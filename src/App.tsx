@@ -1,14 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
 
-function App() {
+import "./index.css"; // 반드시 있어야 Tailwind 적용됨
+
+export default function App() {
   return (
-    <>
-      dd
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        {/* <Route path="/games/roulette" element={<RoulettePage />} />
+        <Route path="/games/balance" element={<BalanceGamePage />} />
+        <Route path="/games/random-question" element={<RandomQuestionPage />} /> */}
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App
