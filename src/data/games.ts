@@ -1,4 +1,5 @@
 import coinFlipImg from "/coin_flip.png";
+import timer from "/timer.png";
 
 export type GameMeta = {
   id: string;
@@ -14,7 +15,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "balance", name: "밸런스 게임", path: "/games/balance" },
   { id: "random-question", name: "랜덤 질문", path: "/games/random-question" },
   { id: "dice", name: "주사위", path: "/games/dice", emoji: "🎲" },
-  { id: "timer", name: "타이머", path: "/games/timer" },
+  { id: "timer", name: "타이머", path: "/games/timer", image: timer },
   { id: "namepick", name: "이름뽑기", path: "/games/namepick" },
   { id: "word", name: "단어랜덤", path: "/games/word" },
   { id: "mission", name: "미션뽑기", path: "/games/mission" },
