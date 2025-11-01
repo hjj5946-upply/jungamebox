@@ -13,6 +13,8 @@ export default function GameCard({ game }: { game: GameMeta }) {
       <div className="w-12 h-12 rounded-lg bg-slate-700 flex items-center justify-center overflow-hidden p-2">
         {game.image ? (
           <img src={game.image} alt={game.name} className="w-full h-full object-contain" />
+        ) : game.emoji ? (
+          <span className="text-3xl">{game.emoji}</span>
         ) : (
           <div className="w-full h-full bg-slate-700" />
         )}
