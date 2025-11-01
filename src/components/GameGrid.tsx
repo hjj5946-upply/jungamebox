@@ -85,7 +85,7 @@ export default function GameGrid({ games }: { games: GameMeta[] }) {
             <span
               key={idx}
               className={`w-2 h-2 rounded-full ${
-                idx === page ? "bg-slate-600" : "bg-slate-300"
+                idx === page ? "bg-slate-400" : "bg-slate-600"
               }`}
             />
           ))}
@@ -94,14 +94,14 @@ export default function GameGrid({ games }: { games: GameMeta[] }) {
 
       {/* 우측 화살표 (마지막 페이지에서는 숨김) */}
       {page < maxPage && (
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-5xl select-none pointer-events-none animate-blink">
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 text-5xl select-none pointer-events-none animate-blink">
           ❯
         </div>
       )}
 
       {/* 좌측 화살표 (첫 페이지에서는 숨김) */}
       {page > 0 && (
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-5xl select-none pointer-events-none animate-blink">
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-500 text-5xl select-none pointer-events-none animate-blink">
           ❮
         </div>
       )}

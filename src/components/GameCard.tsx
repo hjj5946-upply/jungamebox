@@ -1,14 +1,23 @@
-type Game = {
-  id: string;
-  name: string;
-  path: string;
-};
+//src/components/GameCard.tsx
+import { useNavigate } from "react-router-dom";
+import type { GameMeta } from "../data/games";
 
-export default function GameCard({ game }: { game: Game }) {
+export default function GameCard({ game }: { game: GameMeta }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex flex-col items-center justify-center gap-2 bg-white rounded-xl shadow-sm py-4">
-      <div className="w-12 h-12 rounded-lg bg-slate-200" />
-      <span className="text-xs text-slate-700 text-center">{game.name}</span>
+    <div
+      onClick={() => navigate(game.path)}
+      className="flex flex-col items-center justify-center gap-2 bg-slate-800 rounded-xl shadow-lg py-4 hover:bg-slate-700 transition-colors cursor-pointer"
+    >
+      <div className="w-12 h-12 rounded-lg bg-slate-700 flex items-center justify-center overflow-hidden p-2">
+        {game.image ? (
+          <img src={game.image} alt={game.name} className="w-full h-full object-contain" />
+        ) : (
+          <div className="w-full h-full bg-slate-700" />
+        )}
+      </div>
+      <span className="text-xs text-slate-200 text-center">{game.name}</span>
     </div>
   );
 }

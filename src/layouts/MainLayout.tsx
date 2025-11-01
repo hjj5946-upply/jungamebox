@@ -8,7 +8,7 @@ type Props = {
 
 export default function MainLayout({ children }: Props) {
   return (
-    <div className="flex h-screen flex-col bg-slate-100">
+    <div className="flex h-screen flex-col bg-slate-900">
       <TopBar />
       <main className="flex-1 overflow-auto flex justify-center">
         {/* 가운데 고정 폭 컨테이너 */}
