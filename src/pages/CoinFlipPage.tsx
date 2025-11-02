@@ -22,7 +22,7 @@ export default function CoinFlipPage() {
   };
 
   return (
-    <GameLayout title="코인플립">
+    <GameLayout title="앞?뒤?">
       <div className="flex flex-col items-center justify-center h-full gap-8">
         {/* 코인 영역 */}
         <div 

@@ -1,6 +1,6 @@
-//src/pages/DicePage.tsx
 import { useState } from "react";
 import GameLayout from "../layouts/GameLayout";
+import diceImg from "/dice.png";
 
 export default function DicePage() {
   const [result, setResult] = useState<number | null>(null);
@@ -26,7 +26,7 @@ export default function DicePage() {
     }, 100);
   };
 
-  const getDiceEmoji = (num: number | null) => {
+  const getDiceEmoji = (num: number) => {
     const diceMap: { [key: number]: string } = {
       1: "⚀",
       2: "⚁",
@@ -35,7 +35,7 @@ export default function DicePage() {
       5: "⚄",
       6: "⚅",
     };
-    return num ? diceMap[num] : "🎲";
+    return diceMap[num];
   };
 
   return (
@@ -48,9 +48,13 @@ export default function DicePage() {
             isRolling ? "animate-bounce" : ""
           }`}
         >
-          <div className="text-[16rem] leading-none text-white">
-            {getDiceEmoji(result)}
-          </div>
+          {result ? (
+            <div className="text-[16rem] leading-none text-white">
+              {getDiceEmoji(result)}
+            </div>
+          ) : (
+            <img src={diceImg} alt="dice" className="w-64 h-64 object-contain" />
+          )}
         </div>
 
         {/* 결과 텍스트 */}
