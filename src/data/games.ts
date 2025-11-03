@@ -41,8 +41,8 @@ export const GAME_LIST: GameMeta[] = [
   { id: "speed", name: "1 to 48", path: "/games/speed", image: to48Img, imageSize: "large" }, //완료
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg  }, //완료
 
-  { id: "ladder", name: "사다리타기", path: "/games/ladder", image: ladderImg }, //추가예정
-  { id: "quiz", name: "퀴즈", path: "/games/quiz", image: quizImg }, //추가예정
+  { id: "ladder", name: "사다리타기", path: "/games/ladder", image: ladderImg }, //추가예정(사다리타기)
+  { id: "quiz", name: "퀴즈", path: "/games/quiz", image: quizImg }, //추가예정(퀴즈)
   { id: "str", name: "강화하기", path: "/games/str", image: swordImg }, //추가예정(무기강화)
   { id: "timing", name: "타이밍", path: "/games/timing", image: timingImg }, //추가예정(막대(가운데타이밍), 숫자(정확한숫자))
   

@@ -12,6 +12,8 @@ import LottoPage from "./pages/LottoPage";
 import BalancePage from "./pages/BalancePage";
 import NumberGamePage from "./pages/NumberGamePage";
 import BingoPage from "./pages/BingoPage";
+import TimingPage from "./pages/TimingPage";
+import StrengthPage from "./pages/StrengthPage";
 
 import "./index.css";
 
@@ -32,6 +34,8 @@ export default function App() {
         <Route path="/games/balance" element={<BalancePage />} />
         <Route path="/games/speed" element={<NumberGamePage />} />
         <Route path="/games/bingo" element={<BingoPage />} />
+        <Route path="/games/timing" element={<TimingPage />} />
+        <Route path="/games/str" element={<StrengthPage />} />
       </Routes>
     </HashRouter>
   );
