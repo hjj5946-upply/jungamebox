@@ -38,11 +38,11 @@ export const GAME_LIST: GameMeta[] = [
   
   { id: "word", name: "단어랜덤", path: "/games/word" }, //보류
   { id: "mission", name: "미션뽑기", path: "/games/mission" }, //보류
+
+  // Page 2
   { id: "quiz", name: "퀴즈", path: "/games/quiz" }, //보류
   { id: "emoji", name: "이모지룰렛", path: "/games/emoji" }, //보류
   { id: "sound", name: "효과음", path: "/games/sound" }, //보류
   { id: "extra1", name: "추가1", path: "/games/extra1" },
-
-  // Page 2
   { id: "extra2", name: "추가2", path: "/games/extra2" },
 ];

@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import GameCard from "./GameCard";
 import type { GameMeta } from "../data/games";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 16;
 
 export default function GameGrid({ games }: { games: GameMeta[] }) {
   const [page, setPage] = useState(0);
