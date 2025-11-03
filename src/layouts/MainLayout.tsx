@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import TopBar from "../components/TopBar";
 import BottomBar from "../components/BottomBar";
-import devMoneyImg from "/devMoney.png";
+// import devMoneyImg from "/devMoney.png";
 import coffeeImg from "/coffee.png";
 
 type Props = {
