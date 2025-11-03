@@ -149,7 +149,7 @@ export default function OrderPage() {
   };
 
   return (
-    <GameLayout title="순서정하기">
+    <GameLayout title="1빠정하기">
       <div className="flex flex-col h-full">
         {/* 1단계: 인원수 선택 */}
         {step === "select-count" && (
