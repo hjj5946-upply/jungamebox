@@ -34,19 +34,19 @@ export const GAME_LIST: GameMeta[] = [
   { id: "card", name: "카드뽑기", path: "/games/card", image: cardImg }, //완료
   { id: "lotto", name: "로또번호생성", path: "/games/lotto", image: lottoImg }, //완료
   { id: "balance", name: "밸런스 게임", path: "/games/balance", image: balanceImg }, //완료
-  { id: "speed", name: "1 to 48", path: "/games/speed", image: to48Img }, //완료
+  { id: "speed", name: "1 to 48", path: "/games/speed", image: to48Img, imageSize: "large" }, //완료
 
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg  }, //추가예정
   { id: "ladder", name: "사다리타기", path: "/games/ladder", image: ladderImg }, //추가예정
   { id: "quiz", name: "퀴즈", path: "/games/quiz", image: quizImg }, //추가예정
 
-  { id: "team", name: "팀나누기", path: "/games/team" }, //보류
-  { id: "mad", name: "랜덤문장", path: "/games/mad" }, //보류
+  { id: "team", name: "개발중", path: "/games/team" }, //보류(팀나누기)
+  { id: "mad", name: "개발중", path: "/games/mad" }, //보류(랜덤문장)
   
   // Page 2
-  { id: "word", name: "단어랜덤", path: "/games/word" }, //보류
-  { id: "mission", name: "미션뽑기", path: "/games/mission" }, //삭제 > 텔레파시  초성 게임
-  { id: "random-question", name: "랜덤 질문", path: "/games/random-question" }, //삭제 > 라이어 게임
-  { id: "emoji", name: "이모지룰렛", path: "/games/emoji" }, //삭제 > 제시어 연상 퀴즈
+  { id: "word", name: "개발중", path: "/games/word" }, //보류
+  { id: "mission", name: "개발중", path: "/games/mission" }, //삭제 > 텔레파시  초성 게임
+  { id: "random-question", name: "개발중", path: "/games/random-question" }, //삭제 > 라이어 게임
+  { id: "emoji", name: "개발중", path: "/games/emoji" }, //삭제 > 제시어 연상 퀴즈
   
 ];
