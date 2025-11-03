@@ -8,6 +8,10 @@ import rouiletteImg from "/roulette.png";
 import cardImg from "/card.png";  
 import lottoImg from "/lotto.png";
 import balanceImg from "/balance.png";
+import ladderImg from "/ladder.png";
+import bingoImg from "/bingo.png";
+import quizImg from "/quiz.png";
+import to48Img from "/1to48.png";
 
 export type GameMeta = {
   id: string;
@@ -29,20 +33,20 @@ export const GAME_LIST: GameMeta[] = [
   { id: "roulette", name: "돌려돌림판", path: "/games/roulette", image: rouiletteImg }, //완료
   { id: "card", name: "카드뽑기", path: "/games/card", image: cardImg }, //완료
   { id: "lotto", name: "로또번호생성", path: "/games/lotto", image: lottoImg }, //완료
-  { id: "balance", name: "밸런스 게임", path: "/games/balance", image: balanceImg },
-  
-  { id: "random-question", name: "랜덤 질문", path: "/games/random-question" },
-  { id: "team", name: "팀나누기", path: "/games/team" },
-  { id: "bingo", name: "빙고", path: "/games/bingo" },
-  { id: "mad", name: "랜덤문장", path: "/games/mad" },
-  
-  { id: "word", name: "단어랜덤", path: "/games/word" }, //보류
-  { id: "mission", name: "미션뽑기", path: "/games/mission" }, //보류
+  { id: "balance", name: "밸런스 게임", path: "/games/balance", image: balanceImg }, //완료
+  { id: "speed", name: "1 to 48", path: "/games/speed", image: to48Img }, //완료
 
+  { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg  }, //추가예정
+  { id: "ladder", name: "사다리타기", path: "/games/ladder", image: ladderImg }, //추가예정
+  { id: "quiz", name: "퀴즈", path: "/games/quiz", image: quizImg }, //추가예정
+
+  { id: "team", name: "팀나누기", path: "/games/team" }, //보류
+  { id: "mad", name: "랜덤문장", path: "/games/mad" }, //보류
+  
   // Page 2
-  { id: "quiz", name: "퀴즈", path: "/games/quiz" }, //보류
-  { id: "emoji", name: "이모지룰렛", path: "/games/emoji" }, //보류
-  { id: "sound", name: "효과음", path: "/games/sound" }, //보류
-  { id: "extra1", name: "추가1", path: "/games/extra1" },
-  { id: "extra2", name: "추가2", path: "/games/extra2" },
+  { id: "word", name: "단어랜덤", path: "/games/word" }, //보류
+  { id: "mission", name: "미션뽑기", path: "/games/mission" }, //삭제 > 텔레파시  초성 게임
+  { id: "random-question", name: "랜덤 질문", path: "/games/random-question" }, //삭제 > 라이어 게임
+  { id: "emoji", name: "이모지룰렛", path: "/games/emoji" }, //삭제 > 제시어 연상 퀴즈
+  
 ];
