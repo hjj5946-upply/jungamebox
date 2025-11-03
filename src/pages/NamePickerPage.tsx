@@ -1,4 +1,3 @@
-//src/pages/NamePickerPage.tsx
 import { useState } from "react";
 import GameLayout from "../layouts/GameLayout";
 

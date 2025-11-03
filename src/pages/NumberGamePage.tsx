@@ -1,4 +1,3 @@
-//src/pages/NumberGamePage.tsx
 import { useState, useEffect } from "react";
 import GameLayout from "../layouts/GameLayout";
 
