@@ -41,19 +41,18 @@ export default function LottoPage() {
       if (gambleCount >= maxGambleCount) {
         clearInterval(gamblingInterval);
         
-        // 겜블이 끝나면 실제 번호를 하나씩 표시
+        // 겜블이 끝나면 모든 겜블 번호를 먼저 제거
+        setGamblingNumbers(Array(6).fill(null));
+        
+        // 그 다음 실제 번호를 하나씩 표시
         let index = 0;
         const revealInterval = setInterval(() => {
           if (index < drawn.length) {
+            const currentIndex = index;
             setNumbers(prev => {
               const newNumbers = [...prev];
-              newNumbers[index] = drawn[index];
+              newNumbers[currentIndex] = drawn[currentIndex];
               return newNumbers;
-            });
-            setGamblingNumbers(prev => {
-              const newGambling = [...prev];
-              newGambling[index] = null;
-              return newGambling;
             });
             index++;
           } else {
@@ -102,21 +101,26 @@ export default function LottoPage() {
               const isGambling = gamblingNumber !== null;
               const isRevealed = number !== null;
 
-              // 겜블 중이면 겜블 번호 표시, 아니면 실제 번호 또는 빈 공
-              const displayNumber = isGambling ? gamblingNumber : (isRevealed ? number : null);
+              // 표시할 숫자 결정: 공개되었으면 항상 실제 번호, 아니면 겜블 번호 또는 null
+              let displayNumber: number | null = null;
+              if (isRevealed && number !== null) {
+                displayNumber = number;
+              } else if (isGambling && gamblingNumber !== null) {
+                displayNumber = gamblingNumber;
+              }
 
               return (
                 <div
                   key={index}
                   className={`w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl transition-all duration-200 shadow-lg ${
                     isRevealed
-                      ? `${getNumberColor(number!)} scale-100 opacity-100`
+                      ? `${getNumberColor(number!)} scale-100 opacity-100 animate-bounce`
                       : isGambling
                       ? "bg-purple-600 scale-100 opacity-100 animate-pulse"
                       : "bg-slate-700 scale-50 opacity-0"
-                  } ${isRevealed ? "animate-bounce" : ""}`}
+                  }`}
                 >
-                  {displayNumber !== null ? displayNumber : isRevealed ? number : "?"}
+                  {displayNumber !== null ? displayNumber : "?"}
                 </div>
               );
             })}
