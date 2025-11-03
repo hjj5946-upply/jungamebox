@@ -189,7 +189,7 @@ export default function LottoPage() {
             disabled={isDrawing}
             className="flex-1 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {isDrawing ? "뽑는 중..." : "로또 번호 뽑기"}
+            {isDrawing ? "뽑는 중..." : "추첨하기"}
           </button>
           {(numbers.some(n => n !== null) || drawHistory.length > 0) && (
             <button

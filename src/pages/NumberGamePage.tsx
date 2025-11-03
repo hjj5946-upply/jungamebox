@@ -83,7 +83,7 @@ export default function NumberGamePage() {
   };
 
   return (
-    <GameLayout title="번호 빨리 누르기">
+    <GameLayout title="1 to 48">
       <div className="flex flex-col h-full gap-6 py-4">
         {/* 상태 표시 */}
         <div className="flex justify-between items-center px-4">
