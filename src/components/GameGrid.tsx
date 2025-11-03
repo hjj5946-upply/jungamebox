@@ -94,15 +94,19 @@ export default function GameGrid({ games }: { games: GameMeta[] }) {
 
       {/* 우측 화살표 (마지막 페이지에서는 숨김) */}
       {page < maxPage && (
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 text-5xl select-none pointer-events-none animate-blink">
-          ❯
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-5xl select-none pointer-events-none opacity-20 blur-sm transition-opacity hover:opacity-30">
+          <div className="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-r from-transparent via-slate-900/30 to-slate-900/50">
+            ❯
+          </div>
         </div>
       )}
 
       {/* 좌측 화살표 (첫 페이지에서는 숨김) */}
       {page > 0 && (
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-500 text-5xl select-none pointer-events-none animate-blink">
-          ❮
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 text-white text-5xl select-none pointer-events-none opacity-20 blur-sm transition-opacity hover:opacity-30">
+          <div className="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-l from-transparent via-slate-900/30 to-slate-900/50">
+            ❮
+          </div>
         </div>
       )}
     </div>
