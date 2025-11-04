@@ -118,8 +118,8 @@ export default function StrengthPage() {
   const getSellPrice = (lv: number): number => {
     const prices = [
       0,        // +0
-      1000,     // +1
-      1500,     // +2
+      500,     // +1
+      1000,     // +2
       2500,     // +3
       4000,     // +4
       6000,     // +5
@@ -155,9 +155,9 @@ export default function StrengthPage() {
   };
 
   const getZoneName = (lv: number): string => {
-    if (lv <= 10) return "🟢 안전구간";
-    if (lv <= 15) return "🟡 위험구간";
-    return "🔴 극한구간";
+    if (lv <= 10) return "🟢";
+    if (lv <= 15) return "🟡";
+    return "🔴";
   };
 
   const getZoneColor = (lv: number): string => {
@@ -301,29 +301,8 @@ export default function StrengthPage() {
           </div>
         </div>
 
-        {/* 파괴 보호권 안내 */}
-        <div className="w-full max-w-md bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg px-3 py-2 border border-blue-500">
-          <div className="flex items-center justify-between text-white text-sm">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">🛡️</span>
-              <span className="font-semibold">파괴 보호권</span>
-            </div>
-            <div className="text-yellow-400 font-bold">
-              {PROTECTION_COST.toLocaleString()} G
-            </div>
-          </div>
-          <div className="text-slate-300 text-xs mt-1">
-            파괴 시 선택 가능 (현재 강화 단계 유지)
-          </div>
-        </div>
-
         {/* 검 이미지 (임시) */}
         <div className="w-full max-w-md bg-slate-800 rounded-xl p-6 flex flex-col items-center gap-4">
-          {/* 현재 강화 단계 */}
-          <div className={`text-xl font-bold ${getZoneColor(level)}`}>
-            +{level} {getZoneName(level)}
-          </div>
-
           {/* 검 이미지 영역 */}
           <div className="w-44 h-44 bg-slate-700 rounded-lg flex items-center justify-center border-4 border-slate-600 relative overflow-hidden">
             {isEnhancing ? (
@@ -356,6 +335,7 @@ export default function StrengthPage() {
           {/* 검 이름 & 강화 단계 */}
           <div className="flex justify-center items-center">.
               <div className="text-2xl font-bold text-blue-400 mr-2">
+              {getZoneName(level)} 
                   +{level} 
               </div>
               <div className="text-2xl font-bold text-white">
@@ -458,6 +438,22 @@ export default function StrengthPage() {
           >
             리셋
           </button>
+        </div>
+
+        {/* 파괴 보호권 안내 */}
+        <div className="w-full max-w-md bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg px-3 py-2 border border-blue-500">
+          <div className="flex items-center justify-between text-white text-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🛡️</span>
+              <span className="font-semibold">파괴 보호권</span>
+            </div>
+            <div className="text-yellow-400 font-bold">
+              {PROTECTION_COST.toLocaleString()} G
+            </div>
+          </div>
+          <div className="text-slate-300 text-xs mt-1">
+            파괴 시 선택 가능 (현재 강화 단계 유지)
+          </div>
         </div>
 
         {/* 통계 */}
