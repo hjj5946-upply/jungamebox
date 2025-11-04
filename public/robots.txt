@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hjj5946-upply.github.io/jungamebox/sitemap.xml
+Sitemap: https://jun-gamebox.com/sitemap.xml
