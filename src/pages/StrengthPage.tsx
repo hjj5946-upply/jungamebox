@@ -160,11 +160,11 @@ export default function StrengthPage() {
     return "🔴";
   };
 
-  const getZoneColor = (lv: number): string => {
-    if (lv <= 10) return "text-green-400";
-    if (lv <= 15) return "text-yellow-400";
-    return "text-red-400";
-  };
+  // const getZoneColor = (lv: number): string => {
+  //   if (lv <= 10) return "text-green-400";
+  //   if (lv <= 15) return "text-yellow-400";
+  //   return "text-red-400";
+  // };
 
   const handleEnhance = () => {
     const cost = getCost(level);
