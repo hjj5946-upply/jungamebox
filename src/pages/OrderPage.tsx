@@ -1,4 +1,3 @@
-//src/pages/OrderPage.tsx
 import { useState, useEffect, useRef } from "react";
 import GameLayout from "../layouts/GameLayout";
 

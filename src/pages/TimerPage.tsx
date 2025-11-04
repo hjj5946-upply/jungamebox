@@ -1,4 +1,3 @@
-//src/pages/TimerPage.tsx
 import { useState, useEffect, useRef } from "react";
 import GameLayout from "../layouts/GameLayout";
 

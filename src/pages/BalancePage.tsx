@@ -1,4 +1,3 @@
-//src/pages/BalancePage.tsx
 import { useState } from "react";
 import GameLayout from "../layouts/GameLayout";
 

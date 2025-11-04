@@ -1,4 +1,3 @@
-// src/pages/StrengthPage.tsx
 import { useState } from "react";
 import GameLayout from "../layouts/GameLayout";
 

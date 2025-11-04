@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import GameCard from "./GameCard";
 import type { GameMeta } from "../data/games";
 
-const PAGE_SIZE = 16;
+const PAGE_SIZE = 20;
 
 export default function GameGrid({ games }: { games: GameMeta[] }) {
   const [page, setPage] = useState(0);
@@ -55,26 +55,6 @@ export default function GameGrid({ games }: { games: GameMeta[] }) {
     handleSwipeEnd(e.clientX - startX.current);
   };
 
-  const goToPrevPage = () => {
-    if (page > 0) {
-      setAnimDirection("right");
-      setTimeout(() => {
-        setPage((p) => p - 1);
-        setAnimDirection(null);
-      }, 200);
-    }
-  };
-
-  const goToNextPage = () => {
-    if (page < maxPage) {
-      setAnimDirection("left");
-      setTimeout(() => {
-        setPage((p) => p + 1);
-        setAnimDirection(null);
-      }, 200);
-    }
-  };
-
   return (
     <div
       className="relative h-full overflow-hidden"
@@ -98,46 +78,35 @@ export default function GameGrid({ games }: { games: GameMeta[] }) {
         ))}
       </div>
 
-      {/* 페이지 네비게이션 (점 + 화살표) */}
+      {/* 페이지 점 표시 */}
       {maxPage > 0 && (
-        <div className="flex items-center justify-center gap-3 mt-4">
-          {/* 좌측 화살표 */}
-          <button
-            onClick={goToPrevPage}
-            disabled={page === 0}
-            className={`text-xl ${
-              page === 0
-                ? "text-slate-600 cursor-not-allowed"
-                : "text-slate-400 hover:text-slate-200 cursor-pointer"
-            } transition-colors`}
-          >
-            ❮
-          </button>
+        <div className="flex justify-center gap-1 mt-4">
+          {Array.from({ length: maxPage + 1 }).map((_, idx) => (
+            <span
+              key={idx}
+              className={`w-2 h-2 rounded-full ${
+                idx === page ? "bg-slate-400" : "bg-slate-600"
+              }`}
+            />
+          ))}
+        </div>
+      )}
 
-          {/* 페이지 점들 */}
-          <div className="flex gap-1">
-            {Array.from({ length: maxPage + 1 }).map((_, idx) => (
-              <span
-                key={idx}
-                className={`w-2 h-2 rounded-full ${
-                  idx === page ? "bg-slate-400" : "bg-slate-600"
-                }`}
-              />
-            ))}
-          </div>
-
-          {/* 우측 화살표 */}
-          <button
-            onClick={goToNextPage}
-            disabled={page === maxPage}
-            className={`text-xl ${
-              page === maxPage
-                ? "text-slate-600 cursor-not-allowed"
-                : "text-slate-400 hover:text-slate-200 cursor-pointer"
-            } transition-colors`}
-          >
+      {/* 우측 화살표 (마지막 페이지에서는 숨김) */}
+      {page < maxPage && (
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-5xl select-none pointer-events-none opacity-20 blur-sm transition-opacity hover:opacity-30">
+          <div className="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-r from-transparent via-slate-900/30 to-slate-900/50">
             ❯
-          </button>
+          </div>
+        </div>
+      )}
+
+      {/* 좌측 화살표 (첫 페이지에서는 숨김) */}
+      {page > 0 && (
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 text-white text-5xl select-none pointer-events-none opacity-20 blur-sm transition-opacity hover:opacity-30">
+          <div className="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-l from-transparent via-slate-900/30 to-slate-900/50">
+            ❮
+          </div>
         </div>
       )}
     </div>

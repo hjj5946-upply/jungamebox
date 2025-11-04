@@ -1,4 +1,3 @@
-//src/pages/CoinFlipPage.tsx
 import { useState } from "react";
 import GameLayout from "../layouts/GameLayout";
 import coinImage from "/coin_flip.png";
