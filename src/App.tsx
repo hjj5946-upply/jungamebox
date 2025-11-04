@@ -14,6 +14,7 @@ import NumberGamePage from "./pages/NumberGamePage";
 import BingoPage from "./pages/BingoPage";
 import TimingPage from "./pages/TimingPage";
 import StrengthPage from "./pages/StrengthPage";
+import QuizPage from "./pages/QuizPage";
 
 import "./index.css";
 
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/games/bingo" element={<BingoPage />} />
         <Route path="/games/timing" element={<TimingPage />} />
         <Route path="/games/str" element={<StrengthPage />} />
+        <Route path="/games/quiz" element={<QuizPage />} />
       </Routes>
     </HashRouter>
   );
