@@ -284,11 +284,11 @@ export default function StrengthPage() {
     <GameLayout title="강화하기">
       <div className="flex flex-col items-center gap-6 p-4">
         {/* 골드 정보 */}
-        <div className="w-full max-w-md bg-slate-800 rounded-xl p-4">
+        <div className="w-full max-w-md bg-slate-800 rounded-xl px-4 py-3">
           <div className="flex justify-between items-center text-white">
             <div>
               <div className="text-sm text-slate-400">보유 골드</div>
-              <div className="text-2xl font-bold text-yellow-400">
+              <div className="text-xl font-bold text-yellow-400">
                 {gold.toLocaleString()} G
               </div>
             </div>
@@ -302,7 +302,7 @@ export default function StrengthPage() {
         </div>
 
         {/* 파괴 보호권 안내 */}
-        <div className="w-full max-w-md bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg p-3 border border-blue-500">
+        <div className="w-full max-w-md bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg px-3 py-2 border border-blue-500">
           <div className="flex items-center justify-between text-white text-sm">
             <div className="flex items-center gap-2">
               <span className="text-xl">🛡️</span>
@@ -318,14 +318,14 @@ export default function StrengthPage() {
         </div>
 
         {/* 검 이미지 (임시) */}
-        <div className="w-full max-w-md bg-slate-800 rounded-xl p-8 flex flex-col items-center gap-4">
+        <div className="w-full max-w-md bg-slate-800 rounded-xl p-6 flex flex-col items-center gap-4">
           {/* 현재 강화 단계 */}
-          <div className={`text-3xl font-bold ${getZoneColor(level)}`}>
+          <div className={`text-xl font-bold ${getZoneColor(level)}`}>
             +{level} {getZoneName(level)}
           </div>
 
           {/* 검 이미지 영역 */}
-          <div className="w-48 h-48 bg-slate-700 rounded-lg flex items-center justify-center border-4 border-slate-600 relative overflow-hidden">
+          <div className="w-44 h-44 bg-slate-700 rounded-lg flex items-center justify-center border-4 border-slate-600 relative overflow-hidden">
             {isEnhancing ? (
               <div className="text-6xl animate-spin">🌀</div>
             ) : (
@@ -354,13 +354,13 @@ export default function StrengthPage() {
           </div>
 
           {/* 검 이름 & 강화 단계 */}
-          <div className="text-center">
-            <div className="text-2xl font-bold text-white mb-1">
-              {SWORD_NAMES[level]}
-            </div>
-            <div className="text-4xl font-bold text-blue-400">
-              +{level}
-            </div>
+          <div className="flex justify-center items-center">.
+              <div className="text-2xl font-bold text-blue-400 mr-2">
+                  +{level} 
+              </div>
+              <div className="text-2xl font-bold text-white">
+                  {SWORD_NAMES[level]}
+              </div>
           </div>
 
           {/* 판매 가격 표시 */}
@@ -377,17 +377,17 @@ export default function StrengthPage() {
           {result && (
             <div className="text-center animate-bounce">
               {result === "success" && (
-                <div className="text-2xl font-bold text-green-400">
+                <div className="text-xl font-bold text-green-400">
                   ✨ 강화 성공! +{level} 달성!
                 </div>
               )}
               {result === "fail" && (
-                <div className="text-2xl font-bold text-orange-400">
+                <div className="text-xl font-bold text-orange-400">
                   😢 강화 실패... {level > 10 ? "1단계 하락" : "수치 유지"}
                 </div>
               )}
               {result === "destroy" && (
-                <div className="text-2xl font-bold text-red-400">
+                <div className="text-xl font-bold text-red-400">
                   💥 무기가 파괴되었습니다!
                 </div>
               )}
@@ -431,7 +431,7 @@ export default function StrengthPage() {
           <button
             onClick={handleEnhance}
             disabled={!canEnhance}
-            className={`px-8 py-4 text-l font-bold rounded-xl transition-all transform ${
+            className={`px-8 py-4 text-sm font-bold rounded-xl transition-all transform ${
               canEnhance
                 ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 hover:scale-105"
                 : "bg-slate-600 text-slate-400 cursor-not-allowed"
@@ -443,7 +443,7 @@ export default function StrengthPage() {
           <button
             onClick={handleSell}
             disabled={!canSell}
-            className={`px-8 py-4 text-l font-bold rounded-xl transition-all transform ${
+            className={`px-8 py-4 text-sm font-bold rounded-xl transition-all transform ${
               canSell
                 ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 hover:scale-105"
                 : "bg-slate-600 text-slate-400 cursor-not-allowed"
@@ -454,7 +454,7 @@ export default function StrengthPage() {
 
           <button
             onClick={handleReset}
-            className="px-6 py-4 bg-slate-700 text-white text-lg font-bold rounded-xl hover:bg-slate-600 transition-all"
+            className="px-6 py-4 bg-slate-700 text-white text-sm font-bold rounded-xl hover:bg-slate-600 transition-all"
           >
             리셋
           </button>
