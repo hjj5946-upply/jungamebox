@@ -1,6 +1,7 @@
 import { useState } from "react";
 import GameLayout from "../layouts/GameLayout";
 
+import sword0 from "/sword0.png";
 import sword1 from "/sword1.png";
 import sword2 from "/sword2.png";
 import sword3 from "/sword3.png";
@@ -28,7 +29,7 @@ import sword20 from "/sword20.png";
 
 // 검 이미지 경로 (나중에 실제 이미지로 교체!)
 const SWORD_IMAGES = [
-  sword1,   // +0
+  sword0,   // +0
   sword1,   // +1
   sword2,   // +2
   sword3,   // +3
@@ -53,19 +54,19 @@ const SWORD_IMAGES = [
 
 // 검 이름 (나중에 실제 이름으로 교체!)
 const SWORD_NAMES = [
-  "무딘 식칼",         // +0
-  "날카로운 식칼",     // +1
-  "에메랄드 검",       // +2
-  "탄지로일륜도",      // +3
-  "텐겐일륜도",        // +4
-  "미츠리일륜도",      // +5
-  "그륜헐",            // +6
-  "영광의 검",         // +7
-  "전사의 검",         // +8
-  "기사의 검",         // +9
-  "명예의 검",         // +10
-  "영웅의 검",         // +11
-  "전설의 검",         // +12
+  "주방 식칼",         // +0
+  "삼각자마다르",      // +1
+  "닌자도",            // +2
+  "한아비",            // +3
+  "텐겐 일륜도",       // +4
+  "미츠리 일륜도",     // +5
+  "귀검사의 검",       // +6
+  "그륜힐",            // +7
+  "광선검",            // +8
+  "전기의 검",         // +9
+  "나스쥬로 검",       // +10
+  "염화 카타나",       // +11
+  "렌고쿠 일륜도",     // +12
   "신화의 검",         // +13
   "불멸의 검",         // +14
   "초월의 검",         // +15
