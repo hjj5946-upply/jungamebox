@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import TopBar from "../components/TopBar";
 import BottomBar from "../components/BottomBar";
+// import devMoneyImg from "/devMoney.png";
+import coffeeImg from "/coffee.png";
 
 type Props = {
   children: ReactNode;
@@ -19,16 +21,30 @@ export default function MainLayout({ children }: Props) {
       {/* 바텀바 위쪽 안내 문구 */}
       <div className="absolute bottom-8 left-0 right-0 px-4 pb-2">
         {/* 도네이션 버튼 - 우측 정렬 */}
-        <div className="flex justify-end mb-2">
-          <a
-            href="https://toss.me/jun"
+        <div className="flex flex-row justify-end items-center gap-2 mb-2">
+          {/* 국내용: 토스 */}
+          {/* <a
+            href="https://toss.me/hjj5946"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-md"
+            className="flex items-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-md transition-colors"
           >
-            😘 개발자 한번 도와주기
+            <img src={devMoneyImg} alt="donate" className="w-4 h-4" />
+            개발자 한번 도와주기 (Toss)
+          </a> */}
+
+          {/* 해외용: Buy Me a Coffee */}
+          <a
+            href="https://buymeacoffee.com/hjj5946"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-5 py-3 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg shadow-md transition-colors"
+          >
+            <img src={coffeeImg} alt="donate" className="w-4 h-4" />
+            개발자에게 음료한잔 사주기
           </a>
         </div>
+
         {/* 안내 문구 */}
         <div className="max-w-md mx-auto text-center">
           <p className="text-xs text-slate-100 leading-relaxed">
