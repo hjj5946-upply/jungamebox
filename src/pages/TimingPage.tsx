@@ -91,17 +91,14 @@ export default function TimingPage() {
       const score = Math.max(0, 100 - distance * 2);
       setResult(Math.round(score));
     } else {
-      // 목표 숫자와의 오차 계산 - 소수점 둘째자리까지만 비교
-      const roundedValue = Math.round(numberValue * 100) / 100;
-      
-      if (roundedValue === targetNumber) {
-        // 정확히 10.00일 때만 100점!
+      // 정확히 10.00~10.009 범위만 100점!
+      if (numberValue >= 10.00 && numberValue < 10.01) {
         setResult(100);
       } else {
-        // 오차에 따라 점수 계산
+        // 오차에 따라 점수 계산 (0.01초당 1점 감점)
         const error = Math.abs(numberValue - targetNumber);
-        const score = Math.max(0, 100 - error * 10);
-        setResult(Math.round(score));
+        const score = Math.max(0, 100 - Math.ceil(error * 100));
+        setResult(score);
       }
     }
   };
@@ -116,7 +113,7 @@ export default function TimingPage() {
   };
 
   return (
-    <GameLayout title="타이밍">
+    <GameLayout title="타이밍캐치">
       <div className="flex flex-col items-center gap-6 p-4">
         {/* 탭 */}
         <div className="flex gap-2 bg-slate-800 p-1 rounded-lg">

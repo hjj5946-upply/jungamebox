@@ -282,7 +282,7 @@ export default function StrengthPage() {
   const canSell = level > 0 && !isEnhancing;
 
   return (
-    <GameLayout title="강화하기">
+    <GameLayout title="무기강화하기">
       <div className="flex flex-col items-center gap-6 p-4">
         {/* 골드 정보 */}
         <div className="w-full max-w-md bg-slate-800 rounded-xl px-4 py-3">

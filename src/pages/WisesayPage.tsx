@@ -105,7 +105,7 @@ export default function WisesayPage() {
 //   };
 
   return (
-    <GameLayout title="명언 모음">
+    <GameLayout title="명언 모음집">
       <div className="flex flex-col h-full gap-4 py-4">
         
         {/* 카운터 */}
