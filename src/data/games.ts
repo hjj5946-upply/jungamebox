@@ -8,26 +8,26 @@ import rouiletteImg from "/roulette.png";
 import cardImg from "/card.png";  
 import lottoImg from "/lotto.png";
 import balanceImg from "/balance.png";
-import ladderImg from "/ladder.png";
 import bingoImg from "/bingo.png";
 import quizImg from "/quiz.png";
 import to48Img from "/1to48.png";
 import swordImg from "/sword.png";
 import timingImg from "/timing.png";
 import wisesayImg from "/wisesay.png";
-import slotImg from "/slot.png";
 import korlangImg from "/korlang.png";
-import telepathyImg from "/telepathy.png";
-import liarImg from "/liar.png";
-import memoryImg from "/memory.png";
-import colorImg from "/color.png";
-import versusImg from "/versus.png";
-import pinballImg from "/pinball.png";
-import reflexesImg from "/reflexes.png";
-import ifelseImg from "/ifelse.png";
-import moleImg from "/mole.png";
-import mathImg from "/math.png";
-import puzzleImg from "/puzzle.png";
+// import slotImg from "/slot.png";
+// import ladderImg from "/ladder.png";
+// import telepathyImg from "/telepathy.png";
+// import liarImg from "/liar.png";
+// import memoryImg from "/memory.png";
+// import colorImg from "/color.png";
+// import versusImg from "/versus.png";
+// import pinballImg from "/pinball.png";
+// import reflexesImg from "/reflexes.png";
+// import ifelseImg from "/ifelse.png";
+// import moleImg from "/mole.png";
+// import mathImg from "/math.png";
+// import puzzleImg from "/puzzle.png";
 
 export type GameMeta = {
   id: string;
@@ -77,5 +77,5 @@ export const GAME_LIST: GameMeta[] = [
   // { id: "pinball", name: "개발중..", path: "/games/color", image: pinballImg }, //핀볼
 
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg },
-  { id: "wisesay", name: "명언 모음집", path: "/games/wisesay", image: wisesayImg },
+  { id: "wisesay", name: "명언 모음집", path: "/games/wisesay", image: wisesayImg }
 ]
