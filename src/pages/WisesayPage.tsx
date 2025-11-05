@@ -86,23 +86,23 @@ export default function WisesayPage() {
   };
 
   // 공유하기
-  const handleShare = async () => {
-    const text = `"${currentQuote.text}"\n- ${currentQuote.author}`;
+//   const handleShare = async () => {
+//     const text = `"${currentQuote.text}"\n- ${currentQuote.author}`;
     
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "오늘의 명언",
-          text: text,
-        });
-      } catch (err) {
-        console.error("공유 실패:", err);
-      }
-    } else {
-      // Web Share API 미지원 시 복사
-      handleCopy();
-    }
-  };
+//     if (navigator.share) {
+//       try {
+//         await navigator.share({
+//           title: "오늘의 명언",
+//           text: text,
+//         });
+//       } catch (err) {
+//         console.error("공유 실패:", err);
+//       }
+//     } else {
+//       // Web Share API 미지원 시 복사
+//       handleCopy();
+//     }
+//   };
 
   return (
     <GameLayout title="명언 모음">
@@ -169,12 +169,12 @@ export default function WisesayPage() {
           >
             📋 {copied ? "복사됨!" : "복사"}
           </button>
-          <button
+          {/* <button
             onClick={handleShare}
             className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
           >
             🔗 공유
-          </button>
+          </button> */}
         </div>
       </div>
     </GameLayout>

@@ -15,6 +15,7 @@ import to48Img from "/1to48.png";
 import swordImg from "/sword.png";
 import timingImg from "/timing.png";
 import wisesayImg from "/wisesay.png";
+import slotImg from "/slot.png";
 
 export type GameMeta = {
   id: string;
@@ -53,7 +54,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "telepathy", name: "개발중", path: "/games/telepathy" }, //텔레파시  초성 게임
   { id: "liar", name: "개발중", path: "/games/liar" }, //라이어 게임
 
-  { id: "slot", name: "개발중", path: "/games/slot" }, //슬롯머신 3릴슬롯
+  { id: "slot", name: "개발중", path: "/games/slot", image: slotImg }, //슬롯머신 3릴슬롯
   { id: "recall", name: "개발중", path: "/games/recall" }, //제시어 연상 퀴즈
   { id: "memory", name: "개발중", path: "/games/memory" }, //기억력 게임
 ]
