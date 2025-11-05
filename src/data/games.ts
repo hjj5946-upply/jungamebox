@@ -20,6 +20,14 @@ import korlangImg from "/korlang.png";
 import telepathyImg from "/telepathy.png";
 import liarImg from "/liar.png";
 import memoryImg from "/memory.png";
+import colorImg from "/color.png";
+import versusImg from "/versus.png";
+import pinballImg from "/pinball.png";
+import reflexesImg from "/reflexes.png";
+import ifelseImg from "/ifelse.png";
+import moleImg from "/mole.png";
+import mathImg from "/math.png";
+import puzzleImg from "/puzzle.png";
 
 export type GameMeta = {
   id: string;
@@ -43,7 +51,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "card", name: "카드뽑기", path: "/games/card", image: cardImg },
   
   { id: "lotto", name: "로또번호생성", path: "/games/lotto", image: lottoImg },
-  { id: "balance", name: "밸런스 게임", path: "/games/balance", image: balanceImg },
+  { id: "balance", name: "밸런스월드컵", path: "/games/balance", image: balanceImg },
   { id: "speed", name: "1 to 48", path: "/games/speed", image: to48Img, imageSize: "large" },
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg },
 
@@ -54,10 +62,20 @@ export const GAME_LIST: GameMeta[] = [
   
   // Page 2
   { id: "reading", name: "나도아나운서", path: "/games/reading", image: korlangImg },
-  { id: "telepathy", name: "개발중", path: "/games/telepathy", image: telepathyImg }, //텔레파시  초성 게임
-  { id: "liar", name: "개발중", path: "/games/liar", image: liarImg }, //라이어 게임
+  { id: "telepathy", name: "개발중", path: "/games/telepathy", image: telepathyImg, imageSize: "large" }, //초성텔레파시
+  { id: "liar", name: "개발중", path: "/games/liar", image: liarImg }, //라이어게임
   { id: "ladder", name: "개발중", path: "/games/ladder", image: ladderImg }, //사다리타기
 
-  { id: "slot", name: "개발중", path: "/games/slot", image: slotImg }, //슬롯머신 3릴슬롯
-  { id: "memory", name: "개발중", path: "/games/memory", image: memoryImg }, //기억력 게임
+  { id: "slot", name: "개발중", path: "/games/slot", image: slotImg }, //슬롯777
+  { id: "memory", name: "개발중", path: "/games/memory", image: memoryImg }, //기억력테스트
+  { id: "color", name: "개발중", path: "/games/color", image: colorImg }, //색깔맞추기
+  { id: "goandno", name: "개발중", path: "/games/color", image: versusImg }, //한다?안한다?
+
+  { id: "pinball", name: "개발중", path: "/games/color", image: pinballImg }, //핀볼
+  { id: "reflexes", name: "개발중", path: "/games/color", image: reflexesImg }, //반사신경
+  { id: "ifelse", name: "개발중", path: "/games/color", image: ifelseImg }, //만약에?
+  { id: "mole", name: "개발중", path: "/games/color", image: moleImg }, //두더지
+
+  { id: "math", name: "개발중", path: "/games/color", image: mathImg }, //암산의달인
+  { id: "puzzle", name: "개발중", path: "/games/color", image: puzzleImg }, //2048퍼즐
 ]

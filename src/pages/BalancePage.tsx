@@ -280,7 +280,7 @@ export default function BalancePage() {
   const totalRounds = tournamentRound === "32" ? 5 : 6; // 32강: 5라운드, 64강: 6라운드
 
   return (
-    <GameLayout title="밸런스 게임">
+    <GameLayout title="밸런스월드컵">
       <div className="flex flex-col h-full gap-6">
         {/* 카테고리 선택 화면 */}
         {stage === "category" && (
