@@ -19,14 +19,14 @@ export type QuizItem = {
   };
   
   // 헬퍼 함수: 더미 문제 생성 (IT 주제용)
-  const createDummyQuestions = (prefix: string, count: number): QuizItem[] =>
-    Array.from({ length: count }, (_, i) => ({
-      id: i + 1,
-      question: `${prefix} 더미 문제 #${i + 1}의 정답은?`,
-      options: ["선택지 A", "선택지 B (정답)", "선택지 C"],
-      correctAnswerIndex: 1,
-      explanation: `이것은 ${prefix} 더미 문제입니다. 답은 B입니다.`,
-    }));
+  // const createDummyQuestions = (prefix: string, count: number): QuizItem[] =>
+  //   Array.from({ length: count }, (_, i) => ({
+  //     id: i + 1,
+  //     question: `${prefix} 더미 문제 #${i + 1}의 정답은?`,
+  //     options: ["선택지 A", "선택지 B (정답)", "선택지 C"],
+  //     correctAnswerIndex: 1,
+  //     explanation: `이것은 ${prefix} 더미 문제입니다. 답은 B입니다.`,
+  //   }));
   
   // region 일반상식 (총 90문제)
   const GENERAL_QUIZ_EASY: QuizItem[] = [
