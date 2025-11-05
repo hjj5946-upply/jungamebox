@@ -43,10 +43,12 @@ export const GAME_LIST: GameMeta[] = [
 
   { id: "str", name: "강화하기", path: "/games/str", image: swordImg }, //완료
   { id: "timing", name: "타이밍", path: "/games/timing", image: timingImg }, //완료
-  { id: "ladder", name: "사다리타기", path: "/games/ladder", image: ladderImg }, //추가예정(사다리타기)
-  { id: "quiz", name: "퀴즈", path: "/games/quiz", image: quizImg }, //추가예정(퀴즈)
+  { id: "quiz", name: "퀴즈", path: "/games/quiz", image: quizImg }, //완료
+  { id: "ladder", name: "사다리(개발중)", path: "/games/ladder", image: ladderImg }, //추가예정(사다리타기)
+  
   
   // Page 2
+  { id: "reading", name: "개발중", path: "/games/reading" }, //발음게임
   { id: "telepathy", name: "개발중", path: "/games/telepathy" }, //텔레파시  초성 게임
   { id: "Liar", name: "개발중", path: "/games/Liar" }, //라이어 게임
   { id: "recall", name: "개발중", path: "/games/recall" }, //제시어 연상 퀴즈

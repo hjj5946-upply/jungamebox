@@ -8,9 +8,9 @@ type QuizStage = "SELECT" | "PLAY" | "RESULT";
 
 // 난이도별 타이머 시간 설정 (초 단위)
 const TIMER_DURATION: { [key: string]: number } = {
-  "하": 5,   // 5초
-  "중": 10,  // 10초
-  "상": 15,  // 15초
+  "하": 7, 
+  "중": 10,
+  "상": 20,
 };
 
 const QUESTION_COUNT = 10;
