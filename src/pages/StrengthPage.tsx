@@ -71,9 +71,9 @@ const SWORD_NAMES = [
   "수정포정",          // +14
   "쿠사나기",          // +15
   "엑스칼리버",        // +16
-  "무한의대검",         // +17
-  "황제드라몬 소드",         // +18
-  "무한의 검",         // +19
+  "무한의대검",        // +17
+  "황제드라몬 소드",   // +18
+  "K2 소총",          // +19
   "궁극의 검",         // +20
 ];
 
@@ -146,12 +146,13 @@ export default function StrengthPage() {
   // 단계별 확률 (성공, 실패, 파괴)
   const getProbability = (lv: number): { success: number; fail: number; destroy: number } => {
     if (lv <= 5) return { success: 100, fail: 0, destroy: 0 };
-    if (lv <= 10) return { success: 80, fail: 20, destroy: 0 };
-    if (lv <= 15) return { success: 60, fail: 30, destroy: 10 };
-    if (lv === 16) return { success: 40, fail: 40, destroy: 20 };
-    if (lv === 17) return { success: 30, fail: 40, destroy: 30 };
-    if (lv === 18) return { success: 20, fail: 40, destroy: 40 };
-    if (lv === 19) return { success: 15, fail: 35, destroy: 50 };
+    if (lv <= 10) return { success: 85, fail: 15, destroy: 0 };
+    if (lv <= 13) return { success: 75, fail: 25, destroy: 0 };
+    if (lv <= 15) return { success: 65, fail: 30, destroy: 5 };
+    if (lv === 16) return { success: 50, fail: 35, destroy: 15 };
+    if (lv === 17) return { success: 40, fail: 40, destroy: 20 };
+    if (lv === 18) return { success: 30, fail: 40, destroy: 30 };
+    if (lv === 19) return { success: 15, fail: 45, destroy: 40 };
     return { success: 10, fail: 30, destroy: 60 };
   };
 
