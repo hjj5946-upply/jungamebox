@@ -15,7 +15,7 @@ export default function Terms() {
         <p>사이트의 로고·UI·코드는 저작권법 보호를 받습니다.</p>
 
         <h2 className="mt-2 font-semibold">연락처</h2>
-        <p>contact@jun-gamebox.com</p>
+        <p>hjj5946@gmail.com</p>
 
         <p className="mt-2 text-xs text-slate-400">시행일: 2025-11-06</p>
       </section>

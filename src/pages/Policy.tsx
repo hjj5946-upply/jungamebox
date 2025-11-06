@@ -24,7 +24,7 @@ export default function Policy() {
         <p>해당 지역에 광고 제공 시 Google 인증 CMP를 통해 동의를 수집합니다.</p>
 
         <h2 className="mt-2 font-semibold">문의</h2>
-        <p>contact@jun-gamebox.com</p>
+        <p>hjj5946@gmail.com</p>
 
         <p className="mt-2 text-xs text-slate-400">시행일: 2025-11-06</p>
       </section>
