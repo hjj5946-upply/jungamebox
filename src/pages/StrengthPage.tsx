@@ -22,6 +22,7 @@ import sword17 from "/sword17.png";
 import sword18 from "/sword18.png";
 import sword19 from "/sword19.png";
 import sword20 from "/sword20.png";
+import WeaponImage from '/weapon_w.png';
 
 // ============================================
 // 🎨 이미지 & 이름 설정 (여기만 수정하면 됨!)
@@ -68,13 +69,13 @@ const SWORD_NAMES = [
   "염화 카타나",       // +11
   "렌고쿠 일륜도",     // +12
   "토르의 망치",       // +13
-  "수정포정",          // +14
+  "수절포정",          // +14
   "쿠사나기",          // +15
   "엑스칼리버",        // +16
   "무한의대검",        // +17
   "황제드라몬 소드",   // +18
   "K2 소총",          // +19
-  "궁극의 검",         // +20
+  "태극기",         // +20
 ];
 
 // ============================================
@@ -132,13 +133,13 @@ export default function StrengthPage() {
       50000,    // +11
       70000,    // +12
       100000,   // +13
-      150000,   // +14
-      200000,   // +15
-      300000,   // +16
+      140000,   // +14
+      170000,   // +15
+      250000,   // +16
       500000,   // +17
       800000,   // +18
       1300000,  // +19
-      2000000,  // +20
+      3000000,  // +20
     ];
     return prices[lv] || 0;
   };
@@ -308,7 +309,11 @@ export default function StrengthPage() {
           {/* 검 이미지 영역 */}
           <div className="w-44 h-44 bg-slate-700 rounded-lg flex items-center justify-center border-4 border-slate-600 relative overflow-hidden">
             {isEnhancing ? (
-              <div className="text-6xl animate-spin">🌀</div>
+              <img 
+              src={WeaponImage} 
+              alt="강화 중"
+              className="w-24 h-24 animate-spin" 
+            />
             ) : (
               <>
                 {/* ============================================ */}
@@ -413,7 +418,7 @@ export default function StrengthPage() {
           <button
             onClick={handleEnhance}
             disabled={!canEnhance}
-            className={`px-8 py-4 text-sm font-bold rounded-xl transition-all transform ${
+            className={`px-6 py-4 text-sm font-bold rounded-xl transition-all transform ${
               canEnhance
                 ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 hover:scale-105"
                 : "bg-slate-600 text-slate-400 cursor-not-allowed"
@@ -425,7 +430,7 @@ export default function StrengthPage() {
           <button
             onClick={handleSell}
             disabled={!canSell}
-            className={`px-8 py-4 text-sm font-bold rounded-xl transition-all transform ${
+            className={`px-6 py-4 text-sm font-bold rounded-xl transition-all transform ${
               canSell
                 ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 hover:scale-105"
                 : "bg-slate-600 text-slate-400 cursor-not-allowed"

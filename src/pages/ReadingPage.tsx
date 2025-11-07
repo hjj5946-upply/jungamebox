@@ -109,19 +109,19 @@ export default function ReadingPage() {
             onClick={() => handleDifficultyChange("easy")}
             className={getDifficultyButtonClass("easy")}
           >
-            😊 쉬움
+            쉬움
           </button>
           <button
             onClick={() => handleDifficultyChange("normal")}
             className={getDifficultyButtonClass("normal")}
           >
-            😐 보통
+            보통
           </button>
           <button
             onClick={() => handleDifficultyChange("hard")}
             className={getDifficultyButtonClass("hard")}
           >
-            😤 어려움
+            어려움
           </button>
         </div>
 
@@ -150,7 +150,7 @@ export default function ReadingPage() {
                 </div>
               </div>
             ) : (
-              <div className="text-3xl text-slate-400">
+              <div className="text-2xl text-slate-400">
                 준비되면 시작하세요!
               </div>
             )}
@@ -196,7 +196,7 @@ export default function ReadingPage() {
         </div>
 
         {/* 설명 */}
-        <div className="text-slate-400 text-sm text-center max-w-md">
+        <div className="text-slate-400 text-xs text-center max-w-md">
           문장을 빠르고 정확하게 읽고 "성공!" 버튼을 누르세요!
         </div>
       </div>

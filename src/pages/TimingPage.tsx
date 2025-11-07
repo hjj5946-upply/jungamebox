@@ -143,7 +143,7 @@ export default function TimingPage() {
                 : "bg-transparent text-slate-400 hover:text-white"
             }`}
           >
-            숫자 타이밍
+            10.00 도전
           </button>
         </div>
 
@@ -167,7 +167,7 @@ export default function TimingPage() {
             </>
           ) : (
             <>
-              {/* 숫자 타이밍 */}
+              {/* 10.00 도전 */}
               <div className="text-white text-lg font-semibold">
                 정확히 {targetNumber.toFixed(2)}초에 멈춰보세요!
               </div>

@@ -242,7 +242,7 @@ export default function QuizPage() {
   // ------------------------------------------------------------------
   const renderResultStage = () => (
     <div className="text-white text-center p-8 flex flex-col items-center">
-        <h2 className="text-4xl font-extrabold text-white mb-4">
+        <h2 className="text-3xl font-extrabold text-white mb-4">
             🎉 퀴즈 완료!
         </h2>
         <p className="text-xl text-slate-300 mb-6">
@@ -252,7 +252,7 @@ export default function QuizPage() {
         {/* 최종 점수 */}
         <div className="p-8 bg-slate-800 rounded-2xl shadow-xl w-full max-w-xs mb-8">
             <p className="text-2xl font-semibold mb-2">당신의 점수는?</p>
-            <p className="text-7xl font-bold text-green-400">
+            <p className="text-6xl font-bold text-green-400">
                 {score}
             </p>
             <p className="text-xl text-slate-400">
