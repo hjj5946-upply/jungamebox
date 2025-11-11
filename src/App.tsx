@@ -20,6 +20,8 @@ import ReadingPage from "./pages/ReadingPage";
 import Policy from "./pages/Policy";
 import Terms from "./pages/Terms";
 import Contact from "./pages/Contact";
+import IfElsePage from "./pages/IfElsePage";
+import LiarPage from "./pages/LiarPage";
 
 import "./index.css";
 
@@ -45,6 +47,8 @@ export default function App() {
         <Route path="/games/quiz" element={<QuizPage />} />
         <Route path="/games/wisesay" element={<WisesayPage />} />
         <Route path="/games/reading" element={<ReadingPage />} />
+        <Route path="/games/ifelse" element={<IfElsePage />} />
+        <Route path="/games/liar" element={<LiarPage />} />
 
         <Route path="/policy" element={<Policy />} />
         <Route path="/terms" element={<Terms />} />
