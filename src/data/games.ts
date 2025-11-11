@@ -15,7 +15,7 @@ import swordImg from "/sword.png";
 import timingImg from "/timing.png";
 import wisesayImg from "/wisesay.png";
 import korlangImg from "/korlang.png";
-// import slotImg from "/slot.png";
+import slotImg from "/slot.png";
 // import ladderImg from "/ladder.png";
 // import telepathyImg from "/telepathy.png";
 import liarImg from "/liar.png";
@@ -73,9 +73,10 @@ export const GAME_LIST: GameMeta[] = [
 
   { id: "reading", name: "나도아나운서", path: "/games/reading", image: korlangImg },
   { id: "str", name: "무기강화하기", path: "/games/str", image: swordImg }, 
-  // { id: "slot", name: "개발중..", path: "/games/slot", image: slotImg }, //슬롯777
+  { id: "slot", name: "슬롯777", path: "/games/slot", image: slotImg }, //슬롯777
   // { id: "pinball", name: "개발중..", path: "/games/color", image: pinballImg }, //핀볼
 
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg },
   { id: "wisesay", name: "명언 모음집", path: "/games/wisesay", image: wisesayImg }
+  // { id: "pinball", name: "개발중..", path: "/games/color", image: pinballImg }, //스도쿠
 ]
