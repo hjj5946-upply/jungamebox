@@ -53,7 +53,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "balance", name: "밸런스월드컵", path: "/games/balance", image: balanceImg },
   { id: "ifelse", name: "만약에..", path: "/games/ifelse", image: ifelseImg },
   { id: "quiz", name: "퀴즈퀴즈", path: "/games/quiz", image: quizImg },
-  // { id: "goandno", name: "개발중..", path: "/games/color", image: versusImg }, //한다?안한다?
+  // { id: "pinball", name: "개발중..", path: "/games/color", image: pinballImg }, //스도쿠
 
   // { id: "ladder", name: "개발중..", path: "/games/ladder", image: ladderImg }, //사다리타기
   { id: "card", name: "카드뽑기", path: "/games/card", image: cardImg },
@@ -68,7 +68,7 @@ export const GAME_LIST: GameMeta[] = [
   
   { id: "timing", name: "타이밍캐치", path: "/games/timing", image: timingImg },
   // { id: "math", name: "개발중..", path: "/games/color", image: mathImg }, //암산의달인
-  { id: "memory", name: "기억력테스트", path: "/games/memory", image: memoryImg }, //기억력테스트
+  { id: "memory", name: "기억력테스트", path: "/games/memory", image: memoryImg },
   // { id: "puzzle", name: "개발중..", path: "/games/color", image: puzzleImg }, //2048퍼즐
 
   { id: "reading", name: "나도아나운서", path: "/games/reading", image: korlangImg },
@@ -78,5 +78,4 @@ export const GAME_LIST: GameMeta[] = [
 
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg },
   { id: "wisesay", name: "명언 모음집", path: "/games/wisesay", image: wisesayImg }
-  // { id: "pinball", name: "개발중..", path: "/games/color", image: pinballImg }, //스도쿠
 ]
