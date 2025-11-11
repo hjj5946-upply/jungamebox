@@ -86,18 +86,13 @@ export default function TimingPage() {
     setIsPlaying(false);
 
     if (mode === "bar") {
-      // 중앙(50)과의 거리 계산 (0~50)
-      const distance = Math.abs(barPosition - 50);
-      const score = Math.max(0, 100 - distance * 2);
-      setResult(Math.round(score));
-    } else {
-      // 정확히 10.00~10.009 범위만 100점!
-      if (numberValue >= 10.00 && numberValue < 10.01) {
-        setResult(100);
+      const pos = Math.round(barPosition * 100) / 100; // 위치값을 2자리로 고정
+      if (pos === 50) {
+        setResult(100); // 오직 50.00%에서만 100점
       } else {
-        // 오차에 따라 점수 계산 (0.01초당 1점 감점)
-        const error = Math.abs(numberValue - targetNumber);
-        const score = Math.max(0, 100 - Math.ceil(error * 100));
+        const distance = Math.abs(pos - 50); // 0.01% 단위 정밀도
+        // 거리 0.5%면 99점, 1%면 98점… (원하면 가중치 조정 가능)
+        const score = Math.max(0, 100 - Math.round(distance * 2));
         setResult(score);
       }
     }
@@ -156,13 +151,16 @@ export default function TimingPage() {
                 막대를 정확히 가운데에 멈춰보세요!
               </div>
               <div className="w-full h-20 bg-slate-700 rounded-lg relative overflow-hidden">
-                {/* 중앙 타겟 라인 */}
-                <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-yellow-400 z-10"></div>
-                {/* 움직이는 막대 */}
+                {/* 중앙 타겟 라인 (굵기 동일 + 중앙 정렬) */}
                 <div
-                  className="absolute top-0 bottom-0 w-2 bg-blue-500"
+                  className="absolute left-1/2 top-0 bottom-0 w-[8px] bg-yellow-400 z-10 transform -translate-x-1/2"
+                />
+
+                {/* 움직이는 막대 (굵기 동일) */}
+                <div
+                  className="absolute top-0 bottom-0 w-[8px] bg-blue-500"
                   style={{ left: `${barPosition}%`, transform: "translateX(-50%)" }}
-                ></div>
+                />
               </div>
             </>
           ) : (

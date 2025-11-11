@@ -23,7 +23,7 @@ import liarImg from "/liar.png";
 // import colorImg from "/color.png";
 // import versusImg from "/versus.png";
 // import pinballImg from "/pinball.png";
-// import reflexesImg from "/reflexes.png";
+import reflexesImg from "/reflexes.png";
 import ifelseImg from "/ifelse.png";
 // import moleImg from "/mole.png";
 // import mathImg from "/math.png";
@@ -47,11 +47,11 @@ export const GAME_LIST: GameMeta[] = [
 
   { id: "flip", name: "앞?뒤?", path: "/games/flip", image: coinFlipImg },
   { id: "order", name: "1빠정하기", path: "/games/order", image: trackImg },
-  { id: "liar", name: "라이어게임", path: "/games/liar", image: liarImg }, //라이어게임
+  { id: "liar", name: "라이어게임", path: "/games/liar", image: liarImg },
   // { id: "telepathy", name: "개발중..", path: "/games/telepathy", image: telepathyImg, imageSize: "large" }, //초성텔레파시
 
   { id: "balance", name: "밸런스월드컵", path: "/games/balance", image: balanceImg },
-  { id: "ifelse", name: "만약에..", path: "/games/ifelse", image: ifelseImg }, //만약에?
+  { id: "ifelse", name: "만약에..", path: "/games/ifelse", image: ifelseImg },
   { id: "quiz", name: "퀴즈퀴즈", path: "/games/quiz", image: quizImg },
   // { id: "goandno", name: "개발중..", path: "/games/color", image: versusImg }, //한다?안한다?
 
@@ -61,7 +61,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "timer", name: "타이머", path: "/games/timer", image: timer },
   
   // Page 2
-  // { id: "reflexes", name: "개발중..", path: "/games/color", image: reflexesImg }, //반사신경
+  { id: "reflexes", name: "반사신경", path: "/games/reflexes", image: reflexesImg },
   { id: "speed", name: "1 to 48", path: "/games/speed", image: to48Img, imageSize: "large" },
   // { id: "mole", name: "개발중..", path: "/games/color", image: moleImg }, //두더지
   // { id: "color", name: "개발중..", path: "/games/color", image: colorImg }, //색깔맞추기
