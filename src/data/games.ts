@@ -19,7 +19,7 @@ import slotImg from "/slot.png";
 // import ladderImg from "/ladder.png";
 // import telepathyImg from "/telepathy.png";
 import liarImg from "/liar.png";
-// import memoryImg from "/memory.png";
+import memoryImg from "/memory.png";
 // import colorImg from "/color.png";
 // import versusImg from "/versus.png";
 // import pinballImg from "/pinball.png";
@@ -68,7 +68,7 @@ export const GAME_LIST: GameMeta[] = [
   
   { id: "timing", name: "타이밍캐치", path: "/games/timing", image: timingImg },
   // { id: "math", name: "개발중..", path: "/games/color", image: mathImg }, //암산의달인
-  // { id: "memory", name: "개발중..", path: "/games/memory", image: memoryImg }, //기억력테스트
+  { id: "memory", name: "기억력테스트", path: "/games/memory", image: memoryImg }, //기억력테스트
   // { id: "puzzle", name: "개발중..", path: "/games/color", image: puzzleImg }, //2048퍼즐
 
   { id: "reading", name: "나도아나운서", path: "/games/reading", image: korlangImg },
