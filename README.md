@@ -50,7 +50,7 @@
 | Frontend | React 19, TypeScript, Vite |
 | UI Framework | Tailwind CSS |
 | Routing | React Router DOM v7 |
-| 배포 | GitHub Pages |
+| 배포 | GitHub Pages | BaaS(Supabase)
 | Language | Korean / UTF-8 |
 | SEO & PWA | Open Graph, Manifest.json, Favicon 최적화 |
 
