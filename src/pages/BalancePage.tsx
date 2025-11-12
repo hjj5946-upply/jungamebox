@@ -209,7 +209,7 @@ export default function BalancePage() {
       box.style.borderRadius = "0px";
       box.style.transform = "translate3d(0,0,0) scale(1)";
     });
-  }, [overlay.active]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [overlay.active]);
 
   return (
     <GameLayout title="밸런스월드컵">

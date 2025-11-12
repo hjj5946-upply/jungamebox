@@ -30,8 +30,8 @@ jobs:
           echo "VITE_SUPABASE_URL=$VITE_SUPABASE_URL"
           echo "VITE_SUPABASE_ANON_KEY length=${#VITE_SUPABASE_ANON_KEY}"
         env:
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}          # Actions → Variables
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}  # Actions → Secrets
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}  
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }} 
 
       - name: Build
         run: npm run build
