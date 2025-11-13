@@ -39,7 +39,7 @@ export default function LeaderboardPanel({ initialCategory }: { initialCategory?
   return (
     <div className="w-full max-w-2xl mx-auto bg-slate-900/80 rounded-xl p-5 text-white shadow-xl">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">🏆 {selectedCategory} 우승 순위</h2>
+        <h2 className="text-sm font-bold">🏆 {selectedCategory} 우승 순위</h2>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}

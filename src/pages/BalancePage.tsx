@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import GameLayout from "../layouts/GameLayout";
 import { categories } from "../data/balanceGameData";
-import type { Category, Item, TournamentRound } from "../data/balanceGameData";
+import type { Category, Item } from "../data/balanceGameData";
 import { recordWinner } from "../lib/leaderboard";
 import LeaderboardPanel from "../components/LeaderboardPanel";
 
@@ -18,13 +18,14 @@ type ZoomOverlayState = {
 export default function BalancePage() {
   const [stage, setStage] = useState<TournamentStage>("category");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [tournamentRound, setTournamentRound] = useState<TournamentRound | null>(null);
   const [currentRoundItems, setCurrentRoundItems] = useState<Item[]>([]);
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
   const [currentRoundNumber, setCurrentRoundNumber] = useState(1);
   const [finalWinner, setFinalWinner] = useState<Item | null>(null);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-
+  const [tournamentSize, setTournamentSize] = useState<number | null>(null);
+  const [initialBracketSize, setInitialBracketSize] = useState<number>(0);
+  
   // 애니메이션 & 레퍼런스
   const [animating, setAnimating] = useState(false);
   const leftRef = useRef<HTMLDivElement | null>(null);
@@ -43,20 +44,29 @@ export default function BalancePage() {
     setStage("tournament-select");
   };
 
-  // 토너먼트 시작
-  const startTournament = (round: TournamentRound) => {
-    setTournamentRound(round);
-    const itemCount = round === "32" ? 32 : 64;
-    const items = selectedCategory?.items || [];
-    const shuffled = [...items].sort(() => Math.random() - 0.5);
-    const selectedItems = shuffled.slice(0, Math.min(itemCount, items.length));
-
-    setCurrentRoundItems(selectedItems);
-    setCurrentMatchIndex(0);
-    setCurrentRoundNumber(1);
-    setFinalWinner(null);
-    setStage("tournament");
+  // 사용할 수 있는 대진(2,4,8,16,32,64 중에서 아이템 수 이하인 것들)
+  const getAvailableBrackets = (count: number) => {
+    const candidates = [2, 4, 8, 16, 32, 64];
+    return candidates.filter((n) => n <= count);
   };
+
+  // 토너먼트 시작
+ const startTournament = (size: number) => {
+  const items = selectedCategory?.items || [];
+  const shuffled = [...items].sort(() => Math.random() - 0.5);
+
+  // 선택한 size(4/8/16/32/64)와 실제 개수 중 작은 쪽으로 확정
+  const bracket = Math.min(size, items.length);
+  const selectedItems = shuffled.slice(0, bracket);
+
+  setTournamentSize(bracket);        // 몇 강인지
+  setInitialBracketSize(bracket);    // 총 라운드 계산용
+  setCurrentRoundItems(selectedItems);
+  setCurrentMatchIndex(0);
+  setCurrentRoundNumber(1);
+  setFinalWinner(null);
+  setStage("tournament");
+}
 
   // 원래 승자 처리 로직 유지
   const selectWinner = (winner: Item) => {
@@ -93,7 +103,6 @@ export default function BalancePage() {
   const reset = () => {
     setStage("category");
     setSelectedCategory(null);
-    setTournamentRound(null);
     setCurrentRoundItems([]);
     setCurrentMatchIndex(0);
     setCurrentRoundNumber(1);
@@ -108,7 +117,7 @@ export default function BalancePage() {
   const itemB = currentRoundItems[currentMatchIndex + 1];
 
   // 표기
-  const totalRounds = tournamentRound === "32" ? 5 : 6;
+  const totalRounds = initialBracketSize ? Math.log2(initialBracketSize) : 0;
   const matchesInCurrentRound = Math.floor(currentRoundItems.length / 2);
   const currentMatchNumber = Math.floor(currentMatchIndex / 2) + 1;
 
@@ -239,7 +248,7 @@ export default function BalancePage() {
                   onClick={() => setShowLeaderboard(true)}
                   className="text-sm px-3 py-2 rounded-md bg-yellow-500 hover:bg-yellow-600 text-black font-semibold transition-colors"
                 >
-                  🏆 우승결과 보기
+                  🏆 랭킹 보기
                 </button>
               </div>
 
@@ -266,37 +275,45 @@ export default function BalancePage() {
         )}
 
         {/* 라운드 선택 */}
-        {stage === "tournament-select" && selectedCategory && (
-          <div className="flex-1 flex flex-col items-center justify-center gap-6">
-            <div className="text-white text-xl font-bold text-center leading-tight">
-              {selectedCategory.name}
-              <br />
-              <span className="text-sm text-slate-400 font-normal">
-                토너먼트 라운드를 선택하세요
-              </span>
-            </div>
-            <div className="flex gap-3 w-full">
+        {stage === "tournament-select" && selectedCategory && (() => {
+          const count = selectedCategory.items.length;
+          const brackets = getAvailableBrackets(count); // 2,4,8,16,32,64 중 가능한 것들
+
+          return (
+            <div className="flex-1 flex flex-col items-center justify-center gap-6">
+              <div className="text-white text-xl font-bold text-center leading-tight">
+                {selectedCategory.name}
+                <br />
+                <span className="text-sm text-slate-400 font-normal">
+                  토너먼트 라운드를 선택하세요
+                </span>
+                <br />
+                <span className="text-xs text-slate-500">
+                  (총 항목: {count}개)
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-3 w-full">
+                {brackets.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => startTournament(size)}
+                    className="flex-1 min-w-[80px] py-8 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-lg transition-colors"
+                  >
+                    {size}강
+                  </button>
+                ))}
+              </div>
+
               <button
-                onClick={() => startTournament("32")}
-                className="flex-1 py-10 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-lg transition-colors"
+                onClick={reset}
+                className="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md text-sm transition-colors"
               >
-                32강
-              </button>
-              <button
-                onClick={() => startTournament("64")}
-                className="flex-1 py-10 px-6 bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-lg transition-colors"
-              >
-                64강
+                뒤로가기
               </button>
             </div>
-            <button
-              onClick={reset}
-              className="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md text-sm transition-colors"
-            >
-              뒤로가기
-            </button>
-          </div>
-        )}
+          );
+        })()}
 
         {/* 토너먼트 진행 */}
         {stage === "tournament" && itemA && itemB && (
@@ -304,7 +321,7 @@ export default function BalancePage() {
             {/* 진행 상태 (폰트 축소) */}
             <div className="text-white text-center leading-tight">
               <div className="text-base font-semibold">
-                {tournamentRound}강 토너먼트
+                {tournamentSize ?? "?"}강 토너먼트
               </div>
               <div className="text-xl text-slate-400 mt-1">
                 {currentRoundNumber}라운드 / {totalRounds}라운드
