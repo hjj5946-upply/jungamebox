@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { fetchReflexLeaderboard, type ReflexRank } from "../lib/reflex";
 
+// 기록(ms) 색상 한 번에 바꾸고 싶으면 여기만 변경
+const LATENCY_COLOR = "#f97316"; // 주황색 계열 예시 (원하는 HEX로 변경)
+
 export default function ReflexLeaderboardPanel() {
   const [rows, setRows] = useState<ReflexRank[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,33 +38,53 @@ export default function ReflexLeaderboardPanel() {
         <ul className="space-y-1">
           {rows.map((row, idx) => {
             const rank = idx + 1;
+
             const badge =
-                rank === 1 ? "👑" :
-                rank === 2 ? "🥈" :
-                rank === 3 ? "🥉" : "";
+              rank === 1
+                ? "👑"
+                : rank === 2
+                ? "🥈"
+                : rank === 3
+                ? "🥉"
+                : "";
+
+            // 1·2·3위 배경/테두리 차별화
+            const rowClass =
+              rank === 1
+                ? "bg-yellow-500/15 border-yellow-400/60"
+                : rank === 2
+                ? "bg-sky-500/15 border-sky-400/60"
+                : rank === 3
+                ? "bg-rose-500/15 border-rose-400/60"
+                : "bg-slate-800/80 border-slate-700/70";
 
             return (
-                <li
+              <li
                 key={row.id}
-                className="flex items-center gap-2 rounded-lg bg-slate-800/80 px-3 py-2 border border-slate-700/70"
-                >
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 border ${rowClass}`}
+              >
                 <div className="w-8 text-xs font-semibold text-right">
-                    {rank}위{badge && <span className="ml-0.5">{badge}</span>}
+                  {rank}위{badge && <span className="ml-0.5">{badge}</span>}
                 </div>
+
                 <div className="flex-1 flex items-center justify-between text-[13px]">
-                    <div className="flex flex-col">
+                  <div className="flex flex-col">
                     <span className="font-semibold">{row.nickname}</span>
-                    <span className="text-[11px] text-slate-300">
-                        {row.latency_ms} ms
+                    <span
+                      className="text-[11px] font-bold"
+                      style={{ color: LATENCY_COLOR }}
+                    >
+                      {row.latency_ms} ms
                     </span>
-                    </div>
-                    <span className="text-[11px] text-slate-400">
+                  </div>
+
+                  <span className="text-[11px] text-slate-400">
                     {new Date(row.created_at).toLocaleString()}
-                    </span>
+                  </span>
                 </div>
-                </li>
+              </li>
             );
-            })}
+          })}
         </ul>
       )}
     </div>
