@@ -20,7 +20,7 @@ import slotImg from "/slot.png";
 // import telepathyImg from "/telepathy.png";
 import liarImg from "/liar.png";
 import memoryImg from "/memory.png";
-// import colorImg from "/color.png";
+import colorImg from "/color.png";
 // import versusImg from "/versus.png";
 // import pinballImg from "/pinball.png";
 import reflexesImg from "/reflexes.png";
@@ -64,7 +64,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "reflexes", name: "반사신경", path: "/games/reflexes", image: reflexesImg },
   { id: "speed", name: "1 to 48", path: "/games/speed", image: to48Img, imageSize: "large" },
   // { id: "mole", name: "개발중..", path: "/games/color", image: moleImg }, //두더지
-  // { id: "color", name: "개발중..", path: "/games/color", image: colorImg }, //색깔맞추기
+  { id: "color", name: "스투룹테스트", path: "/games/color", image: colorImg }, //스투룹
   
   { id: "timing", name: "타이밍캐치", path: "/games/timing", image: timingImg },
   // { id: "math", name: "개발중..", path: "/games/color", image: mathImg }, //암산의달인

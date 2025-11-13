@@ -31,6 +31,12 @@ const BAD_WORDS = [
   "ㅂㅅ",
   "fuck",
   "shit",
+  "보지",
+  "자지",
+  "새끼",
+  "잠지",
+  "오랄",
+  "사까"
 ];
 
 export default function ReflexPage() {

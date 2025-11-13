@@ -26,10 +26,10 @@ const padColors: { base: string; glow: string }[] = [
 ];
 
 // 속도 파라미터
-const BASE_SHOW_MS = 700;
-const BASE_PAUSE_MS = 200;
-const MIN_SHOW_MS  = 350;
-const SPEEDUP_PER_ROUND = 18;
+const BASE_SHOW_MS = 650;
+const BASE_PAUSE_MS = 150;
+const MIN_SHOW_MS  = 320;
+const SPEEDUP_PER_ROUND = 20;
 
 export default function MemoryPage() {
   // 패드 개수: 4/6/8
