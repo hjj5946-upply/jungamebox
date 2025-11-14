@@ -400,7 +400,7 @@ export default function BalancePage() {
               <img
                 src={overlay.item.image}
                 alt={overlay.item.name}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-contain"
               />
             ) : (
               <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-800" />

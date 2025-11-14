@@ -28,6 +28,7 @@ import ifelseImg from "/ifelse.png";
 // import moleImg from "/mole.png";
 // import mathImg from "/math.png";
 // import puzzleImg from "/puzzle.png";
+// import sudokuImg from "/sudoku.png";
 
 export type GameMeta = {
   id: string;
@@ -53,7 +54,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "balance", name: "밸런스월드컵", path: "/games/balance", image: balanceImg },
   { id: "ifelse", name: "만약에..", path: "/games/ifelse", image: ifelseImg },
   { id: "quiz", name: "퀴즈퀴즈", path: "/games/quiz", image: quizImg },
-  // { id: "pinball", name: "개발중..", path: "/games/color", image: pinballImg }, //스도쿠
+  // { id: "sudoku", name: "개발중..", path: "/games/sudoku", image: sudokuImg }, //스도쿠
 
   // { id: "ladder", name: "개발중..", path: "/games/ladder", image: ladderImg }, //사다리타기
   { id: "card", name: "카드뽑기", path: "/games/card", image: cardImg },
@@ -64,7 +65,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "reflexes", name: "반사신경", path: "/games/reflexes", image: reflexesImg },
   { id: "speed", name: "1 to 48", path: "/games/speed", image: to48Img, imageSize: "large" },
   // { id: "mole", name: "개발중..", path: "/games/color", image: moleImg }, //두더지
-  { id: "color", name: "스투룹테스트", path: "/games/color", image: colorImg }, //스투룹
+  { id: "color", name: "스투룹테스트", path: "/games/color", image: colorImg },
   
   { id: "timing", name: "타이밍캐치", path: "/games/timing", image: timingImg },
   // { id: "math", name: "개발중..", path: "/games/color", image: mathImg }, //암산의달인
