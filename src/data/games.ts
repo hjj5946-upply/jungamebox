@@ -74,7 +74,7 @@ export const GAME_LIST: GameMeta[] = [
 
   { id: "reading", name: "나도아나운서", path: "/games/reading", image: korlangImg },
   { id: "str", name: "무기강화하기", path: "/games/str", image: swordImg }, 
-  { id: "slot", name: "슬롯777", path: "/games/slot", image: slotImg }, //슬롯777
+  { id: "slot", name: "슬롯777", path: "/games/slot", image: slotImg },
   // { id: "pinball", name: "개발중..", path: "/games/color", image: pinballImg }, //핀볼
 
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg },
