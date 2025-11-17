@@ -26,6 +26,7 @@ import ReflexPage from "./pages/ReflexPage";
 import SlotPage from "./pages/SlotPage";
 import MemoryPage from "./pages/MemoryPage";
 import ColorPage from "./pages/ColorPage";
+import MathPage from "./pages/MathPage";
 
 import "./index.css";
 
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="/games/slot" element={<SlotPage />} />
         <Route path="/games/memory" element={<MemoryPage />} />
         <Route path="/games/color" element={<ColorPage />} />
+        <Route path="/games/math" element={<MathPage />} />
 
         <Route path="/policy" element={<Policy />} />
         <Route path="/terms" element={<Terms />} />

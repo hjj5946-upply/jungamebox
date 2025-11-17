@@ -26,7 +26,7 @@ import colorImg from "/color.png";
 import reflexesImg from "/reflexes.png";
 import ifelseImg from "/ifelse.png";
 // import moleImg from "/mole.png";
-// import mathImg from "/math.png";
+import mathImg from "/math.png";
 // import puzzleImg from "/puzzle.png";
 // import sudokuImg from "/sudoku.png";
 
@@ -68,7 +68,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "color", name: "스투룹테스트", path: "/games/color", image: colorImg },
   
   { id: "timing", name: "타이밍캐치", path: "/games/timing", image: timingImg },
-  // { id: "math", name: "개발중..", path: "/games/color", image: mathImg }, //암산의달인
+  { id: "math", name: "암산의 달인", path: "/games/math", image: mathImg },
   { id: "memory", name: "기억력테스트", path: "/games/memory", image: memoryImg },
   // { id: "puzzle", name: "개발중..", path: "/games/color", image: puzzleImg }, //2048퍼즐
 
