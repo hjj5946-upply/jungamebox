@@ -94,6 +94,13 @@ export default function BalancePage() {
       return;
     }
 
+    if (winners.length === 1) {
+      setFinalWinner(winners[0]);
+      setStage("result");
+      recordWinner(selectedCategory?.name ?? "기타", winners[0].name);
+      return;
+    }
+
     setCurrentRoundItems(winners);
     setCurrentMatchIndex(0);
     setCurrentRoundNumber(currentRoundNumber + 1);
@@ -148,31 +155,35 @@ export default function BalancePage() {
 
     return (
       <div
-        ref={side === "A" ? leftRef : rightRef}
-        className="relative flex-1 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-lg transition-transform duration-200 hover:scale-[1.02] cursor-pointer"
-        onClick={onPick}
-        role="button"
-        aria-label={item.name}
-      >
-        {/* 이미지 */}
-        {item.image ? (
-          <img
-            src={item.image}
-            alt={item.name}
-            className="absolute inset-0 w-full h-full object-cover"
-            onError={(e) => (e.currentTarget.style.display = "none")}
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-800" />
-        )}
+            ref={side === "A" ? leftRef : rightRef}
+            // 최상위 div에 기본적으로 배경색을 설정하여 이미지가 없거나 로딩 중일 때 빈 공간이 보이지 않게 합니다.
+            className="relative flex-1 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-lg transition-transform duration-200 hover:scale-[1.02] cursor-pointer bg-slate-800" // 👈 배경색을 기본으로 설정
+            onClick={onPick}
+            role="button"
+            aria-label={item.name}
+        >
+          {/* 이미지 */}
+          {item.image ? (
+              <img
+                  src={item.image}
+                  alt={item.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  // 🚨 onError 핸들러를 제거합니다.
+                  // 경로가 올바르다면, 이 핸들러가 없어야 이미지가 로드됩니다.
+                  // 만약 로딩에 실패하더라도, 대체 배경색(bg-slate-800)이 뒤에 남아있습니다.
+              />
+          ) : (
+              // item.image 필드가 아예 비어있을 경우 (텍스트 전용)
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center" /> 
+          )}
 
-        {/* 이름 오버레이 (폰트 축소) */}
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 p-3 text-center">
-          <span className="text-white font-bold text-sm drop-shadow">
-            {item.name}
-          </span>
-        </div>
+          {/* 이름 오버레이 (나머지 생략) */}
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 p-3 text-center">
+              <span className="text-white font-bold text-sm drop-shadow">
+                  {item.name}
+              </span>
+          </div>
       </div>
     );
   };
