@@ -22,13 +22,13 @@ import liarImg from "/liar.png";
 import memoryImg from "/memory.png";
 import colorImg from "/color.png";
 // import versusImg from "/versus.png";
-// import pinballImg from "/pinball.png";
+import pinballImg from "/pinball.png";
 import reflexesImg from "/reflexes.png";
 import ifelseImg from "/ifelse.png";
 // import moleImg from "/mole.png";
 import mathImg from "/math.png";
 // import puzzleImg from "/puzzle.png";
-// import sudokuImg from "/sudoku.png";
+import sudokuImg from "/sudoku.png";
 
 export type GameMeta = {
   id: string;
@@ -54,7 +54,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "balance", name: "밸런스월드컵", path: "/games/balance", image: balanceImg },
   { id: "ifelse", name: "만약에..", path: "/games/ifelse", image: ifelseImg },
   { id: "quiz", name: "퀴즈퀴즈", path: "/games/quiz", image: quizImg },
-  // { id: "sudoku", name: "개발중..", path: "/games/sudoku", image: sudokuImg }, //스도쿠
+  { id: "sudoku", name: "개발중..", path: "/games/sudoku", image: sudokuImg },
 
   // { id: "ladder", name: "개발중..", path: "/games/ladder", image: ladderImg }, //사다리타기
   { id: "card", name: "카드뽑기", path: "/games/card", image: cardImg },
@@ -75,7 +75,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "reading", name: "나도아나운서", path: "/games/reading", image: korlangImg },
   { id: "str", name: "무기강화하기", path: "/games/str", image: swordImg }, 
   { id: "slot", name: "슬롯777", path: "/games/slot", image: slotImg },
-  // { id: "pinball", name: "개발중..", path: "/games/color", image: pinballImg }, //핀볼
+  { id: "pinball", name: "개발중..", path: "/games/pinball", image: pinballImg },
 
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg },
   { id: "wisesay", name: "명언 모음집", path: "/games/wisesay", image: wisesayImg }

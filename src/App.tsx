@@ -27,6 +27,9 @@ import SlotPage from "./pages/SlotPage";
 import MemoryPage from "./pages/MemoryPage";
 import ColorPage from "./pages/ColorPage";
 import MathPage from "./pages/MathPage";
+import PinballPage from "./pages/PinballPage";
+import PinballPlayPage from "./pages/PinballPlayPage";
+import SudokuPage from "./pages/SudokuPage";
 
 import "./index.css";
 
@@ -59,6 +62,9 @@ export default function App() {
         <Route path="/games/memory" element={<MemoryPage />} />
         <Route path="/games/color" element={<ColorPage />} />
         <Route path="/games/math" element={<MathPage />} />
+        <Route path="/games/pinball" element={<PinballPage />} />
+        <Route path="/games/pinball/play" element={<PinballPlayPage />} />
+        <Route path="/games/sudoku" element={<SudokuPage />} />
 
         <Route path="/policy" element={<Policy />} />
         <Route path="/terms" element={<Terms />} />
