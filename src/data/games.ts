@@ -54,7 +54,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "balance", name: "밸런스월드컵", path: "/games/balance", image: balanceImg },
   { id: "ifelse", name: "만약에..", path: "/games/ifelse", image: ifelseImg },
   { id: "quiz", name: "퀴즈퀴즈", path: "/games/quiz", image: quizImg },
-  { id: "sudoku", name: "개발중..", path: "/games/sudoku", image: sudokuImg },
+  { id: "sudoku", name: "스도쿠", path: "/games/sudoku", image: sudokuImg },
 
   // { id: "ladder", name: "개발중..", path: "/games/ladder", image: ladderImg }, //사다리타기
   { id: "card", name: "카드뽑기", path: "/games/card", image: cardImg },
