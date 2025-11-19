@@ -77,7 +77,7 @@ export default function NumberGamePage() {
 
   const getButtonColor = (value: number | null) => {
     if (value === null) return "bg-slate-800";
-    if (value === currentNumber) return "bg-blue-700 shadow-lg";
+    if (value === currentNumber) return "bg-blue-400 shadow-lg";
     return "bg-blue-600";
   };
 
