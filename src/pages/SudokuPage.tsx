@@ -553,7 +553,7 @@ export default function SudokuPage() {
                     const sameRowOrCol =
                       selected && (selected.row === r || selected.col === c);
                     const rowColHighlightClasses = sameRowOrCol
-                      ? "bg-slate-400/70"
+                      ? "bg-slate-500/70"
                       : "";
 
                     const baseClasses =
