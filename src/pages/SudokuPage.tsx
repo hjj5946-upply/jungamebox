@@ -257,6 +257,10 @@ export default function SudokuPage() {
     null
   );
 
+  // 🔥 숫자 변경(기존 값 있는 칸 수정/삭제) 횟수
+  const [changeCount, setChangeCount] = useState(0);
+  const MAX_CHANGES = 3;
+
   const isReady = difficulty !== null && basePuzzle && solution && board;
 
   const isCellFixed = (row: number, col: number): boolean => {
@@ -273,6 +277,13 @@ export default function SudokuPage() {
     setSelected(null);
     setInvalidMap(getInvalidMap(puzzle));
     setIsCorrectSolution(null);
+    setChangeCount(0); // 변경 기회 초기화
+  };
+
+  const failAndRestartIfNeeded = () => {
+    if (!difficulty) return;
+    alert("입력한 숫자를 변경할 수 있는 기회(3회)를 모두 사용했습니다.\n새로운 판으로 다시 시작합니다.");
+    startNewGame(difficulty);
   };
 
   // 키보드 입력
@@ -284,15 +295,43 @@ export default function SudokuPage() {
       const { row, col } = selected;
       if (isCellFixed(row, col)) return;
 
+      // 현재 값
+      const current = board[row][col];
+
+      // 숫자 입력
       if (e.key >= "1" && e.key <= "9") {
         const num = Number(e.key);
+        if (current === num) return;
+
+        const isChange = current !== 0; // 기존 숫자에서 바꾸는 경우만 카운트
+        if (isChange) {
+          if (changeCount >= MAX_CHANGES) {
+            failAndRestartIfNeeded();
+            return;
+          }
+          setChangeCount((prev) => prev + 1);
+        }
+
         setBoard((prev) => {
           if (!prev) return prev;
           const next = cloneGrid(prev);
           next[row][col] = num;
           return next;
         });
-      } else if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
+      }
+      // 삭제
+      else if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
+        if (current === 0) return;
+
+        const isChange = current !== 0; // 숫자 지우는 것도 변경으로 취급
+        if (isChange) {
+          if (changeCount >= MAX_CHANGES) {
+            failAndRestartIfNeeded();
+            return;
+          }
+          setChangeCount((prev) => prev + 1);
+        }
+
         setBoard((prev) => {
           if (!prev) return prev;
           const next = cloneGrid(prev);
@@ -304,7 +343,7 @@ export default function SudokuPage() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selected, isReady, board, basePuzzle]);
+  }, [selected, isReady, board, basePuzzle, changeCount, difficulty]);
 
   // 보드 변경 시마다 규칙 위반 / 클리어 상태 체크
   useEffect(() => {
@@ -339,6 +378,19 @@ export default function SudokuPage() {
     if (!selected || !board) return;
     const { row, col } = selected;
     if (isCellFixed(row, col)) return;
+
+    const current = board[row][col];
+    if (current === num) return;
+
+    const isChange = current !== 0;
+    if (isChange) {
+      if (changeCount >= MAX_CHANGES) {
+        failAndRestartIfNeeded();
+        return;
+      }
+      setChangeCount((prev) => prev + 1);
+    }
+
     setBoard((prev) => {
       if (!prev) return prev;
       const next = cloneGrid(prev);
@@ -351,6 +403,19 @@ export default function SudokuPage() {
     if (!selected || !board) return;
     const { row, col } = selected;
     if (isCellFixed(row, col)) return;
+
+    const current = board[row][col];
+    if (current === 0) return;
+
+    const isChange = current !== 0;
+    if (isChange) {
+      if (changeCount >= MAX_CHANGES) {
+        failAndRestartIfNeeded();
+        return;
+      }
+      setChangeCount((prev) => prev + 1);
+    }
+
     setBoard((prev) => {
       if (!prev) return prev;
       const next = cloneGrid(prev);
@@ -366,6 +431,7 @@ export default function SudokuPage() {
     setSelected(null);
     setInvalidMap(getInvalidMap(newPuzzle));
     setIsCorrectSolution(null);
+    setChangeCount(0); // 현재 판 다시 시작 → 변경 기회 초기화
   };
 
   const handleChangeDifficulty = () => {
@@ -376,6 +442,7 @@ export default function SudokuPage() {
     setSelected(null);
     setInvalidMap(Array.from({ length: 9 }, () => Array(9).fill(false)));
     setIsCorrectSolution(null);
+    setChangeCount(0);
   };
 
   // 1) 난이도 선택 화면
@@ -431,8 +498,18 @@ export default function SudokuPage() {
         {/* 상단: 난이도 / 상태 메시지 / 난이도 변경 버튼 */}
         <section className="rounded-lg border border-slate-700 bg-slate-800/80 p-3 text-[11px]">
           <div className="mb-2 flex items-center justify-between">
-            <div className="text-xs font-semibold text-emerald-300">
-              난이도: {difficulty ? DIFFICULTY_LABELS[difficulty] : "-"}
+            <div>
+              <div className="text-xs font-semibold text-emerald-300">
+                난이도: {difficulty ? DIFFICULTY_LABELS[difficulty] : "-"}
+              </div>
+              <div className="mt-1 text-[10px] text-slate-300">
+                남은 숫자 변경 기회:{" "}
+                <span className="font-semibold">
+                  {Math.max(0, MAX_CHANGES - changeCount)}회
+                </span>
+                {" / "}
+                총 {MAX_CHANGES}회
+              </div>
             </div>
             <button
               type="button"
@@ -466,48 +543,48 @@ export default function SudokuPage() {
           <div className="w-full max-w-sm">
             <div className="aspect-square w-full rounded-lg bg-slate-900 shadow-lg">
               <div className="grid h-full w-full grid-cols-9">
-              {board!.map((row, r) =>
-                row.map((value, c) => {
-                  const fixed = isCellFixed(r, c);
-                  const selectedCell =
-                    selected?.row === r && selected?.col === c;
-                  const invalid = invalidMap[r][c];
+                {board!.map((row, r) =>
+                  row.map((value, c) => {
+                    const fixed = isCellFixed(r, c);
+                    const selectedCell =
+                      selected?.row === r && selected?.col === c;
+                    const invalid = invalidMap[r][c];
 
-                  const sameRowOrCol =
-                    selected && (selected.row === r || selected.col === c);
-                  const rowColHighlightClasses = sameRowOrCol
-                    ? "bg-slate-500/60"
-                    : "";
+                    const sameRowOrCol =
+                      selected && (selected.row === r || selected.col === c);
+                    const rowColHighlightClasses = sameRowOrCol
+                      ? "bg-slate-500/70"
+                      : "";
 
-                  const baseClasses =
-                    "flex items-center justify-center border border-slate-700 cursor-pointer select-none text-base sm:text-lg";
-                  const fixedClasses = fixed
-                    ? "bg-slate-800 text-slate-100 font-semibold"
-                    : "bg-slate-950 text-slate-100";
-                  const selectedClasses = selectedCell
-                    ? "ring-2 ring-emerald-400 z-10"
-                    : "";
-                  const invalidClasses = invalid ? "bg-rose-900/60" : "";
+                    const baseClasses =
+                      "flex items-center justify-center border border-slate-700 cursor-pointer select-none text-base sm:text-lg";
+                    const fixedClasses = fixed
+                      ? "bg-slate-800 text-slate-100 font-semibold"
+                      : "bg-slate-950 text-slate-100";
+                    const selectedClasses = selectedCell
+                      ? "ring-2 ring-emerald-400 z-10"
+                      : "";
+                    const invalidClasses = invalid ? "bg-rose-900/60" : "";
 
-                  const thickBorderClasses = [
-                    r % 3 === 0 ? "border-t-2 border-t-slate-300" : "",
-                    c % 3 === 0 ? "border-l-2 border-l-slate-300" : "",
-                    r === 8 ? "border-b-2 border-b-slate-300" : "",
-                    c === 8 ? "border-r-2 border-r-slate-300" : "",
-                  ].join(" ");
+                    const thickBorderClasses = [
+                      r % 3 === 0 ? "border-t-2 border-t-slate-300" : "",
+                      c % 3 === 0 ? "border-l-2 border-l-slate-300" : "",
+                      r === 8 ? "border-b-2 border-b-slate-300" : "",
+                      c === 8 ? "border-r-2 border-r-slate-300" : "",
+                    ].join(" ");
 
-                  return (
-                    <button
-                      key={`${r}-${c}`}
-                      type="button"
-                      onClick={() => handleCellClick(r, c)}
-                      className={`${baseClasses} ${fixedClasses} ${rowColHighlightClasses} ${selectedClasses} ${invalidClasses} ${thickBorderClasses}`}
-                    >
-                      {value !== 0 ? value : ""}
-                    </button>
-                  );
-                })
-              )}
+                    return (
+                      <button
+                        key={`${r}-${c}`}
+                        type="button"
+                        onClick={() => handleCellClick(r, c)}
+                        className={`${baseClasses} ${fixedClasses} ${rowColHighlightClasses} ${selectedClasses} ${invalidClasses} ${thickBorderClasses}`}
+                      >
+                        {value !== 0 ? value : ""}
+                      </button>
+                    );
+                  })
+                )}
               </div>
             </div>
           </div>
