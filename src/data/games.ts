@@ -22,7 +22,7 @@ import liarImg from "/liar.png";
 import memoryImg from "/memory.png";
 import colorImg from "/color.png";
 // import versusImg from "/versus.png";
-import pinballImg from "/pinball.png";
+// import pinballImg from "/pinball.png";
 import reflexesImg from "/reflexes.png";
 import ifelseImg from "/ifelse.png";
 // import moleImg from "/mole.png";
@@ -75,7 +75,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "reading", name: "나도아나운서", path: "/games/reading", image: korlangImg },
   { id: "str", name: "무기강화하기", path: "/games/str", image: swordImg }, 
   { id: "slot", name: "슬롯777", path: "/games/slot", image: slotImg },
-  { id: "pinball", name: "개발중..", path: "/games/pinball", image: pinballImg },
+  // { id: "pinball", name: "개발중..", path: "/games/pinball", image: pinballImg },
 
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg },
   { id: "wisesay", name: "명언 모음집", path: "/games/wisesay", image: wisesayImg }
