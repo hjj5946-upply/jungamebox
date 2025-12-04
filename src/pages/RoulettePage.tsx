@@ -35,15 +35,31 @@ export default function RoulettePage() {
     
     // 각 옵션의 각도
     const anglePerOption = 360 / options.length;
-    // 선택된 옵션의 중심 각도 (12시 방향 기준)
-    const selectedAngle = selectedIndex * anglePerOption + anglePerOption / 2;
+    
+    // SVG는 -90도에서 시작하므로 (12시 방향이 0도가 되도록)
+    // 선택된 옵션의 중심 각도를 SVG 좌표계 기준으로 계산
+    // index 0의 중심: -90 + anglePerOption/2
+    // index 1의 중심: -90 + anglePerOption + anglePerOption/2
+    // 일반화: -90 + selectedIndex * anglePerOption + anglePerOption/2
+    const selectedAngleInSVG = -90 + selectedIndex * anglePerOption + anglePerOption / 2;
+    
+    // 현재 회전을 0~360도 범위로 정규화
+    const normalizedRotation = rotation % 360;
     
     // 최소 회전 (2바퀴 이상)
     const minRotation = 720;
     // 추가 랜덤 회전
     const randomRotation = Math.random() * 720;
-    // 전체 회전 = 현재 회전 + 최소 회전 + 랜덤 회전 - 선택된 각도 (12시 방향으로 맞추기)
-    const totalRotation = rotation + minRotation + randomRotation + (360 - selectedAngle);
+    
+    // 목표: 선택된 옵션이 12시 방향(0도)에 오도록
+    // SVG 좌표계에서 selectedAngleInSVG가 0도(12시)에 오려면
+    // -selectedAngleInSVG만큼 회전해야 함
+    // 하지만 회전은 양수로만 증가하므로 360 - selectedAngleInSVG를 더함
+    const targetOffset = (360 - selectedAngleInSVG) % 360;
+    
+    // 전체 회전 = 현재 정규화된 회전 + 최소 회전 + 랜덤 회전 + 목표 오프셋 조정
+    const angleAdjustment = (targetOffset - normalizedRotation + 360) % 360;
+    const totalRotation = normalizedRotation + minRotation + randomRotation + angleAdjustment;
     
     setRotation(totalRotation);
     
@@ -54,6 +70,7 @@ export default function RoulettePage() {
     }, 3500);
   };
 
+  
   const addOption = () => {
     if (!inputValue.trim() || options.length >= 12) return;
     
@@ -70,6 +87,9 @@ export default function RoulettePage() {
     
     setOptions([...options, newOption]);
     setInputValue("");
+    // 옵션이 변경되면 회전 상태 리셋
+    setRotation(0);
+    setResult(null);
   };
 
   const removeOption = (id: number) => {
@@ -78,6 +98,8 @@ export default function RoulettePage() {
       return;
     }
     setOptions(options.filter((opt) => opt.id !== id));
+    // 옵션이 변경되면 회전 상태 리셋
+    setRotation(0);
     if (result && result.id === id) {
       setResult(null);
     }
@@ -136,7 +158,7 @@ export default function RoulettePage() {
                 viewBox="0 0 300 300"
                 style={{
                   transform: `rotate(${rotation}deg)`,
-                  transition: `transform 3500ms cubic-bezier(0.17, 0.67, 0.12, 0.99)`,
+                  transition: isSpinning ? `transform 3500ms cubic-bezier(0.17, 0.67, 0.12, 0.99)` : 'none',
                 }}
               >
                 {options.map((option, index) => (
