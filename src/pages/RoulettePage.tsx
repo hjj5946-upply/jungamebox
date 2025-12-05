@@ -10,10 +10,7 @@ type RouletteOption = {
 const defaultOptions: RouletteOption[] = [
   { id: 1, label: "옵션 1", color: "#3B82F6" },
   { id: 2, label: "옵션 2", color: "#10B981" },
-  { id: 3, label: "옵션 3", color: "#F59E0B" },
-  { id: 4, label: "옵션 4", color: "#EF4444" },
-  { id: 5, label: "옵션 5", color: "#8B5CF6" },
-  { id: 6, label: "옵션 6", color: "#EC4899" },
+  { id: 3, label: "옵션 3", color: "#F59E0B" }
 ];
 
 export default function RoulettePage() {
@@ -167,6 +164,22 @@ export default function RoulettePage() {
     setRotation(0);
   };
 
+  const shuffleOptions = () => {
+    if (isSpinning || options.length === 0) return;
+    
+    // Fisher-Yates 알고리즘으로 옵션 섞기
+    const shuffled = [...options];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    setOptions(shuffled);
+    // 옵션이 변경되면 회전 상태 리셋
+    setRotation(0);
+    setResult(null);
+  };
+
   // SVG path 생성 (파이 조각)
   const getSectorPath = (index: number, total: number, radius: number) => {
     const anglePerOption = 360 / total;
@@ -197,10 +210,10 @@ export default function RoulettePage() {
 
   return (
     <GameLayout title="돌려돌림판">
-      <div className="flex flex-col h-full gap-6">
+      <div className="flex flex-col h-full gap-4 pt-2 pb-4">
         {/* 룰렛 영역 */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="relative w-80 h-80">
+        <div className="flex items-center justify-center pt-2">
+          <div className="relative w-80 h-80 max-w-[90vw] max-h-[90vw]">
             {/* 포인터 (12시 방향) */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
               <div className="w-0 h-0 border-l-[25px] border-l-transparent border-r-[25px] border-r-transparent border-t-[35px] border-t-yellow-400 drop-shadow-lg"></div>
@@ -251,7 +264,7 @@ export default function RoulettePage() {
         {/* 결과 표시 */}
         {result && !isSpinning && (
           <div
-            className="text-2xl font-bold text-center py-4 px-6 rounded-lg animate-bounce"
+            className="mt-4 text-2xl font-bold text-center py-4 px-6 rounded-lg animate-bounce mx-4"
             style={{ backgroundColor: result.color, color: "white" }}
           >
             🎉 {result.label} 🎉
@@ -259,7 +272,7 @@ export default function RoulettePage() {
         )}
 
         {/* 옵션 관리 */}
-        <div className="space-y-3">
+        <div className="space-y-4 px-4 mt-4">
           {/* 옵션 추가 */}
           <div className="flex gap-2">
             <input
@@ -270,26 +283,37 @@ export default function RoulettePage() {
               placeholder="옵션 추가 (최대 12개)"
               maxLength={20}
               disabled={isSpinning || options.length >= 12}
-              className="flex-1 px-4 py-2 bg-slate-800 text-white rounded-lg placeholder-slate-500 disabled:opacity-50"
+              className="flex-1 px-4 py-3 bg-slate-800 text-white rounded-lg placeholder-slate-500 disabled:opacity-50 text-base"
             />
             <button
               onClick={addOption}
               disabled={isSpinning || options.length >= 12 || !inputValue.trim()}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base font-semibold"
             >
               추가
+            </button>
+          </div>
+
+          {/* 버튼 그룹 */}
+          <div className="flex gap-2">
+            <button
+              onClick={shuffleOptions}
+              disabled={isSpinning || options.length < 2}
+              className="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base font-semibold"
+            >
+              🔀 섞기
             </button>
             <button
               onClick={resetOptions}
               disabled={isSpinning}
-              className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base font-semibold"
             >
               리셋
             </button>
           </div>
 
           {/* 옵션 리스트 */}
-          <div className="max-h-32 overflow-y-auto space-y-2">
+          <div className="max-h-48 overflow-y-auto space-y-1.5">
             {options.map((option) => (
               <div
                 key={option.id}
@@ -297,14 +321,14 @@ export default function RoulettePage() {
                 style={{ backgroundColor: option.color + "40" }}
               >
                 <div
-                  className="w-4 h-4 rounded-full"
+                  className="w-4 h-4 rounded-full flex-shrink-0"
                   style={{ backgroundColor: option.color }}
                 ></div>
-                <span className="flex-1 text-white text-sm">{option.label}</span>
+                <span className="flex-1 text-white text-sm font-medium">{option.label}</span>
                 <button
                   onClick={() => removeOption(option.id)}
                   disabled={isSpinning || options.length <= 2}
-                  className="text-red-400 hover:text-red-300 text-sm disabled:opacity-50 transition-colors"
+                  className="text-red-400 hover:text-red-300 text-base font-bold disabled:opacity-50 transition-colors w-7 h-7 flex items-center justify-center"
                 >
                   ✕
                 </button>
@@ -314,13 +338,15 @@ export default function RoulettePage() {
         </div>
 
         {/* 회전 버튼 */}
-        <button
-          onClick={spin}
-          disabled={isSpinning || options.length === 0}
-          className="py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-xl rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          {isSpinning ? "돌리는 중..." : "룰렛 돌리기"}
-        </button>
+        <div className="px-4 mt-auto">
+          <button
+            onClick={spin}
+            disabled={isSpinning || options.length === 0}
+            className="w-full py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-xl rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {isSpinning ? "돌리는 중..." : "룰렛 돌리기"}
+          </button>
+        </div>
       </div>
     </GameLayout>
   );
