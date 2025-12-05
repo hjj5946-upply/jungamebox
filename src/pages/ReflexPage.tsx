@@ -36,7 +36,14 @@ const BAD_WORDS = [
   "새끼",
   "잠지",
   "오랄",
-  "사까"
+  "사까",
+  "꼬추",
+  "꼬추년",
+  "창녀",
+  "개새끼",
+  "씨빨",
+  "씹쌔끼",
+  "오랄"
 ];
 
 export default function ReflexPage() {
@@ -168,6 +175,85 @@ export default function ReflexPage() {
       <div className="flex flex-col">
         {showRanking ? (
           <>
+            {/* 세계에서 가장 빠른 반사신경 순위 */}
+            <div className="mb-4 p-4 rounded-xl bg-gradient-to-br from-amber-900/30 to-orange-900/30 border border-amber-700/50">
+              <h3 className="text-amber-200 text-sm font-bold mb-3 text-center">
+                🌍 세계에서 가장 빠른 반사신경 순위
+              </h3>
+              <div className="max-h-64 overflow-y-auto space-y-2 pr-2">
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-2xl">🥇</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">1위. 고양이</div>
+                    <div className="text-amber-300/80 text-xs">20 ~ 60 ms (위협 회피, 착지 반사, 먹이 포획)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-2xl">🥈</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">2위. 사마귀</div>
+                    <div className="text-amber-300/80 text-xs">15 ~ 70 ms (먹이 포획 - 사냥팔 발사)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-2xl">🥉</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">3위. 뱀 (독사류)</div>
+                    <div className="text-amber-300/80 text-xs">44 ~ 70 ms (공격 및 물기 반사)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-lg font-bold text-amber-200 w-6">4</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">4위. 집파리 / 모기</div>
+                    <div className="text-amber-300/80 text-xs">30 ~ 50 ms (기류 감지 후 탈출 반사)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-lg font-bold text-amber-200 w-6">5</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">5위. 개 (민첩한 품종)</div>
+                    <div className="text-amber-300/80 text-xs">80 ~ 200 ms (던진 물체 포획, 위협 감지 및 반응)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-lg font-bold text-amber-200 w-6">6</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">6위. 토끼</div>
+                    <div className="text-amber-300/80 text-xs">약 100 ms (포식자 회피를 위한 도약 및 방향 전환)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-lg font-bold text-amber-200 w-6">7</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">7위. 다람쥐</div>
+                    <div className="text-amber-300/80 text-xs">약 100 ~ 150 ms (빠른 경계 및 움직임)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-lg font-bold text-amber-200 w-6">8</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">8위. 인간 (최상급 선수)</div>
+                    <div className="text-amber-300/80 text-xs">100 ~ 200 ms (시각/청각 반응 - e스포츠, F1 등)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-lg font-bold text-amber-200 w-6">9</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">9위. 인간 (평균)</div>
+                    <div className="text-amber-300/80 text-xs">250 ~ 500 ms (시각/청각 반응 - 일반적인 측정)</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-2.5 rounded-lg bg-amber-800/20 border border-amber-700/30">
+                  <div className="text-lg font-bold text-amber-200 w-6">10</div>
+                  <div className="flex-1">
+                    <div className="text-amber-100 font-semibold text-sm">10위. 거북이 (일부 종)</div>
+                    <div className="text-amber-300/80 text-xs">500 ms 이상 (위협 시 목과 팔다리를 껍데기 안으로 움츠리는 반사)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-slate-100 text-sm font-semibold">
                 🏆 반사신경 랭킹 (상위 10개)
