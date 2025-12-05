@@ -128,8 +128,8 @@ export default function RoulettePage() {
     if (!inputValue.trim() || options.length >= 12) return;
     
     const colors = [
-      "#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899",
-      "#06B6D4", "#84CC16", "#F97316", "#DC2626", "#9333EA", "#DB2777"
+      "#3B82F6", "#10B981", "#F59E0B", "#fa6161", "#8B5CF6", "#EC4899",
+      "#06B6D4", "#84CC16", "#F97316", "#ad1313", "#9333EA", "#DB2777"
     ];
     
     const newOption: RouletteOption = {
@@ -211,12 +211,12 @@ export default function RoulettePage() {
   return (
     <GameLayout title="돌려돌림판">
       <div className="flex flex-col h-full gap-4 pt-2 pb-4">
-        {/* 룰렛 영역 */}
+        {/* 룰렛 영역 */} 
         <div className="flex items-center justify-center pt-2">
           <div className="relative w-80 h-80 max-w-[90vw] max-h-[90vw]">
             {/* 포인터 (12시 방향) */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
-              <div className="w-0 h-0 border-l-[25px] border-l-transparent border-r-[25px] border-r-transparent border-t-[35px] border-t-yellow-400 drop-shadow-lg"></div>
+              <div className="w-0 h-0 border-l-[22px] border-l-transparent border-r-[22px] border-r-transparent border-t-[35px] border-t-red-500 drop-shadow-lg"></div>
             </div>
 
             {/* 룰렛 원판 */}
