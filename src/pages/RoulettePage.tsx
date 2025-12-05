@@ -22,6 +22,7 @@ export default function RoulettePage() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [inputValue, setInputValue] = useState("");
+  const [shouldAnimate, setShouldAnimate] = useState(false);
 
   const spin = () => {
     if (isSpinning || options.length === 0) return;
@@ -29,45 +30,100 @@ export default function RoulettePage() {
     setIsSpinning(true);
     setResult(null);
 
-    // 랜덤으로 선택된 옵션
+    // 랜덤으로 선택된 옵션 인덱스
     const selectedIndex = Math.floor(Math.random() * options.length);
-    const selectedOption = options[selectedIndex];
     
     // 각 옵션의 각도
     const anglePerOption = 360 / options.length;
     
-    // SVG는 -90도에서 시작하므로 (12시 방향이 0도가 되도록)
-    // 선택된 옵션의 중심 각도를 SVG 좌표계 기준으로 계산
-    // index 0의 중심: -90 + anglePerOption/2
-    // index 1의 중심: -90 + anglePerOption + anglePerOption/2
-    // 일반화: -90 + selectedIndex * anglePerOption + anglePerOption/2
-    const selectedAngleInSVG = -90 + selectedIndex * anglePerOption + anglePerOption / 2;
+    // 선택된 옵션의 중심 각도 (SVG 좌표계: -90도가 12시 방향)
+    // 각 섹터의 중심: -90 + index * anglePerOption + anglePerOption/2
+    const selectedAngleCenter = -90 + selectedIndex * anglePerOption + anglePerOption / 2;
     
     // 현재 회전을 0~360도 범위로 정규화
-    const normalizedRotation = rotation % 360;
+    const currentNormalized = ((rotation % 360) + 360) % 360;
     
     // 최소 회전 (2바퀴 이상)
-    const minRotation = 720;
-    // 추가 랜덤 회전
-    const randomRotation = Math.random() * 720;
+    const minFullRotations = 2;
+    // 추가 랜덤 회전 (0~2바퀴)
+    const randomFullRotations = Math.random() * 2;
+    const totalFullRotations = minFullRotations + randomFullRotations;
     
-    // 목표: 선택된 옵션이 12시 방향(0도)에 오도록
-    // SVG 좌표계에서 selectedAngleInSVG가 0도(12시)에 오려면
-    // -selectedAngleInSVG만큼 회전해야 함
-    // 하지만 회전은 양수로만 증가하므로 360 - selectedAngleInSVG를 더함
-    const targetOffset = (360 - selectedAngleInSVG) % 360;
+    // 목표: 선택된 옵션의 중심이 12시 방향(0도)에 오도록
+    // selectedAngleCenter가 0도(12시)에 오려면 -selectedAngleCenter만큼 회전 필요
+    // 하지만 회전은 양수로만 증가하므로, selectedAngleCenter를 0~360 범위로 정규화
+    const normalizedSelectedAngle = ((selectedAngleCenter % 360) + 360) % 360;
+    // 목표 오프셋: 선택된 각도를 0도로 만들기 위해 필요한 회전
+    const targetOffset = (360 - normalizedSelectedAngle) % 360;
     
-    // 전체 회전 = 현재 정규화된 회전 + 최소 회전 + 랜덤 회전 + 목표 오프셋 조정
-    const angleAdjustment = (targetOffset - normalizedRotation + 360) % 360;
-    const totalRotation = normalizedRotation + minRotation + randomRotation + angleAdjustment;
+    // 현재 정규화된 각도에서 목표 오프셋까지의 차이
+    let angleDiff = targetOffset - currentNormalized;
+    if (angleDiff < 0) angleDiff += 360;
     
-    setRotation(totalRotation);
+    // 전체 회전 = 현재 회전 + 전체 바퀴 수 + 목표 각도 조정
+    const totalRotation = rotation + totalFullRotations * 360 + angleDiff;
+    
+    // transition을 리셋하고 애니메이션 시작
+    setShouldAnimate(false);
+    // 다음 프레임에서 애니메이션 시작 (transition이 제대로 적용되도록)
+    setTimeout(() => {
+      setShouldAnimate(true);
+      setRotation(totalRotation);
+    }, 10);
     
     // 애니메이션 시간 (3.5초)
+    const animationDuration = 3500;
     setTimeout(() => {
-      setResult(selectedOption);
+      // 회전 후 최종 각도에서 실제로 화살표가 가리키는 옵션 계산
+      // 룰렛이 totalRotation만큼 회전했으므로, 화살표는 상대적으로 -totalRotation만큼 이동한 것처럼 보임
+      // 화살표는 12시 방향(-90도)을 가리키므로, 룰렛이 회전한 후 화살표가 가리키는 각도는:
+      // 원래 화살표 위치(-90도)에서 룰렛의 회전을 빼면 됨
+      const finalRotation = ((totalRotation % 360) + 360) % 360;
+      
+      // 화살표가 가리키는 각도 (SVG 좌표계, -90도가 12시 방향)
+      // 룰렛이 시계방향으로 회전하면, 화살표는 반시계방향으로 상대적으로 이동
+      const arrowAngle = -90 - finalRotation;
+      
+      // 각 섹터의 각도
+      const anglePerOption = 360 / options.length;
+      
+      // 화살표 각도를 0~360 범위로 정규화
+      const normalizedArrowAngle = ((arrowAngle % 360) + 360) % 360;
+      
+      // 각 섹터의 시작 각도는 -90 + index * anglePerOption
+      // 이를 0~360 범위로 정규화하면: ((-90 + index * anglePerOption) % 360 + 360) % 360
+      // 화살표가 가리키는 각도가 어느 섹터에 속하는지 계산
+      let actualIndex = 0;
+      for (let i = 0; i < options.length; i++) {
+        const sectorStart = ((-90 + i * anglePerOption) % 360 + 360) % 360;
+        const sectorEnd = ((-90 + (i + 1) * anglePerOption) % 360 + 360) % 360;
+        
+        // 각도가 섹터 범위에 속하는지 확인
+        if (sectorStart < sectorEnd) {
+          // 일반적인 경우
+          if (normalizedArrowAngle >= sectorStart && normalizedArrowAngle < sectorEnd) {
+            actualIndex = i;
+            break;
+          }
+        } else {
+          // 섹터가 360도를 넘어가는 경우 (예: 350도 ~ 30도)
+          if (normalizedArrowAngle >= sectorStart || normalizedArrowAngle < sectorEnd) {
+            actualIndex = i;
+            break;
+          }
+        }
+      }
+      
+      // 실제로 화살표가 가리키는 옵션
+      const actualOption = options[actualIndex];
+      
+      setResult(actualOption);
       setIsSpinning(false);
-    }, 3500);
+      // 애니메이션 완료 후 약간의 지연을 두고 transition 비활성화
+      setTimeout(() => {
+        setShouldAnimate(false);
+      }, 100);
+    }, animationDuration);
   };
 
   
@@ -158,7 +214,7 @@ export default function RoulettePage() {
                 viewBox="0 0 300 300"
                 style={{
                   transform: `rotate(${rotation}deg)`,
-                  transition: isSpinning ? `transform 3500ms cubic-bezier(0.17, 0.67, 0.12, 0.99)` : 'none',
+                  transition: shouldAnimate ? `transform 3500ms cubic-bezier(0.17, 0.67, 0.12, 0.99)` : 'none',
                 }}
               >
                 {options.map((option, index) => (
