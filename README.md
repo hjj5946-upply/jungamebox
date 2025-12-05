@@ -61,7 +61,7 @@
 
 | 구분 | 사용 기술 |
 |------|------------|
-| Frontend | React 19, TypeScript, Vite, planck.js |
+| Frontend | React 19, TypeScript, Vite, planck.js, Canvas |
 | UI Framework | Tailwind CSS |
 | Routing | React Router DOM v7 |
 | 배포 | GitHub Pages | BaaS(Supabase)

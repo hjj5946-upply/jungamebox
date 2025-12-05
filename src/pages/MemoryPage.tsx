@@ -26,9 +26,9 @@ const padColors: { base: string; glow: string }[] = [
 ];
 
 // 속도 파라미터
-const BASE_SHOW_MS = 650;
-const BASE_PAUSE_MS = 150;
-const MIN_SHOW_MS  = 320;
+const BASE_SHOW_MS = 450;
+const BASE_PAUSE_MS = 100;
+const MIN_SHOW_MS  = 250;
 const SPEEDUP_PER_ROUND = 20;
 
 export default function MemoryPage() {
@@ -95,10 +95,9 @@ export default function MemoryPage() {
     lockRef.current = false;
   };
 
-  /** 패드수가 많을수록 시작 속도 약간 느리게 */
+  /** 모든 패드 수에서 동일한 속도 */
   const computeShowMs = (len: number) => {
-    const padOffset = padCount === 4 ? 0 : padCount === 6 ? 80 : 140;
-    return Math.max(MIN_SHOW_MS, BASE_SHOW_MS + padOffset - (len - 1) * SPEEDUP_PER_ROUND);
+    return Math.max(MIN_SHOW_MS, BASE_SHOW_MS - (len - 1) * SPEEDUP_PER_ROUND);
   };
 
   const showSequence = async (s: Pad[], len: number) => {
@@ -163,7 +162,7 @@ export default function MemoryPage() {
                      "scale-[0.85]";
 
   return (
-    <GameLayout title="기억력 게임">
+    <GameLayout title="기억력 테스트">
       <div className="flex flex-col gap-3 p-3 items-center">
         {/* 상단 바: 라운드만 표시, 우측 패드 선택 */}
         <div className="w-full max-w-md flex items-center justify-between">

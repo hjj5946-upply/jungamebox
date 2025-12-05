@@ -166,14 +166,22 @@ export default function MathPage() {
   return (
     <GameLayout title="암산의달인">
       <div className="flex flex-col gap-3">
+        {/* 남은 시간 강조 표시 */}
+        <div className="flex items-center justify-center">
+          <div
+            className={`text-3xl font-extrabold drop-shadow-sm ${
+              timeLeft <= 10 ? "text-red-400" : "text-emerald-400"
+            }`}
+          >
+            ⏱️ {timeLeft}s
+          </div>
+        </div>
+
         {/* 상단 요약 / 컨트롤 */}
         <div className="flex items-center justify-between gap-3 text-[12px] text-slate-200">
           <div className="flex flex-col gap-1">
             <span>
-              남은 시간:{" "}
-              <b className={timeLeft <= 10 ? "text-red-400" : "text-emerald-400"}>
-                {timeLeft}s
-              </b>
+              연속 정답: <b>{streak}</b> (최고 {bestStreak})
             </span>
             <span>
               문제 수: <b>{total}</b> / 정답: <b>{correct}</b> / 정답률:{" "}
@@ -181,9 +189,6 @@ export default function MathPage() {
             </span>
           </div>
           <div className="flex flex-col items-end gap-1">
-            <span>
-              연속 정답: <b>{streak}</b> (최고 {bestStreak})
-            </span>
             {phase !== "playing" ? (
               <button
                 onClick={startGame}
