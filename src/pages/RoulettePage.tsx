@@ -233,8 +233,7 @@ export default function RoulettePage() {
               >
                 {isSpinning ? (
                   <>
-                    <span className="text-xs">돌리는</span>
-                    <span className="text-xs">중...</span>
+                    <span className="text-xs">...</span>
                   </>
                 ) : (
                   <>
