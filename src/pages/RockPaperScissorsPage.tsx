@@ -2,12 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import GameLayout from "../layouts/GameLayout";
 
 type Choice = "rock" | "paper" | "scissors";
-type Result = "win" | "lose" | "draw" | null;
 
 export default function RockPaperScissorsPage() {
-  const [playerChoice, setPlayerChoice] = useState<Choice | null>(null);
-  const [computerChoice, setComputerChoice] = useState<Choice>("rock");
-  const [result, setResult] = useState<Result>(null);
+  const [currentChoice, setCurrentChoice] = useState<Choice>("rock");
+  const [result, setResult] = useState<Choice | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const cycleIntervalRef = useRef<number | null>(null);
 
@@ -17,16 +15,16 @@ export default function RockPaperScissorsPage() {
     scissors: { emoji: "✌️", name: "찌" },
   };
 
-  // 컴퓨터 선택 순환 효과
+  // 자동 순환 효과 (결과 없을 때)
   useEffect(() => {
-    if (!playerChoice) {
+    if (!result && !isPlaying) {
       const options: Choice[] = ["rock", "paper", "scissors"];
       let index = 0;
       
       cycleIntervalRef.current = window.setInterval(() => {
-        setComputerChoice(options[index]);
+        setCurrentChoice(options[index]);
         index = (index + 1) % 3;
-      }, 100);
+      }, 200);
     }
 
     return () => {
@@ -34,7 +32,7 @@ export default function RockPaperScissorsPage() {
         clearInterval(cycleIntervalRef.current);
       }
     };
-  }, [playerChoice]);
+  }, [result, isPlaying]);
 
   const getRandomChoice = (): Choice => {
     const options: Choice[] = ["rock", "paper", "scissors"];
@@ -42,130 +40,91 @@ export default function RockPaperScissorsPage() {
     return options[randomIndex];
   };
 
-  const determineWinner = (player: Choice, computer: Choice): Result => {
-    if (player === computer) return "draw";
-    if (
-      (player === "rock" && computer === "scissors") ||
-      (player === "paper" && computer === "rock") ||
-      (player === "scissors" && computer === "paper")
-    ) {
-      return "win";
-    }
-    return "lose";
-  };
-
-  const handleChoice = (choice: Choice) => {
+  const handlePlay = () => {
     if (isPlaying) return;
     
     setIsPlaying(true);
-    setPlayerChoice(choice);
     
-    // 순환 멈추고 즉시 컴퓨터 선택 확정
+    // 순환 멈추기
     if (cycleIntervalRef.current) {
       clearInterval(cycleIntervalRef.current);
     }
+
+    // 빠르게 순환하는 효과
+    const options: Choice[] = ["rock", "paper", "scissors"];
+    let index = 0;
+    let count = 0;
     
-    const finalComputerChoice = getRandomChoice();
-    setComputerChoice(finalComputerChoice);
-    
-    // 결과 판정
-    setTimeout(() => {
-      const gameResult = determineWinner(choice, finalComputerChoice);
-      setResult(gameResult);
-      setIsPlaying(false);
-    }, 500);
+    const fastCycle = setInterval(() => {
+      setCurrentChoice(options[index]);
+      index = (index + 1) % 3;
+      count++;
+      
+      if (count > 15) {
+        clearInterval(fastCycle);
+        
+        // 최종 결과 확정
+        const finalChoice = getRandomChoice();
+        setCurrentChoice(finalChoice);
+        setResult(finalChoice);
+        setIsPlaying(false);
+      }
+    }, 100);
   };
 
   const reset = () => {
-    setPlayerChoice(null);
-    setComputerChoice("rock");
     setResult(null);
+    setCurrentChoice("rock");
     setIsPlaying(false);
   };
 
-  const getResultText = () => {
-    if (!result) return "";
-    if (result === "win") return "🎉 당신이 이겼습니다!";
-    if (result === "lose") return "😢 컴퓨터가 이겼습니다!";
-    return "🤝 비겼습니다!";
-  };
-
-  const getResultColor = () => {
-    if (!result) return "text-white";
-    if (result === "win") return "text-green-400";
-    if (result === "lose") return "text-red-400";
-    return "text-yellow-400";
-  };
-
   return (
-    <GameLayout title="안내면진거">
-      <div className="flex flex-col items-center justify-center h-full gap-8">
-        {/* 컴퓨터 선택 */}
-        <div className="text-center">
-          <div className="text-slate-400 text-sm mb-2">컴퓨터</div>
-          <div className={`w-32 h-32 bg-slate-800 rounded-2xl flex items-center justify-center text-7xl transition-all ${
-            !playerChoice ? "animate-pulse" : ""
+    <GameLayout title="가위바위보">
+      <div className="flex flex-col h-full">
+        
+        {/* 메인 화면 - 클릭 영역 */}
+        <div 
+          className="relative flex-1 bg-gradient-to-b from-slate-800 to-slate-900 cursor-pointer flex items-center justify-center"
+          onClick={result ? reset : handlePlay}
+        >
+          {/* 손모양 */}
+          <div className={`text-center transition-all ${
+            isPlaying ? "scale-110" : result ? "scale-125" : ""
           }`}>
-            {choices[computerChoice].emoji}
+            <div className={`text-[12rem] leading-none ${
+              !result && !isPlaying ? "animate-pulse" : ""
+            }`}>
+              {choices[currentChoice].emoji}
+            </div>
+            
+            {result && (
+              <div className="text-white text-5xl font-bold mt-8 animate-bounce">
+                {choices[result].name}
+              </div>
+            )}
           </div>
-          {playerChoice && (
-            <div className="text-white text-lg mt-2">
-              {choices[computerChoice].name}
+
+          {/* 안내 텍스트 */}
+          {!result && !isPlaying && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-32 text-slate-500 text-xl">
+                화면을 클릭하세요
+              </div>
+            </div>
+          )}
+
+          {isPlaying && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-32 text-slate-400 text-xl pointer-events-none">
+              선택 중...
+            </div>
+          )}
+
+          {result && (
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-slate-400 text-sm pointer-events-none">
+              화면을 클릭하여 다시하기
             </div>
           )}
         </div>
-
-        {/* 결과 */}
-        {result && (
-          <div className={`text-2xl font-bold ${getResultColor()} animate-bounce`}>
-            {getResultText()}
-          </div>
-        )}
-
-        {/* 플레이어 선택 */}
-        <div className="text-center">
-          <div className="text-slate-400 text-sm mb-2">나</div>
-          <div className="w-32 h-32 bg-slate-800 rounded-2xl flex items-center justify-center text-7xl">
-            {playerChoice ? choices[playerChoice].emoji : "❓"}
-          </div>
-          {playerChoice && (
-            <div className="text-white text-lg mt-2">
-              {choices[playerChoice].name}
-            </div>
-          )}
-        </div>
-
-        {/* 선택 버튼 */}
-        {!playerChoice ? (
-          <div className="flex gap-4">
-            <button
-              onClick={() => handleChoice("rock")}
-              className="w-20 h-20 bg-blue-600 hover:bg-blue-700 rounded-xl text-4xl flex items-center justify-center transition-colors"
-            >
-              ✊
-            </button>
-            <button
-              onClick={() => handleChoice("paper")}
-              className="w-20 h-20 bg-blue-600 hover:bg-blue-700 rounded-xl text-4xl flex items-center justify-center transition-colors"
-            >
-              ✋
-            </button>
-            <button
-              onClick={() => handleChoice("scissors")}
-              className="w-20 h-20 bg-blue-600 hover:bg-blue-700 rounded-xl text-4xl flex items-center justify-center transition-colors"
-            >
-              ✌️
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={reset}
-            disabled={isPlaying}
-            className="px-8 py-4 bg-slate-600 hover:bg-slate-700 disabled:bg-slate-700 text-white font-bold rounded-xl"
-          >
-            다시하기
-          </button>
-        )}
       </div>
     </GameLayout>
   );
