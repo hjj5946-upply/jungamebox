@@ -8,27 +8,53 @@ export default function CoinFlipPage() {
 
   const flipCoin = () => {
     if (isFlipping) return; // 던지는 중이면 무시
-    
+
     setIsFlipping(true);
     setResult(null);
 
-    // 애니메이션 시간
+    // 애니메이션 시간 (1.5초)
     setTimeout(() => {
       const random = Math.random() < 0.5 ? "앞면" : "뒷면";
       setResult(random);
       setIsFlipping(false);
-    }, 1000);
+    }, 1500);
   };
 
   return (
     <GameLayout title="앞?뒤?">
+      <style>{`
+        @keyframes coinFlip {
+          0% {
+            transform: translateY(0) rotateY(0deg);
+          }
+          25% {
+            transform: translateY(-120px) rotateY(900deg);
+          }
+          50% {
+            transform: translateY(-100px) rotateY(1800deg);
+          }
+          75% {
+            transform: translateY(-80px) rotateY(2700deg);
+          }
+          100% {
+            transform: translateY(0) rotateY(3600deg);
+          }
+        }
+
+        .coin-flip-animation {
+          animation: coinFlip 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+          transform-style: preserve-3d;
+        }
+      `}</style>
+
       <div className="flex flex-col items-center justify-center h-full gap-8">
         {/* 코인 영역 */}
-        <div 
+        <div
           onClick={flipCoin}
-          className={`relative w-48 h-48 cursor-pointer hover:scale-105 transition-transform ${
-            isFlipping ? "animate-spin" : ""
+          className={`relative w-48 h-48 cursor-pointer hover:scale-110 transition-transform ${
+            isFlipping ? "coin-flip-animation" : ""
           }`}
+          style={{ perspective: "1000px" }}
         >
           <img
             src={coinImage}
@@ -36,8 +62,12 @@ export default function CoinFlipPage() {
             className={`w-full h-full object-contain transition-transform duration-500 ${
               result === "뒷면" ? "scale-x-[-1]" : ""
             }`}
+            style={{
+              filter: isFlipping ? "brightness(1.2)" : "brightness(1)",
+              transition: "filter 0.3s"
+            }}
           />
-          {!result && (
+          {!result && !isFlipping && (
             <div className="absolute inset-0 flex items-center justify-center text-6xl font-bold text-white drop-shadow-lg pointer-events-none">
               ?
             </div>
@@ -46,7 +76,7 @@ export default function CoinFlipPage() {
 
         {/* 결과 텍스트 */}
         {result && !isFlipping && (
-          <div className="text-2xl font-bold text-white animate-bounce">
+          <div className="text-3xl font-bold text-white animate-bounce">
             {result}!
           </div>
         )}
