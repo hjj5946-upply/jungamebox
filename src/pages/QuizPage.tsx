@@ -8,7 +8,7 @@ type QuizStage = "SELECT" | "PLAY" | "RESULT";
 
 // 난이도별 타이머 시간 설정 (초 단위)
 const TIMER_DURATION: { [key: string]: number } = {
-  "하": 7, 
+  "하": 10, 
   "중": 10,
   "상": 20,
 };
@@ -131,6 +131,23 @@ export default function QuizPage() {
   // ==================================================================
   // 🖼️ 렌더링 함수
   // ==================================================================
+
+  // 점수에 따른 설명 텍스트 반환
+  const getScoreMessage = (score: number): string => {
+    if (score === QUESTION_COUNT) {
+      return "당신은 진정한 퀴즈 마스터입니다! 🏆 완벽한 실력으로 모든 문제를 정복하셨네요. 정말 대단합니다!";
+    } else if (score >= 8) {
+      return "훌륭한 실력이에요! 🎯 거의 만점에 가까운 점수네요. 조금만 더 노력하면 만점도 가능할 것 같아요!";
+    } else if (score >= 6) {
+      return "괜찮은 점수예요! 👍 평균 이상의 실력을 보여주셨네요. 조금만 더 집중하면 더 좋은 결과를 낼 수 있을 거예요.";
+    } else if (score >= 4) {
+      return "아쉽네요... 😅 좀 더 공부하고 다시 도전해보세요. 실력 향상의 여지가 충분히 있어요!";
+    } else if (score >= 2) {
+      return "음... 이 정도면 좀 심각한데요? 😂 혹시 운이 없었나요? 아니면 정말 모르는 건가요? 다시 한 번 도전해보세요!";
+    } else {
+      return "이건 좀... 😱 정말로 이렇게 낮은 점수가 나올 수 있나요? 혹시 눈을 감고 찍으신 건 아니죠? 다시 한 번 진지하게 도전해보세요!";
+    }
+  };
 
   // ------------------------------------------------------------------
   // Stage 1: 주제 및 난이도 선택 화면 
@@ -257,6 +274,13 @@ export default function QuizPage() {
             </p>
             <p className="text-xl text-slate-400">
                 / {QUESTION_COUNT}
+            </p>
+        </div>
+
+        {/* 점수에 따른 설명 */}
+        <div className="w-full max-w-md mb-6 p-6 bg-slate-800 rounded-xl shadow-lg">
+            <p className="text-lg text-center leading-relaxed">
+                {getScoreMessage(score)}
             </p>
         </div>
 
