@@ -138,3 +138,6 @@
 **주요 키워드:** 음료내기, 로또번호, 로또번호생성, 밸런스월드컵, 밸런스게임, 라이어게임, 제비뽑기, 무기강화하기, 강화하기, 슬롯머신, 돌려돌림판, 룰렛, 주사위, 가위바위보, 반사신경, 타이밍캐치, 핀볼
 
 **기술 키워드:** React Game, Mini Game WebApp, J GameBox, Korean Gamebox, Free Web Games, React Tailwind Project, PWA Game
+
+## env
+로컬 실행 시 .env파일 생성 후 supabase 키 설정
