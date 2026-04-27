@@ -31,8 +31,8 @@ export default function RoulettePage() {
     const anglePerOption = 360 / options.length;
     const selectedAngleCenter = -90 + selectedIndex * anglePerOption + anglePerOption / 2;
     const currentNormalized = ((rotation % 360) + 360) % 360;
-    const minFullRotations = 2;
-    const randomFullRotations = Math.random() * 2;
+    const minFullRotations = 3;
+    const randomFullRotations = Math.random() * 5;
     const totalFullRotations = minFullRotations + randomFullRotations;
     const normalizedSelectedAngle = ((selectedAngleCenter % 360) + 360) % 360;
     const targetOffset = (360 - normalizedSelectedAngle) % 360;
