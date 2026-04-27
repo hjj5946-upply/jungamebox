@@ -12,19 +12,8 @@ const defaultOptions: RouletteOption[] = [
   { id: 2, label: "옵션 2", color: "#10B981" }
 ];
 
-const getRandomIndex = (max: number): number => {
-  const array = new Uint32Array(1);
-  crypto.getRandomValues(array);
-  return array[0] % max;
-};
-
-const getCryptoRandom = (): number => {
-  const array = new Uint32Array(1);
-  crypto.getRandomValues(array);
-  return array[0] / (0xFFFFFFFF + 1);
-};
-
 export default function RoulettePage() {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [options, setOptions] = useState<RouletteOption[]>(defaultOptions);
   const [customCount, setCustomCount] = useState(0);
   const [result, setResult] = useState<RouletteOption | null>(null);
@@ -32,47 +21,73 @@ export default function RoulettePage() {
   const [rotation, setRotation] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [shouldAnimate, setShouldAnimate] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const spin = () => {
     if (isSpinning || options.length === 0) return;
     setIsSpinning(true);
     setResult(null);
-
-    const selectedIndex = getRandomIndex(options.length);
-    const selectedOption = options[selectedIndex];
+    
+    const selectedIndex = Math.floor(Math.random() * options.length);
     const anglePerOption = 360 / options.length;
     const selectedAngleCenter = -90 + selectedIndex * anglePerOption + anglePerOption / 2;
     const currentNormalized = ((rotation % 360) + 360) % 360;
-    const totalFullRotations = 2 + getCryptoRandom() * 2;
+    const minFullRotations = 2;
+    const randomFullRotations = Math.random() * 2;
+    const totalFullRotations = minFullRotations + randomFullRotations;
     const normalizedSelectedAngle = ((selectedAngleCenter % 360) + 360) % 360;
     const targetOffset = (360 - normalizedSelectedAngle) % 360;
     let angleDiff = targetOffset - currentNormalized;
     if (angleDiff < 0) angleDiff += 360;
     const totalRotation = rotation + totalFullRotations * 360 + angleDiff;
-
+    
     setShouldAnimate(false);
     setTimeout(() => {
       setShouldAnimate(true);
       setRotation(totalRotation);
     }, 10);
-
+    
+    const animationDuration = 3500;
     setTimeout(() => {
-      setResult(selectedOption);
+      const finalRotation = ((totalRotation % 360) + 360) % 360;
+      const arrowAngle = -90 - finalRotation;
+      const anglePerOption = 360 / options.length;
+      const normalizedArrowAngle = ((arrowAngle % 360) + 360) % 360;
+      
+      let actualIndex = 0;
+      for (let i = 0; i < options.length; i++) {
+        const sectorStart = ((-90 + i * anglePerOption) % 360 + 360) % 360;
+        const sectorEnd = ((-90 + (i + 1) * anglePerOption) % 360 + 360) % 360;
+        
+        if (sectorStart < sectorEnd) {
+          if (normalizedArrowAngle >= sectorStart && normalizedArrowAngle < sectorEnd) {
+            actualIndex = i;
+            break;
+          }
+        } else {
+          if (normalizedArrowAngle >= sectorStart || normalizedArrowAngle < sectorEnd) {
+            actualIndex = i;
+            break;
+          }
+        }
+      }
+      
+      const actualOption = options[actualIndex];
+      setResult(actualOption);
       setIsSpinning(false);
-      setTimeout(() => setShouldAnimate(false), 100);
-    }, 3500);
+      setTimeout(() => {
+        setShouldAnimate(false);
+      }, 100);
+    }, animationDuration);
   };
-
+  
   const addOption = () => {
-    if (isSpinning) return;
     if (!inputValue.trim() || options.length >= 12) return;
-
+    
     const colors = [
       "#ad1313", "#10B981", "#F59E0B", "#fa6161", "#8B5CF6", "#EC4899",
       "#06B6D4", "#84CC16", "#F97316", "#3B82F6", "#9333EA", "#DB2777"
     ];
-
+    
     if (customCount < 2) {
       const updatedOptions = [...options];
       updatedOptions[customCount] = {
@@ -89,7 +104,7 @@ export default function RoulettePage() {
       };
       setOptions([...options, newOption]);
     }
-
+    
     setInputValue("");
     setRotation(0);
     setResult(null);
@@ -100,15 +115,11 @@ export default function RoulettePage() {
       alert("최소 2개의 옵션이 필요합니다!");
       return;
     }
-
-    const removedOption = options.find(opt => opt.id === id);
-    if (removedOption && (removedOption.id === 1 || removedOption.id === 2)) {
-      setCustomCount(prev => Math.max(0, prev - 1));
-    }
-
     setOptions(options.filter((opt) => opt.id !== id));
     setRotation(0);
-    if (result && result.id === id) setResult(null);
+    if (result && result.id === id) {
+      setResult(null);
+    }
   };
 
   const resetOptions = () => {
@@ -120,11 +131,13 @@ export default function RoulettePage() {
 
   const shuffleOptions = () => {
     if (isSpinning || options.length === 0) return;
+    
     const shuffled = [...options];
     for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = getRandomIndex(i + 1);
+      const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
+    
     setOptions(shuffled);
     setRotation(0);
     setResult(null);
@@ -134,11 +147,14 @@ export default function RoulettePage() {
     const anglePerOption = 360 / total;
     const startAngle = (index * anglePerOption - 90) * (Math.PI / 180);
     const endAngle = ((index + 1) * anglePerOption - 90) * (Math.PI / 180);
+    
     const x1 = radius + radius * Math.cos(startAngle);
     const y1 = radius + radius * Math.sin(startAngle);
     const x2 = radius + radius * Math.cos(endAngle);
     const y2 = radius + radius * Math.sin(endAngle);
+    
     const largeArcFlag = anglePerOption > 180 ? 1 : 0;
+    
     return `M ${radius} ${radius} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
   };
 
@@ -210,7 +226,9 @@ export default function RoulettePage() {
                   }
                 `}
               >
-                {isSpinning ? <span className="text-xs">...</span> : (
+                {isSpinning ? (
+                  <span className="text-xs">...</span>
+                ) : (
                   <>
                     <span className="text-xl">▶</span>
                     <span className="text-xs mt-0.5">START</span>
@@ -233,8 +251,8 @@ export default function RoulettePage() {
         <div className="space-y-4 px-4 mt-4">
           <div className="flex gap-2">
             <input
-              ref={inputRef}
               type="text"
+              ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && addOption()}
