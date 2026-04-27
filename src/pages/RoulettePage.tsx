@@ -399,8 +399,8 @@ export default function RoulettePage() {
     if (!inputValue.trim() || options.length >= 12) return;
 
     const colors = [
-      "#3B82F6", "#10B981", "#F59E0B", "#fa6161", "#8B5CF6", "#EC4899",
-      "#06B6D4", "#84CC16", "#F97316", "#ad1313", "#9333EA", "#DB2777"
+      "#ad1313", "#10B981", "#F59E0B", "#fa6161", "#8B5CF6", "#EC4899",
+      "#06B6D4", "#84CC16", "#F97316", "#3B82F6", "#9333EA", "#DB2777"
     ];
 
     if (customCount < 2) {
