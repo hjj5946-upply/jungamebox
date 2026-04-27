@@ -139,5 +139,8 @@
 
 **기술 키워드:** React Game, Mini Game WebApp, J GameBox, Korean Gamebox, Free Web Games, React Tailwind Project, PWA Game
 
+## npm
+npm i -D @types/react @types/react-dom
+
 ## env
 로컬 실행 시 .env파일 생성 후 supabase 키 설정
