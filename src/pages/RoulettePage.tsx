@@ -369,6 +369,7 @@ export default function RoulettePage() {
 
     // ✅ selectedIndex 여기서 한 번만 결정
     const selectedIndex = getRandomIndex(options.length);
+    const selectedOption = options[selectedIndex];
     const anglePerOption = 360 / options.length;
     const selectedAngleCenter = -90 + selectedIndex * anglePerOption + anglePerOption / 2;
     const currentNormalized = ((rotation % 360) + 360) % 360;
@@ -387,14 +388,14 @@ export default function RoulettePage() {
 
     const animationDuration = 3500;
     setTimeout(() => {
-      // ✅ 역산 없이 selectedIndex 그대로 사용
-      setResult(options[selectedIndex]);
+      setResult(selectedOption);
       setIsSpinning(false);
       setTimeout(() => setShouldAnimate(false), 100);
     }, animationDuration);
   };
 
   const addOption = () => {
+    if (isSpinning) return;
     if (!inputValue.trim() || options.length >= 12) return;
 
     const colors = [
@@ -429,6 +430,12 @@ export default function RoulettePage() {
       alert("최소 2개의 옵션이 필요합니다!");
       return;
     }
+
+    const removedOption = options.find(opt => opt.id === id);
+    if (removedOption && (removedOption.id === 1 || removedOption.id === 2)) {
+      setCustomCount(prev => Math.max(0, prev - 1));
+    }
+
     setOptions(options.filter((opt) => opt.id !== id));
     setRotation(0);
     if (result && result.id === id) setResult(null);
