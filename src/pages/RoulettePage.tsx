@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import GameLayout from "../layouts/GameLayout";
 
 type RouletteOption = {
@@ -79,6 +79,8 @@ export default function RoulettePage() {
     }, animationDuration);
   };
   
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const addOption = () => {
   if (!inputValue.trim() || options.length >= 12) return;
   
@@ -109,6 +111,8 @@ export default function RoulettePage() {
     setInputValue("");
     setRotation(0);
     setResult(null);
+
+    setTimeout(() => inputRef.current?.focus(), 50);
   };
 
   const removeOption = (id: number) => {
@@ -262,6 +266,7 @@ export default function RoulettePage() {
           <div className="flex gap-2">
             <input
               type="text"
+              ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && addOption()}
