@@ -140,6 +140,7 @@
 **기술 키워드:** React Game, Mini Game WebApp, J GameBox, Korean Gamebox, Free Web Games, React Tailwind Project, PWA Game
 
 ## npm
+npm install
 npm i -D @types/react @types/react-dom
 
 ## env

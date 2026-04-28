@@ -25,6 +25,22 @@
       content="J GameBox, 게임박스, 미니게임, 음료내기, 로또번호, 로또번호생성, 밸런스월드컵, 밸런스게임, 라이어게임, 제비뽑기, 무기강화하기, 슬롯머신, 돌려돌림판, 룰렛, 주사위, 가위바위보, 제비뽑기, 반사신경, 핀볼"
     />
     
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "J GameBox",
+        "operatingSystem": "WEB",
+        "applicationCategory": "GameApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        },
+        "description": "음료내기, 로또번호생성, 밸런스월드컵 등 다양한 미니게임을 브라우저에서 바로 즐기세요."
+      }
+    </script>
+
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ko_KR" />
@@ -57,7 +73,10 @@
     <!-- Image by https://mitem.gmarket.co.kr/ -->
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <h1>J GameBox - 무료 미니게임 모음</h1>
+      <p>음료내기, 로또번호 생성기, 밸런스 게임, 라이어 게임, 제비뽑기 등 다양한 웹 게임을 즐겨보세요.</p>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

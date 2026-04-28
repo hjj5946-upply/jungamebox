@@ -6,8 +6,8 @@ export default function BottomBar() {
       {/* 콘텐츠 래퍼: 높이 고정 + 수직 중앙 정렬 */}
       <div className="mx-auto flex max-w-6xl min-h-12 items-center justify-between gap-2 px-3 py-2">
         <div className="flex flex-wrap items-center gap-2">
-          <span>© 2025 Jun　</span>
-          <span>v1.0.8</span>
+          <span>© 2025 Jun </span>
+          <span>v1.0.9</span>
         </div>
         {/* 좁은 화면 줄바꿈 대응 */}
         <nav className="flex flex-wrap items-center gap-x-3 gap-y-1">

@@ -5,7 +5,7 @@ import DicePage from "./pages/DicePage";
 import TimerPage from "./pages/TimerPage";
 import RockPaperScissorsPage from "./pages/RockPaperScissorsPage";
 import NamePickerPage from "./pages/NamePickerPage";
-import OrderPage from "./pages/OrderPage";
+import RacePage from "./pages/RacePage";
 import RoulettePage from "./pages/RoulettePage";
 import CardPage from "./pages/CardPage";
 import LottoPage from "./pages/LottoPage";
@@ -44,7 +44,7 @@ export default function App() {
         <Route path="/games/timer" element={<TimerPage />} />
         <Route path="/games/rock" element={<RockPaperScissorsPage />} />
         <Route path="/games/namepick" element={<NamePickerPage />} />
-        <Route path="/games/order" element={<OrderPage />} />
+        <Route path="/games/order" element={<RacePage />} />
         <Route path="/games/roulette" element={<RoulettePage />} />
         <Route path="/games/card" element={<CardPage />} />
         <Route path="/games/lotto" element={<LottoPage />} />
