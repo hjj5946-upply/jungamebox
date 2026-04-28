@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import GameLayout from "../layouts/GameLayout";
 import { gsap } from "gsap";
 
