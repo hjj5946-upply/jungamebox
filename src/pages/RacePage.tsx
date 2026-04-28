@@ -35,12 +35,6 @@ export default function RacePage() {
   const raceIntervalRef = useRef<number | null>(null);
   const scope = useRef(null);
 
-  const medalColors = {
-    first: { from: '#FFD700', to: '#FFA500' },
-    second: { from: '#C0C0C0', to: '#A9A9A9' },
-    third: { from: '#CD7F32', to: '#B8860B' },
-  };
-
   // 1. 단계 전환 시 애니메이션
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
