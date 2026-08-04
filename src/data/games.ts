@@ -1,34 +1,32 @@
-import coinFlipImg from "/coin_flip.png";
-import timer from "/timer.png";
-import diceImg from "/dice.png";
-import rpsImg from "/rps.png";
-import swallowImg from "/swallow.png";
-import trackImg from "/track.png";
-import rouiletteImg from "/roulette.png"; 
-import cardImg from "/card.png";  
-import lottoImg from "/lotto.png";
-import balanceImg from "/balance.png";
-import bingoImg from "/bingo.png";
-import quizImg from "/quiz.png";
-import to48Img from "/1to48.png";
-import swordImg from "/sword.png";
-import timingImg from "/timing.png";
-import wisesayImg from "/wisesay.png";
-import korlangImg from "/korlang.png";
-import slotImg from "/slot.png";
-// import ladderImg from "/ladder.png";
-// import telepathyImg from "/telepathy.png";
-import liarImg from "/liar.png";
-import memoryImg from "/memory.png";
-import colorImg from "/color.png";
-// import versusImg from "/versus.png";
-// import pinballImg from "/pinball.png";
-import reflexesImg from "/reflexes.png";
-import ifelseImg from "/ifelse.png";
-// import moleImg from "/mole.png";
-import mathImg from "/math.png";
-// import puzzleImg from "/puzzle.png";
-import sudokuImg from "/sudoku.png";
+import timer from "../assets/timer.webp";
+import diceImg from "../assets/dice.webp";
+import rpsImg from "../assets/rps.webp";
+import swallowImg from "../assets/swallow.webp";
+import trackImg from "../assets/track.webp";
+import rouiletteImg from "../assets/roulette.webp"; 
+import cardImg from "../assets/card.webp";  
+import lottoImg from "../assets/lotto.webp";
+import balanceImg from "../assets/balance.webp";
+import bingoImg from "../assets/bingo.webp";
+import quizImg from "../assets/quiz.webp";
+import to48Img from "../assets/1to48.webp";
+import swordImg from "../assets/sword.webp";
+import timingImg from "../assets/timing.webp";
+import wisesayImg from "../assets/wisesay.webp";
+import korlangImg from "../assets/korlang.webp";
+// import ladderImg from "../assets/ladder.webp";
+// import telepathyImg from "../assets/telepathy.webp";
+import liarImg from "../assets/liar.webp";
+import memoryImg from "../assets/memory.webp";
+import colorImg from "../assets/color.webp";
+// import versusImg from "../assets/versus.webp";
+// import pinballImg from "../assets/pinball.webp";
+import reflexesImg from "../assets/reflexes.webp";
+import ifelseImg from "../assets/ifelse.webp";
+// import moleImg from "../assets/mole.webp";
+import mathImg from "../assets/math.webp";
+// import puzzleImg from "../assets/puzzle.webp";
+import sudokuImg from "../assets/sudoku.webp";
 
 export type GameMeta = {
   id: string;
@@ -46,7 +44,6 @@ export const GAME_LIST: GameMeta[] = [
   { id: "rock", name: "안내면진거", path: "/games/rock", image: rpsImg },
   { id: "roulette", name: "돌려돌림판", path: "/games/roulette", image: rouiletteImg },
 
-  { id: "flip", name: "앞?뒤?", path: "/games/flip", image: coinFlipImg },
   { id: "order", name: "1빠정하기", path: "/games/order", image: trackImg },
   { id: "liar", name: "라이어게임", path: "/games/liar", image: liarImg },
   // { id: "telepathy", name: "개발중..", path: "/games/telepathy", image: telepathyImg, imageSize: "large" }, //초성텔레파시
@@ -73,8 +70,7 @@ export const GAME_LIST: GameMeta[] = [
   // { id: "puzzle", name: "개발중..", path: "/games/color", image: puzzleImg }, //2048퍼즐
 
   { id: "reading", name: "나도아나운서", path: "/games/reading", image: korlangImg },
-  { id: "str", name: "무기강화하기", path: "/games/str", image: swordImg }, 
-  { id: "slot", name: "슬롯777", path: "/games/slot", image: slotImg },
+  { id: "str", name: "무기강화하기", path: "/games/str", image: swordImg },
   // { id: "pinball", name: "개발중..", path: "/games/pinball", image: pinballImg },
 
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg },

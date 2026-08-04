@@ -3,16 +3,16 @@ import GameLayout from "../layouts/GameLayout";
 import { gsap } from "gsap";
 
 // 이미지 import (경로는 기존과 동일하게 유지)
-import stamp1 from "/stamp1.png";
-import stamp2 from "/stamp2.png";
-import stamp3 from "/stamp3.png";
-import stamp4 from "/stamp4.png";
-import stamp5 from "/stamp5.png";
-import stamp6 from "/stamp6.png";
-import stamp7 from "/stamp7.png";
-import stamp8 from "/stamp8.png";
-import stamp9 from "/stamp9.png";
-import stamp10 from "/stamp10.png";
+import stamp1 from "../assets/stamp1.webp";
+import stamp2 from "../assets/stamp2.webp";
+import stamp3 from "../assets/stamp3.webp";
+import stamp4 from "../assets/stamp4.webp";
+import stamp5 from "../assets/stamp5.webp";
+import stamp6 from "../assets/stamp6.webp";
+import stamp7 from "../assets/stamp7.webp";
+import stamp8 from "../assets/stamp8.webp";
+import stamp9 from "../assets/stamp9.webp";
+import stamp10 from "../assets/stamp10.webp";
 
 type Step = "select-count" | "input-names" | "countdown" | "racing" | "result";
 

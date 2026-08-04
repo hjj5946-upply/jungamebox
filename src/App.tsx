@@ -1,6 +1,5 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import CoinFlipPage from "./pages/CoinFlipPage";
 import DicePage from "./pages/DicePage";
 import TimerPage from "./pages/TimerPage";
 import RockPaperScissorsPage from "./pages/RockPaperScissorsPage";
@@ -23,7 +22,6 @@ import Contact from "./pages/Contact";
 import IfElsePage from "./pages/IfElsePage";
 import LiarPage from "./pages/LiarPage";
 import ReflexPage from "./pages/ReflexPage";
-import SlotPage from "./pages/SlotPage";
 import MemoryPage from "./pages/MemoryPage";
 import ColorPage from "./pages/ColorPage";
 import MathPage from "./pages/MathPage";
@@ -39,7 +37,6 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/games/flip" element={<CoinFlipPage />} />
         <Route path="/games/dice" element={<DicePage />} />
         <Route path="/games/timer" element={<TimerPage />} />
         <Route path="/games/rock" element={<RockPaperScissorsPage />} />
@@ -59,7 +56,6 @@ export default function App() {
         <Route path="/games/ifelse" element={<IfElsePage />} />
         <Route path="/games/liar" element={<LiarPage />} />
         <Route path="/games/reflexes" element={<ReflexPage />} />
-        <Route path="/games/slot" element={<SlotPage />} />
         <Route path="/games/memory" element={<MemoryPage />} />
         <Route path="/games/color" element={<ColorPage />} />
         <Route path="/games/math" element={<MathPage />} />

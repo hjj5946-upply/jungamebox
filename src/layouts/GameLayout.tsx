@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import logo from '/favicon.png';
+import logo from '../assets/favicon.webp';
 
 type Props = {
   children: ReactNode;

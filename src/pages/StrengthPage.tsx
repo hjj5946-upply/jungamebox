@@ -3,28 +3,28 @@ import GameLayout from "../layouts/GameLayout";
 import { gsap } from "gsap";
 
 // 이미지 임포트 (기존 경로 유지)
-import sword0 from "/sword0.png";
-import sword1 from "/sword1.png";
-import sword2 from "/sword2.png";
-import sword3 from "/sword3.png";
-import sword4 from "/sword4.png";
-import sword5 from "/sword5.png";
-import sword6 from "/sword6.png";
-import sword7 from "/sword7.png";
-import sword8 from "/sword8.png";
-import sword9 from "/sword9.png";
-import sword10 from "/sword10.png";
-import sword11 from "/sword11.png";
-import sword12 from "/sword12.png";
-import sword13 from "/sword13.png";
-import sword14 from "/sword14.png";
-import sword15 from "/sword15.png";
-import sword16 from "/sword16.png";
-import sword17 from "/sword17.png";
-import sword18 from "/sword18.png";
-import sword19 from "/sword19.png";
-import sword20 from "/sword20.png";
-import WeaponImage from '/weapon_w.png';
+import sword0 from "../assets/sword0.webp";
+import sword1 from "../assets/sword1.webp";
+import sword2 from "../assets/sword2.webp";
+import sword3 from "../assets/sword3.webp";
+import sword4 from "../assets/sword4.webp";
+import sword5 from "../assets/sword5.webp";
+import sword6 from "../assets/sword6.webp";
+import sword7 from "../assets/sword7.webp";
+import sword8 from "../assets/sword8.webp";
+import sword9 from "../assets/sword9.webp";
+import sword10 from "../assets/sword10.webp";
+import sword11 from "../assets/sword11.webp";
+import sword12 from "../assets/sword12.webp";
+import sword13 from "../assets/sword13.webp";
+import sword14 from "../assets/sword14.webp";
+import sword15 from "../assets/sword15.webp";
+import sword16 from "../assets/sword16.webp";
+import sword17 from "../assets/sword17.webp";
+import sword18 from "../assets/sword18.webp";
+import sword19 from "../assets/sword19.webp";
+import sword20 from "../assets/sword20.webp";
+import WeaponImage from '../assets/weapon_w.webp';
 
 // 데이터 설정
 const SWORD_IMAGES = [
@@ -313,28 +313,28 @@ export default function StrengthPage() {
 // import { useState } from "react";
 // import GameLayout from "../layouts/GameLayout";
 
-// import sword0 from "/sword0.png";
-// import sword1 from "/sword1.png";
-// import sword2 from "/sword2.png";
-// import sword3 from "/sword3.png";
-// import sword4 from "/sword4.png";
-// import sword5 from "/sword5.png";
-// import sword6 from "/sword6.png";
-// import sword7 from "/sword7.png";
-// import sword8 from "/sword8.png";
-// import sword9 from "/sword9.png";
-// import sword10 from "/sword10.png";
-// import sword11 from "/sword11.png";
-// import sword12 from "/sword12.png";
-// import sword13 from "/sword13.png";
-// import sword14 from "/sword14.png";
-// import sword15 from "/sword15.png";
-// import sword16 from "/sword16.png";
-// import sword17 from "/sword17.png";
-// import sword18 from "/sword18.png";
-// import sword19 from "/sword19.png";
-// import sword20 from "/sword20.png";
-// import WeaponImage from '/weapon_w.png';
+// import sword0 from "../assets/sword0.webp";
+// import sword1 from "../assets/sword1.webp";
+// import sword2 from "../assets/sword2.webp";
+// import sword3 from "../assets/sword3.webp";
+// import sword4 from "../assets/sword4.webp";
+// import sword5 from "../assets/sword5.webp";
+// import sword6 from "../assets/sword6.webp";
+// import sword7 from "../assets/sword7.webp";
+// import sword8 from "../assets/sword8.webp";
+// import sword9 from "../assets/sword9.webp";
+// import sword10 from "../assets/sword10.webp";
+// import sword11 from "../assets/sword11.webp";
+// import sword12 from "../assets/sword12.webp";
+// import sword13 from "../assets/sword13.webp";
+// import sword14 from "../assets/sword14.webp";
+// import sword15 from "../assets/sword15.webp";
+// import sword16 from "../assets/sword16.webp";
+// import sword17 from "../assets/sword17.webp";
+// import sword18 from "../assets/sword18.webp";
+// import sword19 from "../assets/sword19.webp";
+// import sword20 from "../assets/sword20.webp";
+// import WeaponImage from '../assets/weapon_w.webp';
 
 // // ============================================
 // // 🎨 이미지 & 이름 설정 (여기만 수정하면 됨!)

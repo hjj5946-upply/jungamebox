@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import logo from '/favicon.png';
+import logo from '../assets/favicon.webp';
 
 export default function TopBar() {
   const navigate = useNavigate();

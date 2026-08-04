@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import TopBar from "../components/TopBar";
 import BottomBar from "../components/BottomBar";
-// import bmcImg from "/bmc-brand-icon.png";
-import kakaoImg from "/btn_send_small.png";
-// import githubImg from "/github.png";
+// import bmcImg from "../assets/bmc-brand-icon.webp";
+import kakaoImg from "../assets/btn_send_small.webp";
+// import githubImg from "../assets/github.webp";
 
 type Props = { children: ReactNode };
 
