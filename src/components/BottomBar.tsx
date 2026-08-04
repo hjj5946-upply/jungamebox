@@ -6,19 +6,13 @@ export default function BottomBar() {
       {/* 콘텐츠 래퍼: 높이 고정 + 수직 중앙 정렬 */}
       <div className="mx-auto flex max-w-6xl min-h-12 items-center justify-between gap-2 px-3 py-2">
         <div className="flex flex-wrap items-center gap-2">
-          <span>© 2025 Jun </span>
-          <span>v1.0.9</span>
+          <span>© Jun </span>
+          <span>v1.1</span>
         </div>
-        {/* 좁은 화면 줄바꿈 대응 */}
+        {/* 좁은 화면 줄바꿈 대응 (문의는 이용약관 페이지 안으로 통합) */}
         <nav className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <Link to="/contact" className="rounded-sm transition-colors hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-500">
-            Contact
-          </Link>
           <Link to="/terms" className="rounded-sm transition-colors hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-500">
             이용약관
-          </Link>
-          <Link to="/policy" className="rounded-sm transition-colors hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-500">
-            개인정보처리방침
           </Link>
         </nav>
       </div>

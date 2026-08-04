@@ -201,7 +201,7 @@ export default function TimerPage() {
         {activeTab === "stopwatch" && (
           <div className="flex-1 flex flex-col items-center justify-between">
             <div className="flex-1 flex items-center justify-center">
-              <div className="text-6xl font-bold text-white">
+              <div className="text-6xl font-bold text-strong">
                 {formatStopwatch(stopwatchTime)}
               </div>
             </div>
@@ -246,7 +246,7 @@ export default function TimerPage() {
                 <>
                   <button
                     onClick={resetStopwatch}
-                    className="flex-1 py-4 bg-slate-600 hover:bg-slate-700 text-white font-bold rounded-xl"
+                    className="flex-1 py-4 bg-slate-600 hover:bg-slate-700 text-strong font-bold rounded-xl"
                   >
                     초기화
                   </button>
@@ -268,7 +268,7 @@ export default function TimerPage() {
             {/* 시간 표시 */}
             <div className="flex-1 flex flex-col items-center justify-center gap-4">
               {timerLeft > 0 ? (
-                <div className="text-6xl font-bold text-white">
+                <div className="text-6xl font-bold text-strong">
                   {formatTimer(timerLeft)}
                 </div>
               ) : (
@@ -289,7 +289,7 @@ export default function TimerPage() {
                     >
                       {timerHours}
                     </button>
-                    <span className="text-white">:</span>
+                    <span className="text-strong">:</span>
                     <button
                       onClick={() => handleFieldClick("minutes")}
                       className={`px-4 py-2 rounded-lg transition-colors ${
@@ -300,7 +300,7 @@ export default function TimerPage() {
                     >
                       {timerMinutes}
                     </button>
-                    <span className="text-white">:</span>
+                    <span className="text-strong">:</span>
                     <button
                       onClick={() => handleFieldClick("seconds")}
                       className={`px-4 py-2 rounded-lg transition-colors ${
@@ -323,20 +323,20 @@ export default function TimerPage() {
                   <button
                     key={num}
                     onClick={() => addDigitToField(String(num))}
-                    className="py-4 bg-slate-800 hover:bg-slate-700 text-white text-2xl font-bold rounded-xl"
+                    className="py-4 bg-slate-800 hover:bg-slate-700 text-strong text-2xl font-bold rounded-xl"
                   >
                     {num}
                   </button>
                 ))}
                 <button
                   onClick={deleteDigitFromField}
-                  className="py-4 bg-slate-800 hover:bg-slate-700 text-white text-2xl font-bold rounded-xl"
+                  className="py-4 bg-slate-800 hover:bg-slate-700 text-strong text-2xl font-bold rounded-xl"
                 >
                   ⌫
                 </button>
                 <button
                   onClick={() => addDigitToField("0")}
-                  className="py-4 bg-slate-800 hover:bg-slate-700 text-white text-2xl font-bold rounded-xl"
+                  className="py-4 bg-slate-800 hover:bg-slate-700 text-strong text-2xl font-bold rounded-xl"
                 >
                   0
                 </button>
@@ -363,7 +363,7 @@ export default function TimerPage() {
                 <>
                   <button
                     onClick={resetTimer}
-                    className="flex-1 py-4 bg-slate-600 hover:bg-slate-700 text-white font-bold rounded-xl"
+                    className="flex-1 py-4 bg-slate-600 hover:bg-slate-700 text-strong font-bold rounded-xl"
                   >
                     취소
                   </button>
@@ -378,7 +378,7 @@ export default function TimerPage() {
                 <>
                   <button
                     onClick={resetTimer}
-                    className="flex-1 py-4 bg-slate-600 hover:bg-slate-700 text-white font-bold rounded-xl"
+                    className="flex-1 py-4 bg-slate-600 hover:bg-slate-700 text-strong font-bold rounded-xl"
                   >
                     초기화
                   </button>

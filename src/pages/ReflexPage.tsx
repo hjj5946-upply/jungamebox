@@ -346,6 +346,7 @@ export default function ReflexPage() {
 
                 {phase === "waiting" && (
                   <>
+                    {/* areaBg 가 채도 높은 색(waitingBg)이므로 테마와 무관하게 흰 글자 유지 */}
                     <h2 className="text-white text-2xl font-bold mb-2">
                       기다려요…
                     </h2>

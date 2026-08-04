@@ -243,17 +243,17 @@ export default function DicePage() {
         <div className="flex items-center justify-center gap-4 py-4">
           <button
             onClick={removeDice}
-            className="w-12 h-12 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-2xl font-bold transition-colors disabled:opacity-50"
+            className="w-12 h-12 rounded-full bg-slate-700 hover:bg-slate-600 text-strong text-2xl font-bold transition-colors disabled:opacity-50"
             disabled={diceList.length <= 1}
           >
             -
           </button>
-          <span className="text-white text-xl font-bold min-w-[80px] text-center">
+          <span className="text-strong text-xl font-bold min-w-[80px] text-center">
             {diceList.length}개
           </span>
           <button
             onClick={addDice}
-            className="w-12 h-12 rounded-full bg-slate-700 hover:bg-slate-600 text-white text-2xl font-bold transition-colors"
+            className="w-12 h-12 rounded-full bg-slate-700 hover:bg-slate-600 text-strong text-2xl font-bold transition-colors"
           >
             +
           </button>
@@ -306,7 +306,7 @@ export default function DicePage() {
 
           {/* 합계 표시 - 화면 하단 */}
           {!isRolling && diceList.some(d => d.x !== 0 || d.y !== 0) && (
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white text-4xl font-bold animate-bounce pointer-events-none">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-strong text-4xl font-bold animate-bounce pointer-events-none">
               {diceList.length > 1 && `합계: `}
               {diceList.reduce((sum, dice) => sum + dice.value, 0)}
             </div>

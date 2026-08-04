@@ -199,11 +199,11 @@ export default function StrengthPage() {
         
         {/* 골드 정보 리뉴얼 */}
         <div className="w-full grid grid-cols-2 gap-3">
-          <div className="bg-slate-800 p-3 rounded-xl border border-white/5">
+          <div className="bg-slate-800 p-3 rounded-xl border border-veil/5">
             <p className="text-[10px] text-slate-400 font-bold uppercase">My Assets</p>
             <p className="text-lg font-black text-yellow-400">{gold.toLocaleString()} G</p>
           </div>
-          <div className="bg-slate-800 p-3 rounded-xl border border-white/5">
+          <div className="bg-slate-800 p-3 rounded-xl border border-veil/5">
             <p className="text-[10px] text-slate-400 font-bold uppercase">Cost</p>
             <p className="text-lg font-black text-orange-500">{getCost(level).toLocaleString()} G</p>
           </div>
@@ -221,7 +221,7 @@ export default function StrengthPage() {
 
           <div className="text-center">
             <p className="text-blue-500 font-black text-lg">+{level}</p>
-            <h2 className="text-2xl font-bold text-white mt-1">{SWORD_NAMES[level]}</h2>
+            <h2 className="text-2xl font-bold text-strong mt-1">{SWORD_NAMES[level]}</h2>
           </div>
 
           {/* 판매가 및 확률 정보 */}
@@ -256,7 +256,7 @@ export default function StrengthPage() {
             <button
               onClick={handleSell}
               disabled={level === 0 || isEnhancing}
-              className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-all"
+              className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-strong font-bold rounded-xl transition-all"
             >
               판매
             </button>
@@ -268,7 +268,7 @@ export default function StrengthPage() {
           <div className="flex items-center gap-2">
             <span className="text-lg">🛡️</span>
             <div>
-              <p className="text-white text-xs font-bold">파괴 보호권 자동 대기</p>
+              <p className="text-strong text-xs font-bold">파괴 보호권 자동 대기</p>
               <p className="text-[10px] text-slate-400">파괴 시 {PROTECTION_COST.toLocaleString()}G 소모</p>
             </div>
           </div>
@@ -285,7 +285,7 @@ export default function StrengthPage() {
             <div className="flex justify-between"><span>실패</span><span className="text-orange-500">{stats.fail}</span></div>
             <div className="flex justify-between"><span>파괴</span><span className="text-red-500">{stats.destroy}</span></div>
             <div className="flex justify-between"><span>보호</span><span className="text-blue-400">{stats.protected}</span></div>
-            <div className="col-span-2 border-t border-white/5 my-1 pt-1 flex justify-between">
+            <div className="col-span-2 border-t border-veil/5 my-1 pt-1 flex justify-between">
               <span className="text-slate-400">순수익</span>
               <span className={`font-bold ${totalEarned - totalSpent >= 0 ? 'text-yellow-400' : 'text-red-400'}`}>
                 {(totalEarned - totalSpent).toLocaleString()} G

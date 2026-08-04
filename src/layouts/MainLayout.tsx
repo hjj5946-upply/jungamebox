@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import TopBar from "../components/TopBar";
 import BottomBar from "../components/BottomBar";
+import ScrollHint from "../components/ScrollHint";
 // import bmcImg from "../assets/bmc-brand-icon.webp";
 import kakaoImg from "../assets/btn_send_small.webp";
 // import githubImg from "../assets/github.webp";
@@ -8,18 +9,30 @@ import kakaoImg from "../assets/btn_send_small.webp";
 type Props = { children: ReactNode };
 
 export default function MainLayout({ children }: Props) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   return (
     // ... 상단 레이아웃 유지 ...
-    <div className="relative flex min-h-dvh flex-col bg-slate-900">
+    <div className="relative flex h-full flex-col overflow-hidden bg-slate-900">
       <TopBar />
 
-      <main className="flex-1 overflow-auto flex justify-center px-4 pb-6 sm:pb-8">
-        <div className="w-full max-w-md pt-4">
+      {/* 콘텐츠 영역: 남은 높이를 모두 차지하고 이 안에서만 스크롤된다.
+          min-h-0 이 없으면 flex 자식이 내용 높이만큼 늘어나 내부 스크롤이 생기지 않는다.
+          relative: ScrollHint 를 이 영역 하단에 겹쳐 놓기 위한 기준. */}
+      <main className="relative flex min-h-0 flex-1 justify-center px-4">
+        {/* no-scrollbar: 스크롤바를 숨기되 스크롤 자체는 유지 (대신 ScrollHint 로 유도) */}
+        <div
+          ref={scrollRef}
+          className="no-scrollbar w-full max-w-md overflow-y-auto overscroll-contain pt-4 pb-8"
+        >
           {children}
         </div>
+
+        <ScrollHint scrollRef={scrollRef} />
       </main>
 
-      <section className="mx-auto w-full max-w-6xl px-4">
+      {/* shrink-0: 콘텐츠 영역만 늘고 이 영역은 고정 높이를 유지해야 한다 */}
+      <section className="mx-auto w-full max-w-6xl shrink-0 px-4">
         {/* 도네이션 버튼 */}
         <div className="flex flex-col items-end gap-2 mb-2">
           {/* kakao (국내용) - 디자인 가이드 적용 */}
@@ -67,7 +80,7 @@ export default function MainLayout({ children }: Props) {
                 <img 
                     src={kakaoImg} 
                     alt="카카오페이로 개발자 후원하기" 
-                    className="rounded-lg max-h-12 w-auto" 
+                    className="rounded-lg max-h-10 w-auto"
                 /> 
                 <span className="sr-only">카카오페이로 개발자 후원하기</span>
             </a>
@@ -84,13 +97,8 @@ export default function MainLayout({ children }: Props) {
             개발자 버블티한잔 $
           </a> */}
         </div>
-        
-        {/* ... 하단 안내 문구 유지 ... */}
-        <div className="max-w-md ml-auto mb-1">
-          <p className="text-[11px] sm:text-xs text-slate-200/90 leading-relaxed text-left">
-            본 서비스는 오락/교육 목적이며, 어떤 용도로든 자유롭게 사용 가능합니다. 실제 금전 거래 및 배팅을 제공하지 않습니다.
-          </p>
-        </div>
+        {/* 오락/교육 목적 고지 문구는 이용약관(pages/Terms.tsx)의 "서비스의 성격"으로 이전.
+            여기서 빠진 높이는 위 콘텐츠 영역이 흡수한다. */}
       </section>
 
       <BottomBar />

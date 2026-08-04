@@ -153,7 +153,7 @@ export default function QuizPage() {
   // Stage 1: 주제 및 난이도 선택 화면 
   // ------------------------------------------------------------------
   const renderSelectionStage = () => (
-    <div className="flex flex-col space-y-8 p-4 text-white">
+    <div className="flex flex-col space-y-8 p-4 text-strong">
       <h2 className="text-2xl font-bold text-center">주제 선택</h2>
       {/* 주제 선택 UI */}
       <div className="grid grid-cols-2 gap-4">
@@ -215,7 +215,7 @@ export default function QuizPage() {
     if (!currentQuestion) return null;
 
     return (
-      <div className="flex flex-col h-full justify-between p-4 text-white">
+      <div className="flex flex-col h-full justify-between p-4 text-strong">
         {/* 상단 진행 상태 및 타이머 */}
         <div className="text-center mb-6">
           <p className="text-xl font-bold text-blue-300">
@@ -258,8 +258,8 @@ export default function QuizPage() {
   // Stage 3: 결과 화면 (RESULT)
   // ------------------------------------------------------------------
   const renderResultStage = () => (
-    <div className="text-white text-center p-8 flex flex-col items-center">
-        <h2 className="text-3xl font-extrabold text-white mb-4">
+    <div className="text-strong text-center p-8 flex flex-col items-center">
+        <h2 className="text-3xl font-extrabold text-strong mb-4">
             🎉 퀴즈 완료!
         </h2>
         <p className="text-xl text-slate-300 mb-6">

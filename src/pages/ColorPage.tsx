@@ -187,6 +187,7 @@ export default function ColorPage() {
                     "flex-1 py-4 rounded-xl text-lg font-bold",
                     "border border-emerald-500/70",
                     "bg-emerald-600 hover:bg-emerald-500",
+                    // 유채색 버튼이므로 테마와 무관하게 흰 글자 유지
                     "text-white shadow-md transition",
                     !canAnswer && "opacity-50 cursor-not-allowed",
                   ].join(" ")}

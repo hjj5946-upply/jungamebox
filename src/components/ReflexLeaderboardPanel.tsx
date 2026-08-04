@@ -18,7 +18,7 @@ export default function ReflexLeaderboardPanel() {
   }, []);
 
   return (
-    <div className="mt-3 w-full rounded-xl bg-slate-900/80 p-4 text-white shadow-lg">
+    <div className="mt-3 w-full rounded-xl bg-slate-900/80 p-4 text-strong shadow-lg">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold">🏆 반사신경 상위 10위</h3>
         <span className="text-[11px] text-slate-400">

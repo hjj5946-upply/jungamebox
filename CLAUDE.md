@@ -56,7 +56,9 @@ export default function FooPage() {
 
 ### 라우팅
 
-- **`HashRouter`** 사용 (`src/App.tsx`). 실제 URL은 `/#/games/foo`. GitHub Pages의 SPA 404 문제 회피용이므로 **`BrowserRouter`로 바꾸지 마세요** — 별도 요청 없이 바꾸면 배포가 깨집니다.
+- **`BrowserRouter`** 사용 (`src/App.tsx`). URL에 `#`이 붙지 않습니다 (`/games/dice`).
+- **`HashRouter`로 되돌리지 마세요.** GitHub Pages는 정적 서버라 `/games/dice` 로 직접 진입하면 파일이 없어 404가 나는데, 이걸 **배포 워크플로가 `dist/index.html` → `dist/404.html` 복사로 해결**하고 있습니다 (`.github/workflows/deploy.yml` 의 "SPA fallback" 스텝). 이 스텝을 지우면 새로고침·직접 진입이 전부 깨집니다.
+- 새 라우트를 추가하면 `public/sitemap.xml` 에도 등록하세요. **도메인은 `index.html` 의 canonical(`https://jun-gamebox.com/`)과 일치해야 하고 `#`을 넣지 않습니다.**
 - 모든 라우트는 `src/App.tsx` 한 곳에 정적 import + `<Route>`로 등록됩니다. 라우트 정의를 다른 파일로 분산시키지 마세요.
 - `vite.config.ts`의 `base: '/'`는 **커스텀 도메인 전용** 설정입니다. 건드리지 마세요.
 
@@ -98,7 +100,29 @@ export default function FooPage() {
 
 - **Tailwind CSS v3**입니다. v4 문법(`@import "tailwindcss"` 등)을 쓰지 마세요. 설정은 `tailwind.config.js`의 `content` 배열 방식입니다.
 - CSS 모듈 / styled-components / 인라인 style 객체를 쓰지 않습니다. **Tailwind 유틸리티 클래스를 JSX에 직접** 작성합니다.
-- 색상은 **`slate` 계열 다크 테마 고정**입니다 (`bg-slate-900` 배경, `bg-slate-800` 카드/바, `text-slate-200` 본문, `border-slate-700`). 라이트 모드가 없으므로 `dark:` 변형을 추가하지 마세요.
+- **라이트/다크 테마를 지원합니다.** 기본값은 라이트. `html.dark` 클래스로 전환하며(`src/lib/theme.ts`), 실제 색은 `src/index.css` 의 CSS 변수(`--s-50`~`--s-950`, `--text-strong`, `--veil`)가 담당합니다.
+- **`slate-*` 는 이제 "표면 단계" 토큰입니다.** `tailwind.config.js` 에서 CSS 변수로 매핑되어 있어 기존 클래스가 테마에 자동 반응합니다. 램프 방향이 테마마다 뒤집힙니다:
+
+  | 용도 | 클래스 | 라이트 | 다크 |
+  |---|---|---|---|
+  | 앱 셸 여백·트랙 | `slate-950` | 밝은 회색 | 가장 어두움 |
+  | 앱 본체 표면 | `slate-900` | 흰색 | `#121314` |
+  | 카드·바 | `slate-800` | 아주 밝은 회색 | `#191a1b` |
+  | 경계선·hover | `slate-700/600` | 밝은 회색 | 어두운 회색 |
+  | 보조 글자 | `slate-400/500` | 중간 회색 | 중간 회색 |
+  | 본문 글자 | `slate-50/100/200/300` | 어두움 | 밝음 |
+
+- **글자색 3종을 구분해서 쓰세요.** 잘못 고르면 한쪽 테마에서 글자가 안 보입니다.
+
+  | 상황 | 사용 | 이유 |
+  |---|---|---|
+  | 중립 표면(slate) 위 강조 글자 | `text-strong` | 라이트=거의 검정, 다크=흰색으로 자동 전환 |
+  | **유채색 배경 위** (`bg-blue-600`, `bg-emerald-600` 등) | `text-white` **고정** | 테마와 무관하게 유채색 위에서는 흰 글자여야 함 |
+  | 밝은 유채색 위 (`bg-yellow-500` 등) | `text-black` 고정 | 노란색 위 흰 글자는 안 읽힘 |
+
+- **반투명 오버레이는 `veil` 을 쓰세요.** `border-white/10` 처럼 흰색 오버레이를 쓰면 라이트 모드에서 사라집니다. `border-veil/10`, `ring-veil/10` 은 다크=흰색, 라이트=검정으로 뒤집힙니다.
+- **slate 를 "장식색"으로 쓰지 마세요.** 예를 들어 은메달을 `from-slate-300` 으로 만들면 표면 토큰이라 라이트 모드에서 어둡게 뒤집힙니다. 장식이 목적이면 `zinc`·`gray` 처럼 매핑되지 않은 팔레트를 쓰세요 (`RacePage` 메달 참고).
+- **SVG `stroke`/`fill` 하드코딩 색**도 테마를 고려하세요. 테마에 반응해야 하면 `stroke="rgb(var(--s-600))"` 형태로 변수를 참조합니다 (`LadderPage` 사다리 선 참고).
 - 본문 최대 폭은 `max-w-md` (모바일 우선). 새 게임도 이 폭 안에서 동작해야 합니다.
 - 커스텀 애니메이션이 필요하면 `src/index.css`에 키프레임을 추가합니다 (현재 `bounceIn` 1종).
 - **폰트는 Pretendard 가변폰트**입니다. `tailwind.config.js`의 `fontFamily.sans` 한 곳에서 지정하고, Tailwind preflight가 `html` 요소에 적용해 전체에 반영됩니다. 개별 컴포넌트에 `font-family`를 직접 쓰지 마세요.
@@ -198,7 +222,7 @@ import diceImg from "../assets/dice.webp";                      // ✅ 코드 im
 | `src/data/games.ts` | 주석 처리된 import와 타일이 섞여 있습니다. 미사용 import를 살리면 `noUnusedLocals`로 빌드가 깨질 수 있습니다. |
 | `index.html` | SEO 메타·OG·JSON-LD·파비콘이 전부 여기 있습니다. 절대 URL(`https://jun-gamebox.com/...`)로 하드코딩되어 있으므로 도메인 변경 시 일괄 수정 필요. |
 | `.github/workflows/deploy.yml` | `VITE_*`를 GitHub Variables/Secrets에서 주입합니다. 환경변수 이름을 바꾸면 이 파일도 함께 고쳐야 배포된 사이트의 랭킹이 죽지 않습니다. |
-| `public/sitemap.xml` | 현재 URL이 구 GitHub Pages 주소(`hjj5946-upply.github.io`)를 가리켜 canonical과 불일치합니다. 알려진 이슈. |
+| `public/sitemap.xml` | 게임 23종 + 홈 + `/terms` 를 해시 없는 실제 경로로 등록해둔 상태입니다. 라우트를 추가/삭제하면 여기도 함께 갱신하세요. |
 | `src/components/BottomBar.tsx` | 버전 문자열(`v1.0.9`)이 하드코딩되어 있고 `package.json`(`0.0.0`)과 다릅니다. 버전 표기를 바꿀 땐 여기를 수정. |
 
 ---
@@ -215,7 +239,7 @@ import diceImg from "../assets/dice.webp";                      // ✅ 코드 im
 ## 하지 말 것
 
 - `.env` 읽기, 키 값 출력
-- `HashRouter` → `BrowserRouter` 변경, `vite.config.ts`의 `base` 변경
+- `BrowserRouter` → `HashRouter` 되돌리기, `deploy.yml` 의 404.html 생성 스텝 삭제, `vite.config.ts`의 `base` 변경
 - 상태관리/데이터페칭/UI 컴포넌트 라이브러리 임의 도입
 - Tailwind v4 문법 사용, 라이트 모드(`dark:` 변형) 추가
 - 새 레이아웃 컴포넌트 생성

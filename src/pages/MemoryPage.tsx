@@ -202,7 +202,7 @@ export default function MemoryPage() {
                   className={[
                     "w-full aspect-square rounded-2xl transition-all duration-150",
                     bgClass,
-                    active ? "scale-[1.02] ring-4 ring-white/30" : "ring-2 ring-black/20",
+                    active ? "scale-[1.02] ring-4 ring-veil/30" : "ring-2 ring-black/20",
                     phase === "input" ? "cursor-pointer" : "cursor-default opacity-90",
                     "shadow-inner"
                   ].join(" ")}

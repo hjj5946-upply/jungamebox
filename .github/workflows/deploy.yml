@@ -39,6 +39,15 @@ jobs:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
+      # BrowserRouter(해시 없는 URL) 대응.
+      # GitHub Pages 는 정적 서버라 /games/dice 같은 경로에 해당하는 파일이 없으면 404.html 을 준다.
+      # 그 404.html 을 index.html 사본으로 두면 어떤 경로로 직접 진입·새로고침해도 앱이 로드되고
+      # React Router 가 클라이언트에서 경로를 처리한다.
+      - name: SPA fallback (404.html)
+        run: |
+          cp dist/index.html dist/404.html
+          test -f dist/404.html && echo "404.html 생성 완료"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

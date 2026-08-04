@@ -98,7 +98,7 @@ export default function RockPaperScissorsPage() {
             </div>
             
             {result && (
-              <div className="text-white text-5xl font-bold mt-8 animate-bounce">
+              <div className="text-strong text-5xl font-bold mt-8 animate-bounce">
                 {choices[result].name}
               </div>
             )}

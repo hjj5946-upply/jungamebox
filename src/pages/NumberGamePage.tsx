@@ -86,7 +86,7 @@ export default function NumberGamePage() {
       <div className="flex flex-col h-full gap-6 py-4">
         {/* 상태 표시 */}
         <div className="flex justify-between items-center px-4">
-          <div className="text-white text-2xl font-bold">
+          <div className="text-strong text-2xl font-bold">
             {endTime ? "완료!" : `다음: ${currentNumber}`}
           </div>
           <div className="text-yellow-400 text-2xl font-bold">
@@ -117,7 +117,7 @@ export default function NumberGamePage() {
         {/* 결과 또는 다시하기 */}
         {endTime ? (
           <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-6 mx-4">
-            <div className="text-white text-center">
+            <div className="text-strong text-center">
               <div className="text-3xl font-bold mb-2">🎉 클리어!</div>
               <div className="text-5xl font-bold mb-2">
                 {formatTime(endTime - (startTime || 0))}
@@ -134,7 +134,7 @@ export default function NumberGamePage() {
         {/* 다시하기 버튼 */}
         <button
           onClick={initializeGame}
-          className="mx-4 py-4 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-colors"
+          className="mx-4 py-4 bg-slate-700 hover:bg-slate-600 text-strong font-bold rounded-xl transition-colors"
         >
           다시하기
         </button>

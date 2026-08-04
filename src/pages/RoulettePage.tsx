@@ -259,7 +259,7 @@ export default function RoulettePage() {
               placeholder="옵션 추가 (최대 12개)"
               maxLength={20}
               disabled={isSpinning || options.length >= 12}
-              className="flex-1 px-4 py-3 bg-slate-800 text-white rounded-lg placeholder-slate-500 disabled:opacity-50 text-base"
+              className="flex-1 px-4 py-3 bg-slate-800 text-strong rounded-lg placeholder-slate-500 disabled:opacity-50 text-base"
             />
             <button
               onMouseDown={(e) => e.preventDefault()}
@@ -282,7 +282,7 @@ export default function RoulettePage() {
             <button
               onClick={resetOptions}
               disabled={isSpinning}
-              className="flex-1 px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base font-semibold"
+              className="flex-1 px-4 py-3 bg-slate-700 hover:bg-slate-600 text-strong rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base font-semibold"
             >
               리셋
             </button>
@@ -296,7 +296,7 @@ export default function RoulettePage() {
                 style={{ backgroundColor: option.color + "40" }}
               >
                 <div className="w-4 h-4 rounded-full flex-shrink-0" style={{ backgroundColor: option.color }}></div>
-                <span className="flex-1 text-white text-sm font-medium">{option.label}</span>
+                <span className="flex-1 text-strong text-sm font-medium">{option.label}</span>
                 <button
                   onClick={() => removeOption(option.id)}
                   disabled={isSpinning || options.length <= 2}

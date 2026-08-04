@@ -37,13 +37,13 @@ export default function LeaderboardPanel({ initialCategory }: { initialCategory?
   }, [selectedCategory]);
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-slate-900/80 rounded-xl p-5 text-white shadow-xl">
+    <div className="w-full max-w-2xl mx-auto bg-slate-900/80 rounded-xl p-5 text-strong shadow-xl">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-sm font-bold">🏆 {selectedCategory} 우승 순위</h2>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="bg-slate-800 border border-slate-700 rounded-md px-3 py-1 text-sm text-white"
+          className="bg-slate-800 border border-slate-700 rounded-md px-3 py-1 text-sm text-strong"
         >
           {categories.map((c) => (
             <option key={c.id} value={c.name}>
@@ -83,7 +83,7 @@ export default function LeaderboardPanel({ initialCategory }: { initialCategory?
             </div>
 
             {/* 썸네일 */}
-            <div className="w-9 h-9 rounded-md overflow-hidden ring-1 ring-white/10 flex items-center justify-center bg-slate-800 shrink-0">
+            <div className="w-9 h-9 rounded-md overflow-hidden ring-1 ring-veil/10 flex items-center justify-center bg-slate-800 shrink-0">
               {imgSrc ? (
                 <img
                   src={imgSrc}

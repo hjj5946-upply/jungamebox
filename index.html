@@ -7,29 +7,49 @@
     <meta name="naver-site-verification" content="373f6c458750b8cf3116a33ea48084307f1fb0c0" />
     <meta name="google-site-verification" content="UA9MSukb0_mx0uWUC2dRTUn6CNDb-rJBDIac2XGzrHk" />
     
-    <title>J GameBox | 음료내기 · 로또번호 · 밸런스월드컵 · 라이어게임 · 제비뽑기 · 강화하기</title>
+    <title>JJang Games 짱게임즈</title>
     <link rel="canonical" href="https://jun-gamebox.com/" />
     <link rel="alternate" href="https://jun-gamebox.com/" hreflang="ko" />
     <link rel="manifest" href="/manifest.json" />
+    <!-- 표준 이름. apple- 접두사 버전은 deprecated 경고가 나지만
+         구형 iOS Safari 는 아직 그것만 인식하므로 둘 다 둔다. -->
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- apple-touch-icon 은 아래 아이콘 묶음에 sizes 와 함께 한 번만 선언한다 -->
     <meta name="author" content="Jun" />
-    <meta name="publisher" content="J GameBox" />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="publisher" content="JJang Games" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- 첫 페인트 전에 테마 클래스를 적용해 새로고침 시 색이 번쩍이는 것을 막는다.
+         기본값은 라이트. 저장 키는 src/lib/theme.ts 의 STORAGE_KEY 와 반드시 일치해야 한다. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("jgb-theme");
+          if (t === "dark") {
+            document.documentElement.classList.add("dark");
+            var m = document.querySelector('meta[name="theme-color"]');
+            if (m) m.setAttribute("content", "#121314");
+          }
+        } catch (e) {
+          /* localStorage 차단 환경 → 라이트로 시작 */
+        }
+      })();
+    </script>
     <meta name="robots" content="index, follow" />
     <meta name="description"
-      content="음료내기, 로또번호생성, 밸런스월드컵, 라이어게임, 제비뽑기, 강화하기, 돌려돌림판 등 다양한 미니게임을 무료로 즐기는 J GameBox!"
+      content="음료내기, 로또번호생성, 밸런스월드컵, 라이어게임, 제비뽑기, 강화하기, 룰렛돌리기 등 다양한 미니게임을 무료로 즐기는 JJang Games!"
     />
     <meta name="keywords"
-      content="J GameBox, 게임박스, 미니게임, 음료내기, 로또번호, 로또번호생성, 밸런스월드컵, 밸런스게임, 라이어게임, 제비뽑기, 무기강화하기, 돌려돌림판, 룰렛, 주사위, 가위바위보, 제비뽑기, 반사신경, 핀볼"
+      content="JJang Games, 게임박스, 미니게임, 음료내기, 로또번호, 로또번호생성, 밸런스월드컵, 밸런스게임, 라이어게임, 제비뽑기, 무기강화하기, 룰렛돌리기, 룰렛, 주사위, 가위바위보, 제비뽑기, 반사신경, 핀볼"
     />
     
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "J GameBox",
+        "name": "JJang Games",
         "operatingSystem": "WEB",
         "applicationCategory": "GameApplication",
         "offers": {
@@ -45,8 +65,8 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:site_name" content="J GameBox" />
-    <meta property="og:title" content="J GameBox - 음료내기 · 로또번호 · 밸런스월드컵 · 라이어게임" />
-    <meta property="og:description" content="음료내기, 로또번호생성, 밸런스월드컵, 라이어게임 등 재밌는 미니게임을 무료로 즐겨보세요!" />
+    <meta property="og:title" content="JJang Games - 음료내기 · 로또번호 · 밸런스월드컵 · 라이어게임" />
+    <meta property="og:description" content="음료내기, 로또번호추천, 밸런스월드컵, 라이어게임 등 재밌는 미니게임을 무료로 즐겨보세요!" />
     <meta property="og:url" content="https://jun-gamebox.com/" />
     <meta property="og:image" content="https://jun-gamebox.com/ogImage.png" />
     <meta property="og:image:width" content="1200" />
@@ -55,16 +75,16 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="J GameBox - 음료내기 · 로또번호 · 밸런스월드컵 · 라이어게임" />
-    <meta name="twitter:description" content="음료내기, 로또번호생성, 밸런스월드컵, 라이어게임 등 재밌는 미니게임을 무료로 즐겨보세요!" />
+    <meta name="twitter:description" content="음료내기, 로또번호추천, 밸런스월드컵, 라이어게임 등 재밌는 미니게임을 무료로 즐겨보세요!" />
     <meta name="twitter:image" content="https://jun-gamebox.com/ogImage.png" />
 
-    <link rel="icon" type="image/png" sizes="48x48" href="https://jun-gamebox.com/favicon.png" />
-    <link rel="shortcut icon" type="image/x-icon" href="https://jun-gamebox.com/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="https://jun-gamebox.com/apple-touch-icon.png" />
-    <link rel="icon" href="https://jun-gamebox.com/favicon.svg" type="image/svg+xml" />
-
-
-    <!-- <link rel="apple-touch-icon" sizes="180x180" href="https://jun-gamebox.com/apple-touch-icon.png" /> -->
+    <!-- 아이콘은 루트 상대 경로로 지정한다.
+         절대 URL(https://jun-gamebox.com/...)로 두면 로컬 개발 중에도 실서버에서 받아오고,
+         도메인이 바뀌면 전부 깨진다. sizes 는 실제 파일 크기와 일치해야 한다. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="128x128" href="/favicon.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     
     <!-- icon & img Reference -->
     <!-- <a href="https://www.flaticon.com/kr/free-icons/-" title="모바일 애플리케이션 아이콘">모바일 애플리케이션 아이콘 제작자: Design Circle - Flaticon</a> -->
@@ -74,7 +94,7 @@
   </head>
   <body>
     <div id="root">
-      <h1 style="color: #FFFFFF">J GameBox - 무료 미니게임 모음</h1>
+      <h1 style="color: #FFFFFF">JJang Games 짱게임즈 - 무료 미니게임 모음</h1>
       <p style="color: #FFFFFF">음료내기, 로또번호 생성기, 밸런스 게임, 라이어 게임, 제비뽑기 등 다양한 웹 게임을 즐겨보세요.</p>
     </div>
     <script type="module" src="/src/main.tsx"></script>

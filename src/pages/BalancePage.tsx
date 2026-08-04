@@ -157,7 +157,7 @@ export default function BalancePage() {
       <div
             ref={side === "A" ? leftRef : rightRef}
             // 최상위 div에 기본적으로 배경색을 설정하여 이미지가 없거나 로딩 중일 때 빈 공간이 보이지 않게 합니다.
-            className="relative flex-1 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-white/10 shadow-lg transition-transform duration-200 hover:scale-[1.02] cursor-pointer bg-slate-800" // 👈 배경색을 기본으로 설정
+            className="relative flex-1 aspect-[4/3] rounded-xl overflow-hidden ring-1 ring-veil/10 shadow-lg transition-transform duration-200 hover:scale-[1.02] cursor-pointer bg-slate-800" // 👈 배경색을 기본으로 설정
             onClick={onPick}
             role="button"
             aria-label={item.name}
@@ -180,7 +180,7 @@ export default function BalancePage() {
           {/* 이름 오버레이 (나머지 생략) */}
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none" />
           <div className="absolute inset-x-0 bottom-0 p-3 text-center">
-              <span className="text-white font-bold text-sm drop-shadow">
+              <span className="text-strong font-bold text-sm drop-shadow">
                   {item.name}
               </span>
           </div>
@@ -221,11 +221,16 @@ export default function BalancePage() {
       };
       box.addEventListener("transitionend", onTransitionEnd as any);
 
-      // 풀스크린으로 확장
-      box.style.top = "0px";
-      box.style.left = "0px";
-      box.style.width = "100vw";
-      box.style.height = "100vh";
+      // 앱 셸(모바일 폭 중앙 열) 크기로 확장.
+      // box 는 position:fixed(뷰포트 기준)이므로 셸의 화면상 위치를 그대로 사용한다.
+      // 모바일에서는 셸 == 뷰포트라 기존 풀스크린 동작과 동일하다.
+      const shell = document.getElementById("app-shell");
+      const r = shell?.getBoundingClientRect();
+
+      box.style.top = `${r?.top ?? 0}px`;
+      box.style.left = `${r?.left ?? 0}px`;
+      box.style.width = r ? `${r.width}px` : "100vw";
+      box.style.height = r ? `${r.height}px` : "100vh";
       box.style.borderRadius = "0px";
       box.style.transform = "translate3d(0,0,0) scale(1)";
     });
@@ -239,10 +244,10 @@ export default function BalancePage() {
             // ✅ 결과 리스트 전용 뷰 (카테고리 버튼/그리드 감추기)
             <div className="flex-1 flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <div className="text-white font-semibold">🏆 우승 결과</div>
+                <div className="text-strong font-semibold">🏆 우승 결과</div>
                 <button
                   onClick={() => setShowLeaderboard(false)}
-                  className="text-sm px-3 py-2 rounded-md bg-slate-700 hover:bg-slate-600 text-white font-medium transition-colors"
+                  className="text-sm px-3 py-2 rounded-md bg-slate-700 hover:bg-slate-600 text-strong font-medium transition-colors"
                 >
                   닫기
                 </button>
@@ -263,7 +268,7 @@ export default function BalancePage() {
                 </button>
               </div>
 
-              <div className="text-white text-xl font-bold text-center">
+              <div className="text-strong text-xl font-bold text-center">
                 카테고리를 선택하세요
               </div>
 
@@ -272,7 +277,7 @@ export default function BalancePage() {
                   <button
                     key={category.id}
                     onClick={() => selectCategory(category)}
-                    className="py-5 px-4 bg-slate-800 hover:bg-slate-700 rounded-lg text-white font-semibold text-base transition-colors shadow"
+                    className="py-5 px-4 bg-slate-800 hover:bg-slate-700 rounded-lg text-strong font-semibold text-base transition-colors shadow"
                   >
                     {category.name}
                     <div className="text-xs text-slate-400 mt-1">
@@ -292,7 +297,7 @@ export default function BalancePage() {
 
           return (
             <div className="flex-1 flex flex-col items-center justify-center gap-6">
-              <div className="text-white text-xl font-bold text-center leading-tight">
+              <div className="text-strong text-xl font-bold text-center leading-tight">
                 {selectedCategory.name}
                 <br />
                 <span className="text-sm text-slate-400 font-normal">
@@ -318,7 +323,7 @@ export default function BalancePage() {
 
               <button
                 onClick={reset}
-                className="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md text-sm transition-colors"
+                className="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-strong rounded-md text-sm transition-colors"
               >
                 뒤로가기
               </button>
@@ -330,7 +335,7 @@ export default function BalancePage() {
         {stage === "tournament" && itemA && itemB && (
           <div className="flex-1 flex flex-col items-center justify-center gap-4">
             {/* 진행 상태 (폰트 축소) */}
-            <div className="text-white text-center leading-tight">
+            <div className="text-strong text-center leading-tight">
               <div className="text-base font-semibold">
                 {tournamentSize ?? "?"}강 토너먼트
               </div>
@@ -342,7 +347,7 @@ export default function BalancePage() {
             </div>
 
             {/* 상단 VS 배지 (폰트 축소) */}
-            <div className="px-5 py-1.5 rounded-full bg-white/10 text-white text-lg font-extrabold tracking-wider">
+            <div className="px-5 py-1.5 rounded-full bg-veil/10 text-strong text-lg font-extrabold tracking-wider">
               VS
             </div>
 
@@ -359,7 +364,7 @@ export default function BalancePage() {
 
             <button
               onClick={reset}
-              className="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-md text-sm transition-colors"
+              className="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-strong rounded-md text-sm transition-colors"
             >
               뒤로가기
             </button>
@@ -418,7 +423,7 @@ export default function BalancePage() {
             )}
             <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-6 text-center">
-              <span className="text-white font-extrabold text-2xl drop-shadow">
+              <span className="text-strong font-extrabold text-2xl drop-shadow">
                 {overlay.item.name}
               </span>
             </div>

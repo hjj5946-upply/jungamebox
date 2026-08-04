@@ -65,7 +65,7 @@
 | 패키지 | 버전 | 용도 |
 |--------|------|------|
 | `react` / `react-dom` | ^19.1.1 | UI 렌더링 (React 19) |
-| `react-router-dom` | ^7.9.5 | 클라이언트 라우팅 (**HashRouter**) |
+| `react-router-dom` | ^7.9.5 | 클라이언트 라우팅 (**BrowserRouter**) |
 | `@supabase/supabase-js` | ^2.86.2 | 랭킹 저장/조회 (BaaS) |
 | `gsap` | ^3.15.0 | 타임라인 기반 애니메이션 (강화·카드·빙고·레이스·타이밍) |
 | `planck-js` | ^1.3.0 | 2D 물리 엔진 (주사위, 핀볼) |
@@ -231,7 +231,7 @@ jungamebox/
 │   └── google*.html, naver*.html    # 검색엔진 소유권 확인 파일
 ├── src/
 │   ├── main.tsx                # 진입점: 콘솔 배너 + createRoot 부트스트랩
-│   ├── App.tsx                 # HashRouter 라우트 테이블 (단일 소스)
+│   ├── App.tsx                 # 앱 셸 + BrowserRouter 라우트 테이블 (단일 소스)
 │   ├── index.css               # Tailwind 지시자 + bounceIn 커스텀 키프레임
 │   ├── assets/                 # 코드에서 import하는 이미지 69개 (전부 WebP, Vite 번들·해시 대상)
 │   │   ├── sword0~20.webp      # 무기강화 단계별 이미지 (21단계)
@@ -287,7 +287,7 @@ jungamebox/
                             · 콘솔 ASCII 배너 1회
                             · createRoot + StrictMode
                                    ↓
-                          src/App.tsx (HashRouter)
+                          src/App.tsx (BrowserRouter)
                                    ↓
               ┌────────────────────┴────────────────────┐
               ↓                                         ↓
@@ -312,7 +312,7 @@ jungamebox/
 
 | | `MainLayout` | `GameLayout` |
 |---|---|---|
-| 사용처 | `HomePage`, `Policy`, `Terms`, `Contact` | 게임 페이지 전체 |
+| 사용처 | `HomePage`, `Terms` | 게임 페이지 전체 |
 | 높이 | `min-h-dvh` (내용 따라 늘어남) | `h-screen` (고정, 내부 스크롤) |
 | 상단 | `TopBar` (로고 + 홈 이동) | 뒤로가기 버튼 + 게임 타이틀 |
 | 하단 | 후원 버튼 + 고지 문구 + `BottomBar` | 없음 |
@@ -356,7 +356,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 ## 🗺 라우팅 맵
 
-**HashRouter**를 사용하므로 실제 URL은 `https://jun-gamebox.com/#/games/dice` 형태입니다. (GitHub Pages에서 SPA 404 문제를 피하기 위한 선택)
+**BrowserRouter**를 사용하므로 URL에 `#`이 없습니다 — `https://jun-gamebox.com/games/dice`.
+
+GitHub Pages는 정적 서버라 `/games/dice` 경로에 해당하는 파일이 없으면 404를 내는데, 배포 워크플로가 **`dist/index.html`을 `dist/404.html`로 복사**해 이를 해결합니다. Pages가 없는 경로에 `404.html`을 돌려주므로 어떤 경로로 직접 진입하거나 새로고침해도 앱이 로드되고, 이후 React Router가 클라이언트에서 경로를 처리합니다.
 
 ### 게임 라우트
 
@@ -396,9 +398,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 | 경로 | 페이지 |
 |------|--------|
-| `/policy` | 개인정보처리방침 |
-| `/terms` | 이용약관 |
-| `/contact` | 문의 |
+| `/terms` | 이용약관 (서비스 성격 고지·책임 한계·지식재산권·문의 이메일) |
 
 ---
 
@@ -589,7 +589,7 @@ iOS 대응으로 `apple-mobile-web-app-capable`, `apple-mobile-web-app-status-ba
 
 - Tailwind 유틸리티 클래스를 JSX에 직접 작성. **CSS 모듈이나 styled-components를 쓰지 않습니다.**
 - **폰트: Pretendard 가변폰트 (자체 호스팅)** — `tailwind.config.js`의 `fontFamily.sans`에서 지정하고 Tailwind preflight가 `html`에 적용합니다. 동적 서브셋(92조각)이라 화면에 보이는 글자에 해당하는 조각만 내려받으며, 가변 축(`font-weight: 45 920`)이 모든 굵기를 커버합니다. `font-mono`는 자리폭 정렬용 3곳(퀴즈 선택지·타이머·타이밍 숫자)을 위해 등폭 기본값을 유지합니다.
-- 색상 팔레트: `slate` 계열 다크 테마 고정 (`bg-slate-900` 배경, `bg-slate-800` 카드, `text-slate-200` 본문). 라이트 모드는 없습니다.
+- **라이트/다크 테마 지원.** 기본값은 라이트(흰색), 다크는 `#121314`(본체) + `#191a1b`(카드) 조합. `html.dark` 클래스로 전환하고 실제 색은 `src/index.css` 의 CSS 변수가 담당합니다. `slate-*` 는 CSS 변수로 매핑된 **표면 단계 토큰**이라 기존 클래스가 테마에 자동 반응하며, 램프 방향이 테마마다 뒤집힙니다. 글자색은 중립 표면 위 `text-strong`, 유채색 배경 위 `text-white` 고정으로 구분합니다 — 자세한 규칙은 `CLAUDE.md` 참조.
 - 본문 최대 폭 `max-w-md` — 모바일 우선 설계.
 - 커스텀 애니메이션은 `src/index.css`에 키프레임으로 추가 (현재 `bounceIn` 1종).
 
@@ -609,9 +609,9 @@ iOS 대응으로 `apple-mobile-web-app-capable`, `apple-mobile-web-app-status-ba
 
 | 항목 | 내용 |
 |------|------|
-| **sitemap.xml 불일치** | `public/sitemap.xml`의 URL이 여전히 `hjj5946-upply.github.io/jungamebox/`를 가리켜, `index.html`의 canonical(`jun-gamebox.com`)과 어긋납니다. 등록된 게임 수(5개)도 실제(23개)보다 훨씬 적습니다. |
 | **참조되나 없는 파일** | `index.html`이 `apple-touch-icon.png`(180×180)와 `favicon.svg`를 참조하지만 **두 파일 모두 존재하지 않습니다.** iOS 홈화면 추가 시 아이콘이 깨집니다. `apple-touch-icon`은 iOS가 WebP를 지원하지 않으므로 **PNG로** 추가해야 합니다. |
-| **HashRouter의 SEO 한계** | `#/games/...` 뒤쪽은 크롤러가 별도 페이지로 색인하지 않습니다. 개별 게임 페이지 색인이 필요하면 `BrowserRouter` + Pages `404.html` 리다이렉트 트릭 또는 SSG 전환이 필요합니다. |
+| **404.html 방식의 한계** | 게임 페이지에 직접 진입하면 서버가 먼저 **HTTP 404 상태코드**를 준 뒤 앱이 로드됩니다. 브라우저에서는 정상 동작하지만, 크롤러가 이를 어떻게 취급할지는 보장되지 않습니다. 개별 페이지 색인을 확실히 하려면 SSG(사전 렌더링) 전환이 필요합니다. |
+| **페이지별 메타태그 동일** | `index.html` 하나를 공유하므로 모든 라우트의 `title`·`description`·OG 태그가 홈과 같습니다. 게임별 메타가 필요하면 런타임 주입 또는 SSG가 필요합니다. |
 | **코드 스플리팅 없음** | 모든 페이지를 `App.tsx`에서 정적 import하므로 GSAP·planck-js를 포함한 전체 번들이 첫 방문에 로드됩니다. `React.lazy` + `Suspense` 적용 여지가 있습니다. |
 | **버전 표기 이원화** | `package.json`은 `0.0.0`, `BottomBar`는 `v1.0.9`로 하드코딩되어 있습니다. |
 | **Service Worker 부재** | PWA 매니페스트만 있고 오프라인 캐싱은 없습니다. |

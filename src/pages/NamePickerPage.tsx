@@ -74,7 +74,7 @@ export default function NamePickerPage() {
             onChange={(e) => setInputName(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && addName()}
             placeholder="이름 입력"
-            className="flex-1 px-4 py-3 bg-slate-800 text-white rounded-lg placeholder-slate-500"
+            className="flex-1 px-4 py-3 bg-slate-800 text-strong rounded-lg placeholder-slate-500"
           />
           <button
             onClick={addName}
@@ -97,7 +97,7 @@ export default function NamePickerPage() {
                   key={index}
                   className="flex items-center gap-2 px-3 py-2 bg-slate-700 rounded-lg"
                 >
-                  <span className="text-white">{name}</span>
+                  <span className="text-strong">{name}</span>
                   <button
                     onClick={() => removeName(index)}
                     className="text-red-400 hover:text-red-300"
@@ -116,7 +116,7 @@ export default function NamePickerPage() {
             !isPicking ? "animate-bounce" : ""
           }`}>
             <div className="text-slate-200 text-sm mb-2">{isPicking ? "뽑는 중..." : pickedMessage}</div>
-            <div className="text-white text-4xl font-bold">{pickedName}</div>
+            <div className="text-strong text-4xl font-bold">{pickedName}</div>
           </div>
         )}
 
@@ -125,7 +125,7 @@ export default function NamePickerPage() {
           {names.length > 0 && (
             <button
               onClick={clearAll}
-              className="px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg"
+              className="px-4 py-3 bg-slate-700 hover:bg-slate-600 text-strong rounded-lg"
             >
               전체삭제
             </button>
@@ -133,7 +133,7 @@ export default function NamePickerPage() {
           {pickedName && !isPicking && (
             <button
               onClick={reset}
-              className="px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg"
+              className="px-4 py-3 bg-slate-700 hover:bg-slate-600 text-strong rounded-lg"
             >
               다시뽑기
             </button>

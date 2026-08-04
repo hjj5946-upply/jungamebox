@@ -1,18 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  BrowserRouter 사용 → 해시(#) 없는 실제 경로를 등록한다.
+  도메인은 index.html 의 canonical 과 반드시 일치해야 한다: https://jun-gamebox.com/
+  게임을 추가/삭제하면 src/data/games.ts 의 GAME_LIST 와 함께 이 파일도 갱신할 것.
+  홈에 노출하지 않는 라우트(/games/pinball, /games/ladder)는 의도적으로 제외했다.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hjj5946-upply.github.io/jungamebox/</loc>
+    <loc>https://jun-gamebox.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- 게임 23종 (GAME_LIST 순서) -->
+  <url>
+    <loc>https://jun-gamebox.com/games/reflexes</loc>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hjj5946-upply.github.io/jungamebox/#/games/roulette</loc>
+    <loc>https://jun-gamebox.com/games/str</loc>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hjj5946-upply.github.io/jungamebox/#/games/dice</loc>
+    <loc>https://jun-gamebox.com/games/timing</loc>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hjj5946-upply.github.io/jungamebox/#/games/balance</loc>
+    <loc>https://jun-gamebox.com/games/roulette</loc>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hjj5946-upply.github.io/jungamebox/#/games/lotto</loc>
+    <loc>https://jun-gamebox.com/games/balance</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/dice</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/rock</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/lotto</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/bingo</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/reading</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/card</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/sudoku</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/speed</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/memory</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/math</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/liar</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/namepick</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/order</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/quiz</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/ifelse</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/color</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/timer</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/wisesay</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 정적 페이지 -->
+  <url>
+    <loc>https://jun-gamebox.com/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

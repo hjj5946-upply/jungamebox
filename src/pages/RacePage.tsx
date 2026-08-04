@@ -151,13 +151,13 @@ export default function RacePage() {
   };
 
   return (
-    <GameLayout title="1빠 정하기 레이스 | J GameBox">
+    <GameLayout title="1빠정하기">
       <div ref={scope} className="flex flex-col h-full overflow-hidden">
         
         {/* 1단계: 인원수 선택 */}
         {step === "select-count" && (
           <div className="flex-1 flex flex-col items-center justify-center gap-6 fade-in-element">
-            <h2 className="text-white text-2xl font-bold">참가 인원을 선택하세요</h2>
+            <h2 className="text-strong text-2xl font-bold">참가 인원을 선택하세요</h2>
             <div className="grid grid-cols-3 gap-3">
               {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((count) => (
                 <button
@@ -175,7 +175,7 @@ export default function RacePage() {
         {/* 2단계: 이름 입력 */}
         {step === "input-names" && (
           <div className="flex-1 flex flex-col gap-4 p-4 fade-in-element">
-            <h2 className="text-white text-xl font-bold text-center">참가자 이름을 입력하세요</h2>
+            <h2 className="text-strong text-xl font-bold text-center">참가자 이름을 입력하세요</h2>
             <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
               {racers.map((racer, index) => (
                 <div key={racer.id} className="flex items-center gap-3 bg-slate-800/50 p-2 rounded-xl border border-slate-700">
@@ -185,14 +185,14 @@ export default function RacePage() {
                     value={racer.name}
                     onChange={(e) => handleNameChange(racer.id, e.target.value)}
                     placeholder={`${index + 1}번 참가자`}
-                    className="flex-1 px-4 py-3 bg-slate-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="flex-1 px-4 py-3 bg-slate-900 text-strong rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                     maxLength={4}
                   />
                 </div>
               ))}
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setStep("select-count")} className="px-6 py-4 bg-slate-700 text-white rounded-xl font-bold">뒤로</button>
+              <button onClick={() => setStep("select-count")} className="px-6 py-4 bg-slate-700 text-strong rounded-xl font-bold">뒤로</button>
               <button onClick={startCountdown} className="flex-1 py-4 bg-green-600 text-white font-bold rounded-xl shadow-[0_4px_0_rgb(22,101,52)] active:translate-y-1 active:shadow-none transition-all">레이스 시작!</button>
             </div>
           </div>
@@ -201,7 +201,7 @@ export default function RacePage() {
         {/* 3단계: 카운트다운 */}
         {step === "countdown" && (
           <div className="flex-1 flex items-center justify-center">
-            <div className="countdown-text text-white text-9xl font-black italic">
+            <div className="countdown-text text-strong text-9xl font-black italic">
               {countdown > 0 ? countdown : "GO!"}
             </div>
           </div>
@@ -242,7 +242,7 @@ export default function RacePage() {
         {/* 5단계: 결과 */}
         {step === "result" && (
           <div className="flex-1 flex flex-col gap-4 p-4 fade-in-element">
-            <h2 className="text-white text-3xl font-black text-center mb-2 italic">RANKING</h2>
+            <h2 className="text-strong text-3xl font-black text-center mb-2 italic">RANKING</h2>
             <div className="flex-1 overflow-y-auto space-y-3">
               {[...racers]
                 .sort((a, b) => (a.finishOrder || 0) - (b.finishOrder || 0))
@@ -250,19 +250,30 @@ export default function RacePage() {
                   const isFirst = racer.finishOrder === 1;
                   const isLast = racer.finishOrder === playerCount;
                   
+                  // 메달 색은 "장식"이므로 테마와 무관하게 고정한다.
+                  // (은메달에 slate 를 쓰면 테마 토큰이라 라이트 모드에서 어둡게 뒤집힌다 → zinc 사용)
+                  // 글자색도 배경 밝기에 맞춰 행마다 따로 정한다.
                   let medalColor = "bg-slate-700";
-                  if (isFirst) medalColor = "bg-gradient-to-r from-yellow-300 to-yellow-600 shadow-[0_0_15px_rgba(251,191,36,0.4)]";
-                  else if (racer.finishOrder === 2) medalColor = "bg-gradient-to-r from-slate-300 to-slate-500";
-                  else if (racer.finishOrder === 3) medalColor = "bg-gradient-to-r from-orange-400 to-orange-700";
+                  let medalText = "text-strong";
+                  if (isFirst) {
+                    medalColor = "bg-gradient-to-r from-yellow-300 to-yellow-600 shadow-[0_0_15px_rgba(251,191,36,0.4)]";
+                    medalText = "text-black";
+                  } else if (racer.finishOrder === 2) {
+                    medalColor = "bg-gradient-to-r from-zinc-300 to-zinc-500";
+                    medalText = "text-black";
+                  } else if (racer.finishOrder === 3) {
+                    medalColor = "bg-gradient-to-r from-orange-400 to-orange-700";
+                    medalText = "text-white";
+                  }
 
                   return (
                     <div key={racer.id} className={`flex items-center gap-4 px-4 py-4 rounded-2xl ${medalColor} transition-transform hover:scale-[1.02]`}>
-                      <div className="w-12 h-12 bg-black/20 rounded-full flex items-center justify-center text-white font-black text-xl border border-white/20">
+                      <div className={`w-12 h-12 bg-black/20 rounded-full flex items-center justify-center ${medalText} font-black text-xl border border-black/20`}>
                         {racer.finishOrder}
                       </div>
                       <img src={racer.image} alt="winner" className="w-12 h-12 object-contain" />
                       <div className="flex-1">
-                        <div className="text-white text-xl font-bold drop-shadow-sm">{racer.name}</div>
+                        <div className={`${medalText} text-xl font-bold drop-shadow-sm`}>{racer.name}</div>
                         {isLast && <div className="text-black/60 text-xs font-bold mt-0.5 animate-pulse">응 너 꼴찌 ㅋㅋ</div>}
                       </div>
                       {isFirst && <span className="text-2xl">👑</span>}

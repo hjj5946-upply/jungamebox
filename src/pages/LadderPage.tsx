@@ -145,7 +145,8 @@ function LadderView({ players, ladder, activeIndex, onFinish }: LadderViewProps)
               y1={0}
               x2={x}
               y2={viewHeight}
-              stroke="#e5e7eb"
+              // 테마에 따라 반응하는 사다리 선 색 (라이트에서 흰 배경에 묻히지 않도록)
+              stroke="rgb(var(--s-600))"
               strokeWidth={3}
             />
           );

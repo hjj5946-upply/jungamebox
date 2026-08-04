@@ -1,0 +1,42 @@
+<svg width="678" height="154" viewBox="0 0 678 154" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="25.8284" y="25.6669" width="25.8286" height="25.6667" fill="white"/>
+<rect y="51.3331" width="25.8286" height="25.6667" fill="white"/>
+<rect x="51.657" y="25.6669" width="25.8286" height="25.6667" fill="white"/>
+<rect x="25.8284" y="51.3331" width="25.8286" height="25.6667" fill="white"/>
+<rect x="25.8284" y="77" width="25.8286" height="25.6667" fill="white"/>
+<rect x="51.657" y="77" width="25.8286" height="25.6667" fill="white"/>
+<rect x="103.315" y="77" width="25.8286" height="25.6667" fill="white"/>
+<rect x="77.4854" y="77" width="25.8286" height="25.6667" fill="white"/>
+<rect x="129.143" y="77" width="25.8286" height="25.6667" fill="white"/>
+<rect x="129.143" y="51.3331" width="25.8286" height="25.6667" fill="white"/>
+<rect x="116.228" y="102.667" width="25.8286" height="25.6667" fill="white"/>
+<rect x="38.743" y="102.667" width="25.8286" height="25.6667" fill="white"/>
+<rect x="77.4854" y="51.3331" width="25.8286" height="25.6667" fill="white"/>
+<rect x="103.315" y="25.6669" width="25.8286" height="25.6667" fill="white"/>
+<rect x="77.4854" y="25.6669" width="25.8286" height="25.6667" fill="white"/>
+<rect x="116.228" width="25.8286" height="25.6667" fill="white"/>
+<rect x="116.228" width="25.8286" height="25.6667" fill="white"/>
+<rect x="142.057" width="25.8286" height="25.6667" fill="white"/>
+<rect x="38.743" width="25.8286" height="25.6667" fill="white"/>
+<rect x="12.9147" width="25.8286" height="25.6667" fill="white"/>
+<rect x="129.143" y="25.6669" width="25.8286" height="25.6667" fill="white"/>
+<rect x="154.971" y="51.3331" width="25.8286" height="25.6667" fill="white"/>
+<rect x="154.971" y="77" width="25.8286" height="25.6667" fill="white"/>
+<rect y="77" width="25.8286" height="25.6667" fill="white"/>
+<rect x="12.9147" y="102.667" width="25.8286" height="25.6667" fill="white"/>
+<rect x="142.057" y="102.667" width="25.8286" height="25.6667" fill="white"/>
+<rect x="116.228" y="128.333" width="25.8286" height="25.6667" fill="white"/>
+<rect x="90.4" y="128.333" width="25.8286" height="25.6667" fill="white"/>
+<rect x="64.5717" y="128.333" width="25.8286" height="25.6667" fill="white"/>
+<rect x="38.743" y="128.333" width="25.8286" height="25.6667" fill="white"/>
+<path d="M248.6 69.6889V59.7333H237.3V49.7778H259.9V59.7333H293.8V0H316.4V59.7333H305.1V69.6889H248.6Z" fill="white"/>
+<path d="M339 69.6889V59.7333H327.7V49.7778H350.3V59.7333H384.2V0H406.8V59.7333H395.5V69.6889H339Z" fill="white"/>
+<path d="M418.1 69.6889V19.9111H429.4V9.95555H440.7V0H474.6V9.95555H485.9V19.9111H497.2V69.6889H474.6V49.7778H440.7V69.6889H418.1ZM440.7 39.8222H474.6V19.9111H463.3V9.95555H452V19.9111H440.7V39.8222Z" fill="white"/>
+<path d="M508.5 69.6889V0H531.1V9.95555H542.4V19.9111H553.7V29.8667H565V0H587.6V69.6889H565V49.7778H553.7V39.8222H542.4V29.8667H531.1V69.6889H508.5Z" fill="white"/>
+<path d="M621.5 69.6889V59.7333H610.2V49.7778H598.9V19.9111H610.2V9.95555H621.5V0H678V9.95555H632.8V19.9111H621.5V49.7778H632.8V59.7333H655.4V39.8222H644.1V29.8667H678V69.6889H621.5Z" fill="white"/>
+<path d="M259.9 154V144.044H248.6V134.089H237.3V104.222H248.6V94.2667H259.9V84.3111H316.4V94.2667H271.2V104.222H259.9V134.089H271.2V144.044H293.8V124.133H282.5V114.178H316.4V154H259.9Z" fill="white"/>
+<path d="M327.7 154V104.222H339V94.2667H350.3V84.3111H384.2V94.2667H395.5V104.222H406.8V154H384.2V134.089H350.3V154H327.7ZM350.3 124.133H384.2V104.222H372.9V94.2667H361.6V104.222H350.3V124.133Z" fill="white"/>
+<path d="M418.1 154V84.3111H440.7V94.2667H452V104.222H463.3V94.2667H474.6V84.3111H497.2V154H474.6V114.178H463.3V134.089H452V114.178H440.7V154H418.1Z" fill="white"/>
+<path d="M508.5 154V84.3111H587.6V94.2667H531.1V114.178H576.3V124.133H531.1V144.044H587.6V154H508.5Z" fill="white"/>
+<path d="M610.2 154V144.044H598.9V134.089H621.5V144.044H655.4V124.133H610.2V114.178H598.9V94.2667H610.2V84.3111H666.7V94.2667H678V104.222H655.4V94.2667H621.5V114.178H666.7V124.133H678V144.044H666.7V154H610.2Z" fill="white"/>
+</svg>

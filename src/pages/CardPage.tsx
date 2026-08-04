@@ -92,7 +92,7 @@ export default function CardPage() {
   };
 
   return (
-    <GameLayout title="랜덤 카드 뽑기 | J GameBox">
+    <GameLayout title="카드뽑기">
       <div ref={scope} className="flex flex-col h-full gap-6 py-4 px-4 overflow-hidden">
         
         {/* 카드 표시 영역 */}
@@ -102,9 +102,9 @@ export default function CardPage() {
             {!currentCard && !isDrawing && (
               <div
                 onClick={drawCard}
-                className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-blue-700 to-blue-900 rounded-2xl border-4 border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform group"
+                className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-blue-700 to-blue-900 rounded-2xl border-4 border-veil/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform group"
               >
-                <div className="w-full h-full border-2 border-white/10 m-2 rounded-xl flex items-center justify-center">
+                <div className="w-full h-full border-2 border-veil/10 m-2 rounded-xl flex items-center justify-center">
                   <span className="text-6xl group-hover:scale-125 transition-transform">🃏</span>
                 </div>
                 <div className="absolute bottom-6 text-blue-200 font-bold tracking-widest text-sm uppercase">Tap to Draw</div>
@@ -160,7 +160,7 @@ export default function CardPage() {
             </button>
             <button
               onClick={reset}
-              className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-2xl transition-all"
+              className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-strong font-bold rounded-2xl transition-all"
             >
               리셋
             </button>

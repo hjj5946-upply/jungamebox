@@ -174,12 +174,12 @@ export default function BingoPage() {
   };
 
   return (
-    <GameLayout title="무료 온라인 빙고판 | J GameBox">
+    <GameLayout title="빙고">
       <div ref={scope} className="flex flex-col h-full gap-6 py-4">
         {/* 빙고 카운트 */}
         {mode !== "custom-input" && (
           <div className="text-center">
-            <div className="bingo-count-display text-white text-5xl font-bold mb-2">
+            <div className="bingo-count-display text-strong text-5xl font-bold mb-2">
               {bingoCount > 0 && <span className="inline-block mr-2">🎉</span>}
               {bingoCount} BINGO
               {bingoCount > 0 && <span className="inline-block ml-2">🎉</span>}
@@ -195,7 +195,7 @@ export default function BingoPage() {
         {/* 커스텀 모드 설명 */}
         {mode === "custom-input" && (
           <div className="text-center">
-            <h2 className="text-white text-xl font-bold">나만의 단어 빙고 만들기</h2>
+            <h2 className="text-strong text-xl font-bold">나만의 단어 빙고 만들기</h2>
             <p className="text-slate-400 text-sm mt-1">(최대 8글자, 중복 없이 입력하세요)</p>
           </div>
         )}
@@ -215,7 +215,7 @@ export default function BingoPage() {
                       type="text"
                       value={cell.text}
                       onChange={(e) => handleCustomTextChange(rowIndex, colIndex, e.target.value)}
-                      className="bingo-cell aspect-square rounded-lg text-xs font-bold bg-slate-800 text-white text-center border-2 border-slate-600 focus:border-blue-500 focus:outline-none p-1"
+                      className="bingo-cell aspect-square rounded-lg text-xs font-bold bg-slate-800 text-strong text-center border-2 border-slate-600 focus:border-blue-500 focus:outline-none p-1"
                       placeholder={`${rowIndex * 5 + colIndex + 1}`}
                     />
                   );
@@ -257,12 +257,12 @@ export default function BingoPage() {
           <div className="flex gap-2">
             {mode === "custom-input" ? (
               <>
-                <button onClick={initializeNumberBoard} className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-all">취소</button>
+                <button onClick={initializeNumberBoard} className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-strong font-bold rounded-xl transition-all">취소</button>
                 <button onClick={startCustomGame} className="flex-1 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg">시작하기</button>
               </>
             ) : (
               <>
-                <button onClick={initializeNumberBoard} className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-all">숫자 빙고</button>
+                <button onClick={initializeNumberBoard} className="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-strong font-bold rounded-xl transition-all">숫자 빙고</button>
                 <button onClick={initializeCustomBoard} className="flex-1 py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-lg">커스텀 빙고</button>
               </>
             )}

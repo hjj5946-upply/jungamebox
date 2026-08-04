@@ -30,7 +30,7 @@ function printRainbowGameBannerOnce() {
 
   // 헤더/안내 문구
   console.log(
-    "%cJ GameBox Console",
+    "%cJJang Games Console",
     "font-weight:800; font-size:14px; color:#0f172a; background:#e2e8f0; padding:6px 10px; border-radius:8px;"
   );
 
@@ -51,7 +51,7 @@ function printRainbowGameBannerOnce() {
 
   // 하단 포인트 문구 (레인보우 느낌으로 강조)
   console.log(
-    "%cⓒ Hong JeongJun 🎮",
+    "%cⓒ Jun 🎮",
     "font-weight:700; font-size:12px; background:linear-gradient(90deg,#ff004c,#ff7a00,#ffd400,#00d084,#00aaff,#7a3cff); -webkit-background-clip:text; color:transparent;"
   );
 }

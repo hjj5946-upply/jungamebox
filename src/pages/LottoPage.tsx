@@ -112,6 +112,7 @@ export default function LottoPage() {
               return (
                 <div
                   key={index}
+                  // 배경이 getNumberColor()의 유채색 공이므로 테마와 무관하게 흰 글자 유지
                   className={`w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl transition-all duration-200 shadow-lg ${
                     isRevealed
                       ? `${getNumberColor(number!)} scale-100 opacity-100 animate-bounce`
@@ -144,7 +145,7 @@ export default function LottoPage() {
         {/* 뽑은 번호 상세 */}
         {numbers.every(n => n !== null) && !isDrawing && (
           <div className="bg-slate-800 rounded-lg p-4">
-            <div className="text-white text-sm font-semibold mb-2">뽑은 번호:</div>
+            <div className="text-strong text-sm font-semibold mb-2">뽑은 번호:</div>
             <div className="flex gap-2 flex-wrap">
               {numbers.filter(n => n !== null).map((num, index) => (
                 <div
@@ -161,7 +162,7 @@ export default function LottoPage() {
         {/* 이전 뽑기 기록 */}
         {drawHistory.length > 0 && (
           <div className="max-h-40 overflow-y-auto space-y-2">
-            <div className="text-white text-sm font-semibold">이전 뽑기:</div>
+            <div className="text-strong text-sm font-semibold">이전 뽑기:</div>
             <div className="space-y-2">
               {drawHistory.map((history, historyIndex) => (
                 <div

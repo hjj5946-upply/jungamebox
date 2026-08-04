@@ -97,7 +97,7 @@ export default function ReadingPage() {
     if (difficulty === diff) {
       return `${baseClass} bg-blue-600 text-white`;
     }
-    return `${baseClass} bg-transparent text-slate-400 hover:text-white`;
+    return `${baseClass} bg-transparent text-slate-400 hover:text-strong`;
   };
 
   return (
@@ -129,7 +129,7 @@ export default function ReadingPage() {
         <div className="w-full max-w-md bg-slate-800 rounded-xl p-8 flex flex-col items-center gap-6">
           {/* 문장 */}
           {currentPhrase && (
-            <div className="text-white text-xl leading-relaxed text-center font-medium px-4">
+            <div className="text-strong text-xl leading-relaxed text-center font-medium px-4">
               "{currentPhrase.text}"
             </div>
           )}
@@ -145,7 +145,7 @@ export default function ReadingPage() {
                 <div className="text-4xl font-bold text-yellow-400">
                   {result.toFixed(2)}초
                 </div>
-                <div className="text-xl text-white">
+                <div className="text-xl text-strong">
                   {getEvaluationText(result)}
                 </div>
               </div>
@@ -180,7 +180,7 @@ export default function ReadingPage() {
               <div className="flex gap-3">
                 <button
                   onClick={handleStart}
-                  className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+                  className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-strong rounded-lg font-semibold transition-colors"
                 >
                   다시하기
                 </button>

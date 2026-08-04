@@ -99,11 +99,11 @@ export default function TimingPage() {
   };
 
   return (
-    <GameLayout title="타이밍 캐치 | J GameBox">
+    <GameLayout title="타이밍캐치">
       <div ref={scope} className="flex flex-col items-center gap-8 p-6">
         
         {/* 모드 선택 탭 */}
-        <div className="flex bg-slate-900/50 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+        <div className="flex bg-slate-900/50 p-1.5 rounded-2xl border border-veil/10 backdrop-blur-md">
           {["bar", "number"].map((m) => (
             <button
               key={m}
@@ -118,15 +118,15 @@ export default function TimingPage() {
         </div>
 
         {/* 메인 게임 카드 */}
-        <div className="game-card w-full max-w-md bg-slate-800 rounded-[2rem] p-10 flex flex-col items-center gap-8 border border-white/5 shadow-2xl shadow-black/50 relative overflow-hidden">
+        <div className="game-card w-full max-w-md bg-slate-800 rounded-[2rem] p-10 flex flex-col items-center gap-8 border border-veil/5 shadow-2xl shadow-black/50 relative overflow-hidden">
           
           {mode === "bar" ? (
             <div className="w-full flex flex-col gap-6">
               <div className="text-center text-slate-300 font-medium">중앙 라인에 맞춰 멈추세요!</div>
               <div className="bar-container w-full h-24 bg-slate-950 rounded-2xl relative overflow-hidden border-4 border-slate-700 shadow-inner">
                 {/* 배경 가이드 라인 */}
-                <div className="absolute inset-y-0 left-1/4 w-px bg-white/5"></div>
-                <div className="absolute inset-y-0 left-3/4 w-px bg-white/5"></div>
+                <div className="absolute inset-y-0 left-1/4 w-px bg-veil/5"></div>
+                <div className="absolute inset-y-0 left-3/4 w-px bg-veil/5"></div>
                 
                 {/* 중앙 타겟 라인 */}
                 <div className="absolute left-1/2 top-0 bottom-0 w-2 bg-yellow-400 z-10 -translate-x-1/2 shadow-[0_0_15px_rgba(250,204,21,0.5)]" />
@@ -157,7 +157,7 @@ export default function TimingPage() {
           {result !== null && (
             <div className="result-score text-center">
               <div className="text-6xl font-black text-yellow-400 mb-2 drop-shadow-lg">{result}점</div>
-              <div className="text-xl text-white font-bold">{getResultText(result)}</div>
+              <div className="text-xl text-strong font-bold">{getResultText(result)}</div>
             </div>
           )}
 

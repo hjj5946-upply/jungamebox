@@ -140,7 +140,7 @@ export default function WisesayPage() {
 
             {/* 명언 텍스트 */}
             <div className="mt-6 mb-8 text-center">
-              <p className="text-white text-lg leading-relaxed font-medium">
+              <p className="text-strong text-lg leading-relaxed font-medium">
                 "{currentQuote.text}"
               </p>
             </div>
@@ -165,7 +165,7 @@ export default function WisesayPage() {
         <div className="flex gap-3 px-4 pb-4">
           <button
             onClick={handleCopy}
-            className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+            className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-strong rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
           >
             📋 {copied ? "복사됨!" : "복사"}
           </button>
