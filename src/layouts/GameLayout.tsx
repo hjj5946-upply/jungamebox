@@ -33,8 +33,10 @@ export default function GameLayout({ children, title }: Props) {
         <div className="w-8"></div> {/* 중앙 정렬용 */}
       </header>
 
-      {/* 게임 컨텐츠 */}
-      <main className="flex-1 overflow-auto flex justify-center">
+      {/* 게임 컨텐츠
+          min-w-0: 자식이 컨테이너보다 넓어지려 할 때 flex 부모가 늘어나지 않도록 한다.
+          (앱 셸이 overflow-hidden 이라 넘치면 스크롤이 아니라 잘려 보인다) */}
+      <main className="flex min-w-0 flex-1 justify-center overflow-auto">
         <div className="w-full max-w-md p-4">
           {children}
         </div>

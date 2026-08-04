@@ -262,12 +262,13 @@ export default function MathPage() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="flex-1 rounded-lg bg-slate-900/70 border border-slate-700 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    // min-w-0: 없으면 input 의 기본 min-content 폭 때문에 좁은 화면에서 행이 넘친다
+                    className="min-w-0 flex-1 rounded-lg bg-slate-900/70 border border-slate-700 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                     placeholder="정답을 입력 후 엔터 또는 버튼을 누르세요"
                   />
                   <button
                     onClick={handleSubmit}
-                    className="rounded-lg bg-emerald-600 hover:bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition"
+                    className="shrink-0 rounded-lg bg-emerald-600 hover:bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition"
                   >
                     정답!
                   </button>

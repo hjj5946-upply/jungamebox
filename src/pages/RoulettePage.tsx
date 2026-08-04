@@ -173,7 +173,9 @@ export default function RoulettePage() {
     <GameLayout title="돌려돌림판">
       <div className="flex flex-col h-full gap-4 pt-2 pb-4">
         <div className="flex items-center justify-center pt-2">
-          <div className="relative w-80 h-80 max-w-[90vw] max-h-[90vw]">
+          {/* 컨테이너 기준 크기. 이전의 max-w-[90vw] 는 뷰포트 기준이라
+              부모의 p-4 패딩을 고려하지 못해 좁은 화면에서 넘칠 수 있었다. */}
+          <div className="relative aspect-square w-full max-w-[20rem]">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
               <div className="w-0 h-0 border-l-[22px] border-l-transparent border-r-[22px] border-r-transparent border-t-[35px] border-t-red-500 drop-shadow-lg"></div>
             </div>
@@ -259,13 +261,15 @@ export default function RoulettePage() {
               placeholder="옵션 추가 (최대 12개)"
               maxLength={20}
               disabled={isSpinning || options.length >= 12}
-              className="flex-1 px-4 py-3 bg-slate-800 text-strong rounded-lg placeholder-slate-500 disabled:opacity-50 text-base"
+              // min-w-0: input 은 기본 min-content 폭(size=20, 약 200px)을 가져
+              // flex-1 만으로는 그 아래로 줄어들지 않는다. 없으면 좁은 화면에서 행이 넘친다.
+              className="min-w-0 flex-1 px-4 py-3 bg-slate-800 text-strong rounded-lg placeholder-slate-500 disabled:opacity-50 text-base"
             />
             <button
               onMouseDown={(e) => e.preventDefault()}
               onClick={addOption}
               disabled={isSpinning || options.length >= 12 || !inputValue.trim()}
-              className="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base font-semibold"
+              className="shrink-0 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base font-semibold"
             >
               추가
             </button>

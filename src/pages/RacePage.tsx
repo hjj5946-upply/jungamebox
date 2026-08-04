@@ -179,13 +179,14 @@ export default function RacePage() {
             <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
               {racers.map((racer, index) => (
                 <div key={racer.id} className="flex items-center gap-3 bg-slate-800/50 p-2 rounded-xl border border-slate-700">
-                  <img src={racer.image} alt="racer icon" className="w-12 h-12 object-contain" />
+                  <img src={racer.image} alt="racer icon" className="w-12 h-12 shrink-0 object-contain" />
                   <input
                     type="text"
                     value={racer.name}
                     onChange={(e) => handleNameChange(racer.id, e.target.value)}
                     placeholder={`${index + 1}번 참가자`}
-                    className="flex-1 px-4 py-3 bg-slate-900 text-strong rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    // min-w-0: 없으면 input 의 기본 min-content 폭 때문에 좁은 화면에서 행이 넘친다
+                    className="min-w-0 flex-1 px-4 py-3 bg-slate-900 text-strong rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                     maxLength={4}
                   />
                 </div>

@@ -273,7 +273,7 @@ export default function ReflexPage() {
             <div className="mb-3 flex flex-col gap-1">
               {/* 상단: 라벨 + 에러문구 같은 줄 */}
               <div className="flex items-center justify-between">
-                <label className="text-[11px] text-slate-300">
+                <label className="min-w-0 text-[11px] text-slate-300">
                   닉네임 (한글/영문 10자 이하)
                 </label>
 
@@ -290,14 +290,15 @@ export default function ReflexPage() {
                   type="text"
                   value={nickname}
                   onChange={onChangeNickname}
-                  className="flex-1 rounded-md bg-slate-900/70 border border-slate-700 px-3 py-1.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  // min-w-0: 없으면 input 의 기본 min-content 폭 때문에 좁은 화면에서 행이 넘친다
+                  className="min-w-0 flex-1 rounded-md bg-slate-900/70 border border-slate-700 px-3 py-1.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                   maxLength={12}
                   placeholder="닉네임을 입력하세요"
                 />
 
                 <button
                   onClick={() => setShowRanking(true)}
-                  className="text-sm px-3 py-2 rounded-md bg-yellow-500 hover:bg-yellow-600 text-black font-semibold transition-colors whitespace-nowrap"
+                  className="shrink-0 text-sm px-3 py-2 rounded-md bg-yellow-500 hover:bg-yellow-600 text-black font-semibold transition-colors whitespace-nowrap"
                 >
                   🏆 랭킹 보기
                 </button>

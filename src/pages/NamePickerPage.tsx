@@ -74,11 +74,12 @@ export default function NamePickerPage() {
             onChange={(e) => setInputName(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && addName()}
             placeholder="이름 입력"
-            className="flex-1 px-4 py-3 bg-slate-800 text-strong rounded-lg placeholder-slate-500"
+            // min-w-0: 없으면 input 의 기본 min-content 폭 때문에 좁은 화면에서 행이 넘친다
+            className="min-w-0 flex-1 px-4 py-3 bg-slate-800 text-strong rounded-lg placeholder-slate-500"
           />
           <button
             onClick={addName}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg"
+            className="shrink-0 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg"
           >
             추가
           </button>
