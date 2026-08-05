@@ -13,7 +13,9 @@ export default function GameLayout({ children, title }: Props) {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-full flex-col bg-slate-900">
+    // 배경색 없음: 바탕은 #app-shell 의 bg-slate-900 이 깔고,
+    // 그 위 PixelDrift 장식이 이 레이아웃을 통해 비쳐 보인다.
+    <div className="flex h-full flex-col">
       {/* 상단바 */}
       <header className="h-12 flex items-center px-4 bg-slate-800 border-b border-slate-700 shadow-sm">
         <button

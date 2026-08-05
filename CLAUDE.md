@@ -100,14 +100,14 @@ export default function FooPage() {
 
 - **Tailwind CSS v3**입니다. v4 문법(`@import "tailwindcss"` 등)을 쓰지 마세요. 설정은 `tailwind.config.js`의 `content` 배열 방식입니다.
 - CSS 모듈 / styled-components / 인라인 style 객체를 쓰지 않습니다. **Tailwind 유틸리티 클래스를 JSX에 직접** 작성합니다.
-- **라이트/다크 테마를 지원합니다.** 기본값은 라이트. `html.dark` 클래스로 전환하며(`src/lib/theme.ts`), 실제 색은 `src/index.css` 의 CSS 변수(`--s-50`~`--s-950`, `--text-strong`, `--veil`)가 담당합니다.
+- **라이트/다크 테마를 지원합니다.** 기본값은 다크. `html.dark` 클래스로 전환하며(`src/lib/theme.ts`), 실제 색은 `src/index.css` 의 CSS 변수(`--s-50`~`--s-950`, `--text-strong`, `--veil`)가 담당합니다.
 - **`slate-*` 는 이제 "표면 단계" 토큰입니다.** `tailwind.config.js` 에서 CSS 변수로 매핑되어 있어 기존 클래스가 테마에 자동 반응합니다. 램프 방향이 테마마다 뒤집힙니다:
 
   | 용도 | 클래스 | 라이트 | 다크 |
   |---|---|---|---|
-  | 앱 셸 여백·트랙 | `slate-950` | 밝은 회색 | 가장 어두움 |
-  | 앱 본체 표면 | `slate-900` | 흰색 | `#121314` |
-  | 카드·바 | `slate-800` | 아주 밝은 회색 | `#191a1b` |
+  | 앱 셸 여백·트랙 | `slate-950` | `#E5E7F0` | `#0A0B16` |
+  | 앱 본체 표면 | `slate-900` | `#F7F8FC` | `#0F101C` |
+  | 카드·바 | `slate-800` | `#EEF0F7` | `#161724` |
   | 경계선·hover | `slate-700/600` | 밝은 회색 | 어두운 회색 |
   | 보조 글자 | `slate-400/500` | 중간 회색 | 중간 회색 |
   | 본문 글자 | `slate-50/100/200/300` | 어두움 | 밝음 |

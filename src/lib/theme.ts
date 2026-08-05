@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 /**
  * 라이트/다크 테마 상태.
  *
- * - 기본값은 라이트. 저장된 값이 없으면 시스템 설정과 무관하게 라이트로 시작한다.
+ * - 기본값은 다크. 저장된 값이 없으면 시스템 설정과 무관하게 다크로 시작한다.
  * - html 요소의 .dark 클래스로 전환하고(tailwind darkMode: "class"),
  *   실제 색은 src/index.css 의 CSS 변수가 담당한다.
  * - 첫 페인트 전에 index.html 의 인라인 스크립트가 같은 로직으로 클래스를 미리 붙여
@@ -30,7 +30,7 @@ export function applyTheme(theme: Theme) {
 
   // 모바일 브라우저 상단 UI 색도 함께 맞춘다.
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", theme === "dark" ? "#121314" : "#ffffff");
+  if (meta) meta.setAttribute("content", theme === "dark" ? "#0f101c" : "#f7f8fc");
 }
 
 export function useTheme() {
@@ -57,5 +57,5 @@ export function useTheme() {
 
 // 초기 테마 결정 로직(인라인 스크립트와 동일). 필요 시 재사용.
 export function resolveInitialTheme(): Theme {
-  return readStored() ?? "light";
+  return readStored() ?? "dark";
 }

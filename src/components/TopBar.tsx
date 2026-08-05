@@ -12,7 +12,7 @@ export default function TopBar() {
     // relative: 로고는 가운데 정렬을 유지하고 버튼만 우측에 겹쳐 배치하기 위함
     <header
       onClick={() => navigate("/")}
-      className="relative h-12 flex items-center justify-center px-4 bg-slate-800 border-b border-slate-700 shadow-sm cursor-pointer select-none hover:bg-slate-700 transition-colors"
+      className="relative h-14 flex items-center justify-center px-4 bg-slate-800 border-b border-slate-700 shadow-sm cursor-pointer select-none hover:bg-slate-700 transition-colors"
     >
       {/* 로고에 워드마크가 포함되어 있어 별도 텍스트를 두지 않음.
           인라인 SVG + currentColor 라서 text-strong 으로 테마에 맞춰 색이 바뀐다.

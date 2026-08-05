@@ -19,21 +19,25 @@
     <!-- apple-touch-icon 은 아래 아이콘 묶음에 sizes 와 함께 한 번만 선언한다 -->
     <meta name="author" content="Jun" />
     <meta name="publisher" content="JJang Games" />
-    <meta name="theme-color" content="#ffffff" />
+    <!-- 기본이 다크이므로 meta 초기값도 다크. 아래 스크립트가 라이트일 때만 되돌린다. -->
+    <meta name="theme-color" content="#0f101c" />
 
     <!-- 첫 페인트 전에 테마 클래스를 적용해 새로고침 시 색이 번쩍이는 것을 막는다.
-         기본값은 라이트. 저장 키는 src/lib/theme.ts 의 STORAGE_KEY 와 반드시 일치해야 한다. -->
+         기본값은 다크. 저장된 값이 "light" 일 때만 라이트로 내린다.
+         저장 키는 src/lib/theme.ts 의 STORAGE_KEY 와 반드시 일치해야 한다. -->
     <script>
       (function () {
+        var t = null;
         try {
-          var t = localStorage.getItem("jgb-theme");
-          if (t === "dark") {
-            document.documentElement.classList.add("dark");
-            var m = document.querySelector('meta[name="theme-color"]');
-            if (m) m.setAttribute("content", "#121314");
-          }
+          t = localStorage.getItem("jgb-theme");
         } catch (e) {
-          /* localStorage 차단 환경 → 라이트로 시작 */
+          /* localStorage 차단 환경 → 기본값(다크) 유지 */
+        }
+        if (t === "light") {
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute("content", "#f7f8fc");
+        } else {
+          document.documentElement.classList.add("dark");
         }
       })();
     </script>

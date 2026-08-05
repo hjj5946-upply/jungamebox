@@ -24,9 +24,9 @@ export default function GameCard({ game }: { game: GameMeta }) {
   return (
     <div
       onClick={() => navigate(game.path)}
-      className="flex flex-col items-center justify-center gap-2 bg-slate-800 rounded-xl shadow-lg py-4 hover:bg-slate-700 transition-colors cursor-pointer"
+      className="flex flex-col items-center justify-center gap-2 py-2 cursor-pointer transition-transform active:scale-95 hover:-translate-y-0.5"
     >
-      <div className={`w-12 h-12 rounded-lg bg-slate-700 flex items-center justify-center overflow-hidden ${getPadding()}`}>
+      <div className={`w-14 h-14 rounded-2xl bg-slate-700 flex items-center justify-center overflow-hidden ${getPadding()}`}>
         {game.image ? (
           <img src={game.image} alt={game.name} className="w-full h-full object-contain" />
         ) : game.emoji ? (
@@ -35,7 +35,8 @@ export default function GameCard({ game }: { game: GameMeta }) {
           <div className="w-full h-full bg-slate-700" />
         )}
       </div>
-      <span className="text-xs text-slate-200 text-center">{game.name}</span>
+      {/* text-xs(12px) 보다 딱 1px 크게 — leading 은 text-xs 와 동일하게 고정 */}
+      <span className="text-[13px] leading-4 text-slate-200 text-center">{game.name}</span>
     </div>
   );
 }

@@ -13,7 +13,9 @@ export default function MainLayout({ children }: Props) {
 
   return (
     // ... 상단 레이아웃 유지 ...
-    <div className="relative flex h-full flex-col overflow-hidden bg-slate-900">
+    // 배경색 없음: 바탕은 #app-shell 의 bg-slate-900 이 깔고,
+    // 그 위 PixelDrift 장식이 이 레이아웃을 통해 비쳐 보인다.
+    <div className="relative flex h-full flex-col overflow-hidden">
       <TopBar />
 
       {/* 콘텐츠 영역: 남은 높이를 모두 차지하고 이 안에서만 스크롤된다.
@@ -80,7 +82,7 @@ export default function MainLayout({ children }: Props) {
                 <img 
                     src={kakaoImg} 
                     alt="카카오페이로 개발자 후원하기" 
-                    className="rounded-lg max-h-10 w-auto"
+                    className="rounded-lg max-h-10 w-100 object-contain"
                 /> 
                 <span className="sr-only">카카오페이로 개발자 후원하기</span>
             </a>

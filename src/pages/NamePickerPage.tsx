@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import GameLayout from "../layouts/GameLayout";
 
 export default function NamePickerPage() {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [names, setNames] = useState<string[]>([]);
   const [inputName, setInputName] = useState("");
   const [pickedName, setPickedName] = useState<string | null>(null);
@@ -24,6 +25,8 @@ export default function NamePickerPage() {
       setNames([...names, trimmed]);
       setInputName("");
     }
+    // 중복이라 추가되지 않았더라도 포커스는 유지한다 (모바일 키보드가 닫히지 않게).
+    inputRef.current?.focus();
   };
 
   const removeName = (index: number) => {
@@ -70,14 +73,19 @@ export default function NamePickerPage() {
         <div className="flex gap-2">
           <input
             type="text"
+            ref={inputRef}
             value={inputName}
             onChange={(e) => setInputName(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && addName()}
             placeholder="이름 입력"
             // min-w-0: 없으면 input 의 기본 min-content 폭 때문에 좁은 화면에서 행이 넘친다
-            className="min-w-0 flex-1 px-4 py-3 bg-slate-800 text-strong rounded-lg placeholder-slate-500"
+            // text-base: 16px 미만이면 iOS Safari 가 포커스 시 화면을 확대해 버린다
+            className="min-w-0 flex-1 px-4 py-3 bg-slate-800 text-strong rounded-lg placeholder-slate-500 text-base"
           />
           <button
+            // onMouseDown preventDefault: 버튼을 눌러도 input 이 포커스를 잃지 않게 한다.
+            // 없으면 모바일에서 "추가" 를 누를 때마다 키보드가 내려간다. (돌려돌림판과 동일)
+            onMouseDown={(e) => e.preventDefault()}
             onClick={addName}
             className="shrink-0 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg"
           >
