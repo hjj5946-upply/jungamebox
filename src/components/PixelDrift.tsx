@@ -12,7 +12,7 @@ import { gsap } from "gsap";
  *                               UI 가위에 얹히므로 양옆 여백보다 훨씬 옅게 깐다.
  *
  * - pointer-events-none 이므로 클릭을 절대 가로막지 않는다.
- * - prefers-reduced-motion 이면 애니메이션 없이 정적으로만 표시한다.
+ * - 환경(OS 동작 줄이기 설정 등)에 상관없이 항상 같게 움직인다. 조건 분기를 넣지 말 것.
  */
 
 const PIXELS_PER_SIDE = 16;
@@ -104,18 +104,8 @@ function useDriftAnimation(rootRef: RefObject<HTMLDivElement | null>, pixels: Pi
     const root = rootRef.current;
     if (!root) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     const ctx = gsap.context(() => {
       const nodes = gsap.utils.toArray<HTMLElement>("[data-pixel]");
-
-      if (reduced) {
-        // 움직임을 원하지 않는 사용자: 흩뿌려진 정적 상태로만 표시
-        nodes.forEach((el, i) => {
-          gsap.set(el, { y: `${gsap.utils.random(5, 95)}%`, opacity: pixels[i].peak * 0.6 });
-        });
-        return;
-      }
 
       nodes.forEach((el, i) => {
         const p = pixels[i];
