@@ -8,6 +8,7 @@ import { ChevronDown } from "lucide-react";
  * - 시간이 지나 사라지지 않고 계속 표시된다.
  * - 맨 아래에 닿으면 사라진다. 더 내려갈 곳이 없는데 내리라고 하면 오히려 혼란스럽기 때문.
  * - pointer-events-none 이라 스크롤·클릭을 가로막지 않는다.
+ * - 배경(페이드·배지)을 두지 않아 뒤 배경 장식(PixelDriftBackdrop)이 그대로 비친다.
  */
 
 // 맨 아래 판정 여유값(px). 소수점 스크롤 오차와 관성 스크롤을 감안.
@@ -50,15 +51,14 @@ export default function ScrollHint({
                   transition-opacity duration-300 ${visible ? "opacity-100" : "opacity-0"}`}
       aria-hidden="true"
     >
-      {/* 내용이 잘린 느낌을 주는 하단 페이드 */}
-      <div className="h-10 w-full bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent" />
-
-      {/* 안내 배지 */}
-      <div className="-mt-1 flex items-center gap-1 pb-1">
-        <span className="animate-scroll-nudge flex items-center gap-1 rounded-full bg-slate-800/90 px-2.5 py-1 text-[11px] font-medium text-slate-300 ring-1 ring-veil/10">
-          스크롤
-          <ChevronDown size={13} strokeWidth={2.5} />
-        </span>
+      {/* 배경(페이드·배지) 없이 문구와 화살표만. 화살표는 계속 아래로 흘러내린다. */}
+      <div className="flex flex-col items-center pb-1.5">
+        <span className="text-[11px] font-medium leading-none text-slate-400">스크롤</span>
+        <ChevronDown
+          className="animate-scroll-arrow text-slate-400"
+          size={16}
+          strokeWidth={2.5}
+        />
       </div>
     </div>
   );

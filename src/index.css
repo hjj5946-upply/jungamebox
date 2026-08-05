@@ -105,26 +105,30 @@
   animation: bounceIn 0.5s ease-out;
 }
 
-/* 스크롤 유도 표시(ScrollHint)의 아래로 살짝 밀리는 모션 */
-@keyframes scrollNudge {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.5;
+/* 스크롤 유도 표시(ScrollHint)의 화살표 —
+   위에서 스며 나와 아래로 흘러내리며 사라지는 동작을 반복해 "아래로" 를 가리킨다. */
+@keyframes scrollArrow {
+  0% {
+    transform: translateY(-3px);
+    opacity: 0;
   }
-  50% {
-    transform: translateY(5px);
+  25%,
+  65% {
     opacity: 1;
+  }
+  100% {
+    transform: translateY(7px);
+    opacity: 0;
   }
 }
 
-.animate-scroll-nudge {
-  animation: scrollNudge 1.6s ease-in-out infinite;
+.animate-scroll-arrow {
+  animation: scrollArrow 1.5s ease-in-out infinite;
 }
 
 /* 움직임을 원하지 않는 사용자에게는 정적으로만 표시 */
 @media (prefers-reduced-motion: reduce) {
-  .animate-scroll-nudge {
+  .animate-scroll-arrow {
     animation: none;
     opacity: 0.85;
   }
