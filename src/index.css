@@ -84,6 +84,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 앱 바깥 캔버스 바탕. index.html 의 첫 페인트용 인라인 스타일과 같은 색이어야
+   번들 CSS 가 도착하는 순간 색이 튀지 않는다. (index.html 의 <style> 도 함께 수정할 것) */
+html {
+  background-color: rgb(var(--s-950));
+}
+
 @keyframes bounceIn {
   0% {
     transform: scale(0.3) rotate(-180deg);

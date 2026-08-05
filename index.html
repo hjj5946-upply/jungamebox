@@ -22,6 +22,14 @@
     <!-- 기본이 다크이므로 meta 초기값도 다크. 아래 스크립트가 라이트일 때만 되돌린다. -->
     <meta name="theme-color" content="#0f101c" />
 
+    <!-- 첫 페인트용 바탕색. 번들 CSS 는 아직 안 왔고 React 도 안 붙은 시점이라
+         이게 없으면 브라우저 기본 캔버스색이 잠깐 보인다.
+         값은 src/index.css 의 --s-950 (셸 여백)과 같게 유지할 것. -->
+    <style>
+      html { background-color: #e5e7f0; }
+      html.dark { background-color: #0a0b16; }
+    </style>
+
     <!-- 첫 페인트 전에 테마 클래스를 적용해 새로고침 시 색이 번쩍이는 것을 막는다.
          기본값은 다크. 저장된 값이 "light" 일 때만 라이트로 내린다.
          저장 키는 src/lib/theme.ts 의 STORAGE_KEY 와 반드시 일치해야 한다. -->
@@ -98,8 +106,14 @@
   </head>
   <body>
     <div id="root">
-      <h1 style="color: #FFFFFF">JJang Games 짱게임즈 - 무료 미니게임 모음</h1>
-      <p style="color: #FFFFFF">음료내기, 로또번호 생성기, 밸런스 게임, 라이어 게임, 제비뽑기 등 다양한 웹 게임을 즐겨보세요.</p>
+      <!-- JS 를 실행하지 않는 크롤러용 대체 콘텐츠. React 가 마운트되면서 통째로 교체된다.
+           그냥 두면 번들을 받아 실행하기 전까지 이 글자가 화면에 번쩍이므로
+           화면에서만 감춘다(DOM 에는 그대로 남아 크롤러는 읽는다).
+           display:none 이 아니라 1px 로 밀어내는 방식인 이유도 같다. -->
+      <div style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0">
+        <h1>JJang Games 짱게임즈 - 무료 미니게임 모음</h1>
+        <p>음료내기, 로또번호 생성기, 밸런스 게임, 라이어 게임, 제비뽑기 등 다양한 웹 게임을 즐겨보세요.</p>
+      </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

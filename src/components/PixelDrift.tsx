@@ -27,13 +27,25 @@ const PEAK_GUTTER: [number, number] = [0.18, 0.5];
 // CSS 변수로 처리하므로 테마를 토글해도 픽셀 위치가 리셋되지 않는다.
 const PEAK_CENTER: [number, number] = [0.2, 0.43];
 
-// 중립색은 테마 변수를 참조해 라이트/다크 양쪽에서 여백과 자연스럽게 어울리게 한다.
-// 포인트 색은 두 테마 모두에서 잘 보이므로 고정.
-const COLORS = [
+// 여백(양옆)용. 바탕이 가장 어두운 --s-950 이라 표면 토큰으로도 충분히 떠오른다.
+const COLORS_GUTTER = [
   "rgb(var(--s-600))",
   "rgb(var(--s-600))",
   "rgb(var(--s-500))",
   "rgb(var(--s-500))",
+  "rgb(var(--s-400))",
+  "#f59e0b",
+  "#3b82f6",
+  "#f43f5e",
+  "#10b981",
+];
+
+// 본체 배경용. 여기 바탕은 --s-900 이고 --s-600/500 은 다크에서 그 바로 옆 단계라,
+// 여백용 색을 그대로 쓰면 0.15~0.32 불투명도에서 배경에 묻혀 안 보인다.
+// (다크 기준 --s-600 #2E3145 를 #0F101C 위에 0.32 로 얹으면 채널당 차이가 10 남짓)
+// 그래서 배경과 확실히 떨어지는 --s-400 과, 테마와 무관하게 선명한 포인트 색으로만 채운다.
+const COLORS_CENTER = [
+  "rgb(var(--s-400))",
   "rgb(var(--s-400))",
   "#f59e0b",
   "#3b82f6",
@@ -50,11 +62,11 @@ type Pixel = {
   peak: number;   // 최대 불투명도
 };
 
-function makePixels(count: number, peak: [number, number]): Pixel[] {
+function makePixels(count: number, peak: [number, number], colors: string[]): Pixel[] {
   return Array.from({ length: count }, () => ({
     left: gsap.utils.random(4, 92),
     size: Math.round(gsap.utils.random(6, 20)),
-    color: COLORS[Math.floor(gsap.utils.random(0, COLORS.length))],
+    color: colors[Math.floor(gsap.utils.random(0, colors.length))],
     duration: gsap.utils.random(11, 24),
     spin: gsap.utils.random(-200, 200),
     peak: gsap.utils.random(peak[0], peak[1]),
@@ -133,8 +145,8 @@ export default function PixelDrift() {
   const rootRef = useRef<HTMLDivElement>(null);
 
   // 마운트 시 한 번만 생성 (리렌더로 위치가 튀지 않게)
-  const left = useMemo(() => makePixels(PIXELS_PER_SIDE, PEAK_GUTTER), []);
-  const right = useMemo(() => makePixels(PIXELS_PER_SIDE, PEAK_GUTTER), []);
+  const left = useMemo(() => makePixels(PIXELS_PER_SIDE, PEAK_GUTTER, COLORS_GUTTER), []);
+  const right = useMemo(() => makePixels(PIXELS_PER_SIDE, PEAK_GUTTER, COLORS_GUTTER), []);
   const all = useMemo(() => [...left, ...right], [left, right]);
 
   useDriftAnimation(rootRef, all);
@@ -153,7 +165,7 @@ export default function PixelDrift() {
  */
 export function PixelDriftBackdrop() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const pixels = useMemo(() => makePixels(PIXELS_CENTER, PEAK_CENTER), []);
+  const pixels = useMemo(() => makePixels(PIXELS_CENTER, PEAK_CENTER, COLORS_CENTER), []);
 
   useDriftAnimation(rootRef, pixels);
 

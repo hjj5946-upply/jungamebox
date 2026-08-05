@@ -50,23 +50,48 @@ const BAND_DARK = "#0c0f18";
 const FIXED_DT = 1 / 120; // 물리 스텝. 화면 주사율과 무관하게 고정
 const MAX_FRAME = 0.1; // 탭 복귀 등으로 프레임이 벌어져도 여기까지만 따라잡는다
 
-const START_VEL_MIN = 1400; // 초기 각속도 ≈ 4바퀴/초
-const START_VEL_MAX = 2000;
-const DECAY = 0.45; // 1초 뒤 남는 속도 비율 — 공기저항
-const DRAG = 12; // 초당 빼는 양 — 축 마찰. 지수감쇠만으로는 0 에 안 닿아서 필요하다
-const CELL_DRAG = 1.2; // 칸턱 하나 넘을 때마다 깎이는 속도
-const CATCH_VEL = 90; // 이 아래로 떨어지면 턱에 "걸리기" 시작한다
-const CATCH_LOSS = 0.87; // 걸릴 때 남는 비율 — 끝에서 다다다 하며 잦아든다
-const SETTLE_VEL = 45; // 이 아래면 마지막 칸에 자리를 잡는 단계로 넘어간다
-const SETTLE_EASE = 7; // 자리 잡는 속도
+const START_VEL_MIN = 1700; // 초기 각속도 ≈ 5바퀴/초
+const START_VEL_MAX = 2600;
+const AIR_DECAY = 0.68; // 1초 뒤 남는 속도 비율 — 공기저항
+const AXLE_KINETIC = 55; // 돌고 있을 때의 축 마찰 (deg/s²)
+const AXLE_STATIC = 420; // 멎어 있을 때 버티는 힘 (deg/s²). 턱이 미는 힘이 이보다 작으면 그대로 걸려 선다
+const CREST_LOSS = 0.985; // 턱을 넘을 때마다 부딪히며 잃는 비율 (곱셈이라 속도와 무관하게 항상 손해)
+const CATCH_VEL = 90; // 이 아래로 떨어지면 턱에 걸리는 손실이 커진다
+const CATCH_LOSS = 0.9;
+const REST_VEL = 3; // 이 아래면 정지마찰 판정에 들어간다
+
+/* ── 턱 모양 ──────────────────────────────────────────────────
+   칸 하나를 [평평한 홈] → [완만한 오르막] → [가파른 낙차] 로 본다.
+   이 높이차가 그대로 위치에너지라서, 오르막에서는 원판을 뒤로 밀고
+   낙차에서는 앞으로 민다. 보존력이므로 여기서 에너지가 생기지 않는다
+   (손실은 공기저항·축마찰·CREST_LOSS 뿐 → 반드시 멈춘다). */
+const RIDGE_START = 0.75; // 칸의 앞 3/4 은 평평한 홈 — 여기서 힘없이 멎으면 화살표는 반듯하다
+const RIDGE_DROP = 0.08; // 턱을 넘어 다음 홈으로 떨어지는 구간
+const RIDGE_ACCEL = 100; // 턱 경사가 만드는 접선 가속 계수
+const RIDGE_PRELOAD = 0.25; // 화살표가 평소에도 띠를 누르고 있는 정도
 
 /* ── 화살표(플래퍼) 스프링 ────────────────────────────────────── */
-const FLAP_MAX = 15; // 턱을 다 타넘었을 때의 최대 각도
-const FLAP_RIDGE = 0.55; // 칸의 이 지점부터 턱을 타기 시작한다 (앞쪽 55% 는 홈에 눌러앉아 0)
+const FLAP_MAX = 15; // 턱 꼭대기에서의 각도
 const FLAP_STIFF = 1800; // 스프링 강성 (고유진동수 ≈ 6.7Hz)
 const FLAP_DAMP = 30; // 감쇠. 임계(≈85)보다 낮게 둬서 되튕기는 맛을 남긴다
-const FLAP_REST = 0.15; // 이 정도까지 잦아들면 멈춘 것으로 본다
-const FLAP_REST_VEL = 1.5;
+const FLAP_SETTLED = 0.2; // 턱 높이와 이만큼 가까워지면 떨림이 멎은 것으로 본다
+const FLAP_SETTLED_VEL = 2;
+
+/** 칸 안 위치(0~1)에서의 턱 높이 h(0~1)와 기울기 dh/dphase. */
+function ridgeAt(phase: number) {
+  if (phase < RIDGE_START) return { h: 0, slope: 0 };
+  const crest = 1 - RIDGE_DROP;
+  if (phase < crest) {
+    const w = crest - RIDGE_START;
+    return { h: (phase - RIDGE_START) / w, slope: 1 / w };
+  }
+  return { h: 1 - (phase - crest) / RIDGE_DROP, slope: -1 / RIDGE_DROP };
+}
+
+/** 칸 안에서의 위치(0~1) */
+function phaseOf(rotation: number, cell: number) {
+  return (((rotation % cell) + cell) % cell) / cell;
+}
 
 /* ── 진동 ─────────────────────────────────────────────────────── */
 // 초반에는 초당 100번 넘게 턱을 지나므로 그대로 울리면 모터가 못 따라오고 호출만 쌓인다.
@@ -195,7 +220,6 @@ export default function RoulettePage() {
     let rot = rotationRef.current;
     let flap = flapRef.current;
     let flapVel = 0;
-    let settleTo: number | null = null; // null 이면 아직 굴러가는 중
     let wheelDone = false;
     let acc = 0;
     let last = performance.now();
@@ -203,48 +227,48 @@ export default function RoulettePage() {
     let lastVibeAt = 0;
 
     const tick = (dt: number) => {
-      if (!wheelDone && settleTo === null) {
-        // ── 굴러가는 단계 ──
-        vel = vel * Math.pow(DECAY, dt) - DRAG * dt;
-        if (vel < 0) vel = 0;
+      if (!wheelDone) {
+        const { h, slope } = ridgeAt(phaseOf(rot, cell));
 
-        const prev = rot;
-        rot += vel * dt;
+        // 턱 경사가 만드는 접선 가속. 눌린 만큼 세게 버티므로 (선하중 + 높이) 를 곱한다.
+        // 오르막(slope>0)이면 뒤로, 낙차(slope<0)면 앞으로 민다.
+        let accel = -RIDGE_ACCEL * (RIDGE_PRELOAD + h) * slope;
 
-        // 칸턱을 몇 개 넘었는지 — 넘을 때마다 에너지를 잃는다
-        const crossed = Math.floor(rot / cell) - Math.floor(prev / cell);
-        if (crossed > 0) {
-          crossedInFrame += crossed;
-          vel -= CELL_DRAG * crossed;
-          // 느릴수록 턱을 넘기 버거워진다 → 끝에서 다다다 하며 급격히 잦아든다
-          if (vel < CATCH_VEL) vel *= CATCH_LOSS;
-          if (vel < 0) vel = 0;
-        }
+        vel *= Math.pow(AIR_DECAY, dt);
 
-        if (vel <= SETTLE_VEL) {
-          // 앞쪽으로 가장 가까운 칸 중앙을 목표로 삼는다.
-          // 칸 경계는 곧 색칸 경계이므로, 중앙에 서면 화살표가 경계에 걸치는 일이 없다.
-          settleTo = Math.ceil((rot - cell / 2) / cell) * cell + cell / 2;
-        }
-      } else if (!wheelDone && settleTo !== null) {
-        // ── 자리 잡는 단계 — 마지막 한 칸을 부드럽게 밀어 넣는다 ──
-        const prev = rot;
-        rot += (settleTo - rot) * Math.min(1, SETTLE_EASE * dt);
-        // 여기서도 턱을 하나 넘을 수 있다. 마지막 "딱" 이 빠지지 않게 같이 센다.
-        crossedInFrame += Math.floor(rot / cell) - Math.floor(prev / cell);
-        if (Math.abs(settleTo - rot) < 0.03) {
-          rot = settleTo;
+        if (Math.abs(vel) > REST_VEL) {
+          // 돌고 있다 — 운동마찰이 진행 방향 반대로 걸린다
+          accel -= Math.sign(vel) * AXLE_KINETIC;
+        } else if (Math.abs(accel) <= AXLE_STATIC) {
+          // 거의 멎었는데 턱이 미는 힘이 정지마찰을 못 이긴다 → 여기서 그대로 선다.
+          // 오르막 중턱이면 화살표가 턱에 걸린 채로, 홈이면 반듯한 채로 멈춘다.
+          vel = 0;
+          accel = 0;
           wheelDone = true;
+        } else {
+          accel -= Math.sign(accel) * AXLE_STATIC;
+        }
+
+        if (!wheelDone) {
+          vel += accel * dt;
+          const prev = rot;
+          rot += vel * dt;
+
+          // 턱을 넘었으면 부딪히며 에너지를 잃는다 (뒤로 되넘어가는 경우는 세지 않는다)
+          const crossed = Math.floor(rot / cell) - Math.floor(prev / cell);
+          if (crossed > 0) {
+            crossedInFrame += crossed;
+            vel *= Math.pow(CREST_LOSS, crossed);
+            if (vel < CATCH_VEL) vel *= CATCH_LOSS;
+          }
         }
       }
 
       // ── 화살표 ──
-      // 칸 앞쪽 55% 는 홈에 눌러앉아 0. 뒤쪽에서 턱을 타며 밀려 올라가고,
-      // 턱을 넘는 순간 목표가 0 으로 뚝 떨어져 스프링이 되튕긴다. 이게 "다닥" 한 번이다.
-      const phase = (((rot % cell) + cell) % cell) / cell;
-      const climb = phase <= FLAP_RIDGE ? 0 : (phase - FLAP_RIDGE) / (1 - FLAP_RIDGE);
-      const target = FLAP_MAX * climb * climb;
-
+      // 목표 각도는 지금 밟고 있는 턱의 높이 그 자체다.
+      // 낙차 구간에서 목표가 뚝 떨어지면 스프링이 되튕기며 "다닥" 이 된다.
+      // 원판이 오르막에 걸린 채 멈추면 목표가 0 이 아니므로 화살표도 기운 채로 남는다.
+      const target = FLAP_MAX * ridgeAt(phaseOf(rot, cell)).h;
       flapVel += (target - flap) * FLAP_STIFF * dt - flapVel * FLAP_DAMP * dt;
       flap += flapVel * dt;
     };
@@ -270,11 +294,15 @@ export default function RoulettePage() {
       if (wheelRef.current) wheelRef.current.style.transform = `rotate(${rot}deg)`;
       if (pointerRef.current) pointerRef.current.style.transform = `rotate(${-flap}deg)`;
 
-      // 원판이 선 뒤에도 화살표가 마지막 떨림을 마칠 때까지 기다린다
-      if (wheelDone && Math.abs(flap) < FLAP_REST && Math.abs(flapVel) < FLAP_REST_VEL) {
+      // 원판이 선 뒤에도 화살표가 마지막 떨림을 마칠 때까지 기다린다.
+      // 걸린 채로 섰다면 0 이 아니라 그 턱 높이에서 멎으므로 target 기준으로 판정한다.
+      const rest = FLAP_MAX * ridgeAt(phaseOf(rot, cell)).h;
+      if (
+        wheelDone &&
+        Math.abs(flap - rest) < FLAP_SETTLED &&
+        Math.abs(flapVel) < FLAP_SETTLED_VEL
+      ) {
         rafRef.current = null;
-        flapRef.current = 0;
-        if (pointerRef.current) pointerRef.current.style.transform = "rotate(0deg)";
         vibrate(VIBE_RESULT); // 결과 확정 — 두 번 울린다
         setResult(options[sectorAt(rot, count)]);
         setIsSpinning(false);
@@ -306,6 +334,7 @@ export default function RoulettePage() {
 
     setInputValue("");
     rotationRef.current = 0;
+    flapRef.current = 0;
     setResult(null);
     inputRef.current?.focus();
   };
@@ -317,6 +346,7 @@ export default function RoulettePage() {
     }
     setOptions(options.filter((opt) => opt.id !== id));
     rotationRef.current = 0;
+    flapRef.current = 0;
     if (result && result.id === id) setResult(null);
   };
 
@@ -325,6 +355,7 @@ export default function RoulettePage() {
     setCustomCount(0);
     setResult(null);
     rotationRef.current = 0;
+    flapRef.current = 0;
   };
 
   const shuffleOptions = () => {
@@ -339,15 +370,19 @@ export default function RoulettePage() {
     setOptions(shuffled);
     setResult(null);
     rotationRef.current = 0;
+    flapRef.current = 0;
   };
 
   return (
     <GameLayout title="돌려돌림판">
       <div className="flex flex-col h-full gap-4 pt-2 pb-4">
         <div className="flex items-center justify-center pt-2">
-          {/* 컨테이너 기준 크기. 뷰포트 기준(max-w-[90vw])이면 부모의 p-4 를 고려하지 못해 좁은 화면에서 넘친다.
-              상한 24rem — 앱 열(max-w-md=28rem)에서 GameLayout 의 p-4 를 뺀 26rem 안에 여유를 두고 들어간다. */}
-          <div className="relative aspect-square w-full max-w-[24rem]">
+          {/* 폭과 높이 양쪽에 걸린다.
+              - w-full        : 좁은 화면에서는 열 폭을 따라간다
+              - 24rem         : 넓은 화면 상한. 앱 열(28rem)에서 GameLayout 의 p-4 를 뺀 26rem 안에 들어간다
+              - 100dvh-30rem  : 원판 말고 나머지(헤더·입력·버튼·목록·결과배너·여백)가 약 30rem 이라
+                                남는 높이를 넘지 않게 해 세로 스크롤 없이 한 화면에 담는다 */}
+          <div className="relative aspect-square w-full max-w-[min(24rem,calc(100dvh_-_30rem))]">
             {/* 화살표(플래퍼). 축은 원판 위에 떠 있고, 끝만 얇은 띠에 걸친다.
                 띠 폭이 지름의 4% 뿐이라 끝이 그보다 더 들어가면 색칸을 가린다.
                 전체 높이 32px(축 10 − 겹침 4 + 촉 26), 24px 끌어올려 끝이 가장자리에서 8px 안쪽. */}
@@ -358,7 +393,13 @@ export default function RoulettePage() {
               </div>
             </div>
 
-            <div className="relative h-full w-full">
+            {/* overflow-hidden 필수:
+                svg 는 정사각형 상자인데 rotate 를 걸면 회전한 상자의 외접 사각형이 √2 배(최대 +41%)로 커진다.
+                transform 은 스크롤 오버플로에 그대로 잡히므로, 클리핑하지 않으면 돌리는 동안
+                GameLayout 의 overflow-auto 가 이를 감지해 가로 스크롤바가 생긴다.
+                원판은 정사각형에 내접한 원이라 잘려 나가는 네 귀퉁이는 모두 투명 영역이다.
+                화살표는 이 div 바깥(형제)에 있으므로 위로 삐져나온 축이 잘리지 않는다. */}
+            <div className="relative h-full w-full overflow-hidden">
               <svg
                 ref={wheelRef}
                 width="100%"
