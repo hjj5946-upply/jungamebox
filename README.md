@@ -206,6 +206,17 @@ create table if not exists public.reflex_scores (
 );
 ```
 
+### 3) 1 to 48 랭킹 — `src/lib/speedrun.ts`
+
+| 객체 | 종류 | 코드가 요구하는 형태 |
+|------|------|---------------------|
+| `speed_scores` | 테이블 | 컬럼 `id`, `elapsed_ms`, `nickname`, `created_at` |
+| `submit_speed_score` | RPC 함수 | 인자 `p_elapsed` (숫자), `p_nickname` (텍스트) |
+
+조회는 `elapsed_ms` 오름차순 → `created_at` 오름차순으로 **상위 10건**만 가져옵니다. 저장 RPC 는 삽입 후 11위 이하를 삭제하므로 테이블에는 항상 10행만 남습니다.
+
+**전체 스키마·정책·함수는 `supabase/speed_scores.sql` 에 있습니다** (Supabase SQL Editor 에 통째로 붙여 실행). 이 함수는 `elapsed_ms` 를 7,000~600,000ms 로 제한하고 닉네임 문자셋을 검사합니다 — anon 키가 번들에 노출되어 있어 브라우저 검증만으로는 위조 기록을 막을 수 없기 때문입니다.
+
 ### RLS 정책
 
 브라우저에 노출되는 **publishable(anon) 키만** 사용하므로 RLS는 필수입니다. 최소 구성:
@@ -213,6 +224,7 @@ create table if not exists public.reflex_scores (
 - `wins` — anon **insert 허용**, select는 뷰를 통해서만
 - `leaderboard` 뷰 — anon **select 허용**
 - `reflex_scores` — anon **select 허용**, 직접 insert는 **차단** (저장은 `security definer` RPC로만)
+- `speed_scores` — 위와 동일 (select 허용 / 직접 insert 차단 / `submit_speed_score` RPC 로만 저장)
 
 ---
 

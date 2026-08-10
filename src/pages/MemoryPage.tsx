@@ -1,186 +1,278 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import GameLayout from "../layouts/GameLayout";
 import Confetti from "../components/Confetti";
 
 /** 진동 유틸 */
 const vibrate = (pattern: number | number[]) => {
-  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-    // @ts-ignore
+  if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
     navigator.vibrate(pattern);
   }
 };
 
 type Phase = "idle" | "showing" | "input" | "fail" | "clear";
 type Pad = number; // 4/6/8 대응
+type PadCount = 4 | 6 | 8;
 
 // 최대 8패드 색 팔레트
 const padColors: { base: string; glow: string }[] = [
-  { base: "bg-emerald-600", glow: "bg-emerald-400" },
-  { base: "bg-rose-600",    glow: "bg-rose-400"    },
-  { base: "bg-indigo-600",  glow: "bg-indigo-400"  },
-  { base: "bg-amber-600",   glow: "bg-amber-400"   },
-  { base: "bg-cyan-600",    glow: "bg-cyan-400"    },
-  { base: "bg-fuchsia-600", glow: "bg-fuchsia-400" },
-  { base: "bg-lime-600",    glow: "bg-lime-400"    },
-  { base: "bg-orange-600",  glow: "bg-orange-400"  },
+  { base: "bg-emerald-600", glow: "bg-emerald-300" },
+  { base: "bg-rose-600", glow: "bg-rose-300" },
+  { base: "bg-indigo-600", glow: "bg-indigo-300" },
+  { base: "bg-amber-600", glow: "bg-amber-300" },
+  { base: "bg-cyan-600", glow: "bg-cyan-300" },
+  { base: "bg-fuchsia-600", glow: "bg-fuchsia-300" },
+  { base: "bg-lime-600", glow: "bg-lime-300" },
+  { base: "bg-orange-600", glow: "bg-orange-300" },
 ];
 
-// 속도 파라미터
-const BASE_SHOW_MS = 450;
-const BASE_PAUSE_MS = 100;
-const MIN_SHOW_MS  = 250;
-const SPEEDUP_PER_ROUND = 20;
+/* ────────────── 난이도 곡선 ──────────────
+ * 이전에는 450ms 에서 라운드당 20ms 씩 줄이다 250ms 에서 멈췄다.
+ * 11라운드면 하한에 닿아 그 뒤로는 난이도가 전혀 안 올라갔다.
+ * 지수 감쇠로 바꿔서 훨씬 낮은 하한까지 계속 조여든다. */
+const SHOW_BASE = 400;
+const SHOW_FLOOR = 130;
+const SHOW_DECAY = 0.9;
+
+const PAUSE_BASE = 110;
+const PAUSE_FLOOR = 35;
+const PAUSE_DECAY = 0.88;
+
+// 입력 제한시간 — 탭 하나마다 다시 시작한다
+const LIMIT_BASE = 2200;
+const LIMIT_FLOOR = 800;
+const LIMIT_DECAY = 0.94;
+
+const READY_MS = 320; // 시퀀스 재생 직전 준비 시간
+const FLASH_MS = 110; // 사용자가 누른 패드가 빛나는 시간 (입력을 막지 않는다)
+const ADVANCE_MS = 380; // 라운드 클리어 후 다음 시퀀스까지
+const GROWTH_STEP_ROUND = 12; // 이 라운드부터 시퀀스가 한 번에 2개씩 늘어난다
+const MILESTONE = 5; // 컨페티를 띄우는 라운드 간격
+
+function curve(base: number, floor: number, decay: number, round: number) {
+  return Math.round(floor + (base - floor) * Math.pow(decay, round - 1));
+}
+
+// 라운드 r 을 클리어했을 때 시퀀스에 추가되는 개수
+function growth(round: number) {
+  return round >= GROWTH_STEP_ROUND ? 2 : 1;
+}
+
+const bestKey = (n: PadCount) => `jgb-memory-best-${n}`;
+
+function readBest(n: PadCount): number {
+  try {
+    return Number(localStorage.getItem(bestKey(n))) || 0;
+  } catch {
+    // 시크릿 모드 등에서 localStorage 접근이 막힐 수 있다
+    return 0;
+  }
+}
+
+function sleep(ms: number) {
+  return new Promise<void>((res) => setTimeout(res, ms));
+}
 
 export default function MemoryPage() {
-  // 패드 개수: 4/6/8
-  const [padCount, setPadCount] = useState<4 | 6 | 8>(4);
+  const [padCount, setPadCount] = useState<PadCount>(4);
   const pads = Array.from({ length: padCount }, (_, i) => i as Pad);
 
-  // 상태
   const [phase, setPhase] = useState<Phase>("idle");
   const [round, setRound] = useState(0);
   const [seq, setSeq] = useState<Pad[]>([]);
   const [flash, setFlash] = useState<Pad | null>(null);
   const [inputIndex, setInputIndex] = useState(0);
-  const [, setMessage] = useState("시작하기를 눌러주세요"); // 값은 미사용, setter만 사용
-  const lockRef = useRef(false);
-
-  // 컨페티/다음 라운드 대기
+  const [failReason, setFailReason] = useState("");
+  const [best, setBest] = useState(0);
   const [confetti, setConfetti] = useState(false);
-  const [pendingAdvanceNext, setPendingAdvanceNext] = useState(false);
 
-  // 톤(옵션)
-  const toneRefs = useRef<HTMLAudioElement[]>([]);
-  useEffect(() => {
-    toneRefs.current = new Array(8).fill(0).map(() => new Audio());
-    // toneRefs.current[0].src = "/sounds/tone0.mp3";
+  /* 재생 중인 시퀀스를 취소하기 위한 토큰.
+   * 이전 구현은 취소 수단이 없어서 패드 수를 바꾸거나 페이지를 떠나도
+   * async 루프가 계속 돌며 setState 를 호출했다. */
+  const runIdRef = useRef(0);
+  const flashTimerRef = useRef<number | null>(null);
+  const limitTimerRef = useRef<number | null>(null);
+  const advanceTimerRef = useRef<number | null>(null);
+
+  const showMs = curve(SHOW_BASE, SHOW_FLOOR, SHOW_DECAY, Math.max(1, round));
+  const limitMs = curve(LIMIT_BASE, LIMIT_FLOOR, LIMIT_DECAY, Math.max(1, round));
+
+  const clearTimers = useCallback(() => {
+    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    if (limitTimerRef.current) clearTimeout(limitTimerRef.current);
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    flashTimerRef.current = null;
+    limitTimerRef.current = null;
+    advanceTimerRef.current = null;
   }, []);
-  const playTone = (p: Pad) => {
-    const a = toneRefs.current[p];
-    if (a && a.src) { a.currentTime = 0; a.play().catch(() => {}); }
-  };
 
-  // 패드 수 변경 시 초기화
-  useEffect(() => { resetGame(); }, [padCount]);
-
-  const nextPad = (): Pad => Math.floor(Math.random() * padCount) as Pad;
-
-  const startGame = async () => {
-    if (lockRef.current) return;
-    lockRef.current = true;
-    setMessage("시퀀스를 외우세요…");
-    vibrate(20);
-
-    const first = [nextPad()];
-    setSeq(first);
-    setRound(1);
-    await showSequence(first, 1);
-    setPhase("input");
+  const resetGame = useCallback(() => {
+    runIdRef.current++; // 진행 중인 시퀀스 무효화
+    clearTimers();
+    setSeq([]);
+    setRound(0);
     setInputIndex(0);
-    setMessage("그대로 눌러보세요!");
-    lockRef.current = false;
-  };
-
-  const advanceRound = async () => {
-    if (lockRef.current) return;
-    lockRef.current = true;
-    const n = [...seq, nextPad()];
-    setSeq(n);
-    setRound(n.length);
-    setMessage("시퀀스를 외우세요…");
-    await showSequence(n, n.length);
-    setPhase("input");
-    setInputIndex(0);
-    setMessage("그대로 눌러보세요!");
-    lockRef.current = false;
-  };
-
-  /** 모든 패드 수에서 동일한 속도 */
-  const computeShowMs = (len: number) => {
-    return Math.max(MIN_SHOW_MS, BASE_SHOW_MS - (len - 1) * SPEEDUP_PER_ROUND);
-  };
-
-  const showSequence = async (s: Pad[], len: number) => {
-    setPhase("showing");
-    const showMs = computeShowMs(len);
-    for (let i = 0; i < s.length; i++) {
-      const p = s[i];
-      setFlash(p);
-      playTone(p);
-      await sleep(showMs);
-      setFlash(null);
-      await sleep(BASE_PAUSE_MS);
-    }
-  };
-
-  const onPadPress = async (p: Pad) => {
-    if (phase !== "input" || lockRef.current) return;
-
-    setFlash(p); playTone(p); vibrate(16);
-    await sleep(140);
+    setPhase("idle");
     setFlash(null);
+    setFailReason("");
+    setConfetti(false);
+  }, [clearTimers]);
 
-    const expect = seq[inputIndex];
-    if (p !== expect) {
+  // 패드 수 변경 시 초기화 + 해당 패드 수의 최고 기록 불러오기
+  useEffect(() => {
+    resetGame();
+    setBest(readBest(padCount));
+  }, [padCount, resetGame]);
+
+  useEffect(() => () => {
+    runIdRef.current++;
+    clearTimers();
+  }, [clearTimers]);
+
+  const nextPad = useCallback(
+    (): Pad => Math.floor(Math.random() * padCount) as Pad,
+    [padCount]
+  );
+
+  const failRound = useCallback(
+    (reason: string) => {
+      runIdRef.current++;
+      clearTimers();
+      setFailReason(reason);
       setPhase("fail");
-      setMessage("실패! 다시 도전해보세요.");
+      setFlash(null);
       vibrate([60, 30, 60]);
+    },
+    [clearTimers]
+  );
+
+  // 탭 하나마다 제한시간을 다시 건다
+  const armLimit = useCallback(
+    (r: number) => {
+      if (limitTimerRef.current) clearTimeout(limitTimerRef.current);
+      const ms = curve(LIMIT_BASE, LIMIT_FLOOR, LIMIT_DECAY, r);
+      limitTimerRef.current = window.setTimeout(
+        () => failRound("시간 초과!"),
+        ms
+      );
+    },
+    [failRound]
+  );
+
+  const beginRound = useCallback(
+    async (s: Pad[], r: number) => {
+      const runId = ++runIdRef.current;
+      setSeq(s);
+      setRound(r);
+      setInputIndex(0);
+      setPhase("showing");
+      setFlash(null);
+
+      const stepShow = curve(SHOW_BASE, SHOW_FLOOR, SHOW_DECAY, r);
+      const stepPause = curve(PAUSE_BASE, PAUSE_FLOOR, PAUSE_DECAY, r);
+
+      await sleep(READY_MS);
+      if (runId !== runIdRef.current) return;
+
+      for (const p of s) {
+        setFlash(p);
+        await sleep(stepShow);
+        if (runId !== runIdRef.current) return;
+        setFlash(null);
+        await sleep(stepPause);
+        if (runId !== runIdRef.current) return;
+      }
+
+      setPhase("input");
+      armLimit(r);
+    },
+    [armLimit]
+  );
+
+  const startGame = useCallback(() => {
+    clearTimers();
+    setFailReason("");
+    setConfetti(false);
+    vibrate(20);
+    beginRound([Math.floor(Math.random() * padCount) as Pad], 1);
+  }, [beginRound, clearTimers, padCount]);
+
+  const onPadPress = (p: Pad) => {
+    if (phase !== "input") return;
+
+    /* 시각 피드백은 입력을 막지 않는다.
+     * 이전에는 여기서 await sleep(140) 으로 정답 판정까지 늦춰서
+     * 초당 7탭이 상한이었고 입력이 밀리는 느낌이 났다. */
+    setFlash(p);
+    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    flashTimerRef.current = window.setTimeout(() => setFlash(null), FLASH_MS);
+    vibrate(14);
+
+    if (p !== seq[inputIndex]) {
+      failRound("틀렸어요!");
       return;
     }
 
     const nextIdx = inputIndex + 1;
-    if (nextIdx >= seq.length) {
-      // 라운드 성공 → 컨페티 끝난 뒤 다음 라운드
-      setPhase("clear");
-      setMessage("잘했어요! 다음 라운드…");
-      vibrate(40);
-      setPendingAdvanceNext(true);
-      setConfetti(true);
-      setInputIndex(0);
-    } else {
+    if (nextIdx < seq.length) {
       setInputIndex(nextIdx);
+      armLimit(round);
+      return;
     }
+
+    // 라운드 클리어
+    if (limitTimerRef.current) clearTimeout(limitTimerRef.current);
+    setPhase("clear");
+    vibrate(40);
+
+    const cleared = round;
+    if (cleared > best) {
+      setBest(cleared);
+      try {
+        localStorage.setItem(bestKey(padCount), String(cleared));
+      } catch {
+        // 저장 실패는 무시 — 이번 세션에만 반영된다
+      }
+    }
+    // 컨페티는 이제 진행을 막지 않는다. 5라운드마다 축하만 한다.
+    if (cleared % MILESTONE === 0) setConfetti(true);
+
+    const grown = [...seq];
+    for (let i = 0; i < growth(cleared); i++) grown.push(nextPad());
+    advanceTimerRef.current = window.setTimeout(
+      () => beginRound(grown, cleared + 1),
+      ADVANCE_MS
+    );
   };
 
-  const resetGame = () => {
-    setSeq([]); setRound(0); setInputIndex(0);
-    setPhase("idle"); setFlash(null);
-    setMessage("시작하기를 눌러주세요");
-    setPendingAdvanceNext(false);
-    setConfetti(false);
-  };
-
-  // ✅ 패드 수에 따른 간격/스케일(셀 크기 조절)
-  const gridGapClass =
-    padCount === 4 ? "gap-4" :
-    padCount === 6 ? "gap-3" :
-                     "gap-2"; // 8패드
-
-  const boardScaleClass =
-    padCount === 4 ? "scale-100" :
-    padCount === 6 ? "scale-[0.92]" :
-                     "scale-[0.85]";
+  // 패드 수에 따라 열을 바꿔 보드가 항상 2행(또는 2×2)으로 유지된다
+  const gridCols =
+    padCount === 4 ? "grid-cols-2" : padCount === 6 ? "grid-cols-3" : "grid-cols-4";
 
   return (
     <GameLayout title="기억력 테스트">
-      <div className="flex flex-col gap-3 p-3 items-center">
-        {/* 상단 바: 라운드만 표시, 우측 패드 선택 */}
-        <div className="w-full max-w-md flex items-center justify-between">
-          <div className="text-sm text-slate-300">
-            라운드: <b className="text-slate-100">{round}</b>
+      <div className="flex flex-col items-center gap-3">
+        {/* 상단: 라운드 · 길이 · 최고 기록 / 패드 수 */}
+        <div className="flex w-full max-w-md items-center justify-between">
+          <div className="flex items-baseline gap-2 text-sm text-slate-300">
+            <span>
+              라운드 <b className="text-strong">{round}</b>
+            </span>
+            <span className="text-[11px] text-slate-400">길이 {seq.length}</span>
+            <span className="text-[11px] text-slate-400">최고 {best}</span>
           </div>
-          <div className="flex gap-2">
-            {[4,6,8].map((n) => (
+          <div className="flex gap-1.5">
+            {([4, 6, 8] as PadCount[]).map((n) => (
               <button
                 key={n}
-                onClick={() => { if (padCount !== n) setPadCount(n as 4|6|8); }}
-                className={`px-3 py-1 rounded-lg text-xs bg-slate-700 transition ${padCount === n ? "text-white" : "text-slate-200 hover:bg-slate-600"} ${
-                  n === 4 ? (padCount === 4 ? "bg-emerald-600" : "") :
-                  n === 6 ? (padCount === 6 ? "bg-indigo-600" : "") :
-                             (padCount === 8 ? "bg-amber-600" : "")
+                onClick={() => {
+                  if (padCount !== n) setPadCount(n);
+                }}
+                className={`rounded-lg px-3 py-1 text-xs font-semibold transition ${
+                  padCount === n
+                    ? "bg-emerald-600 text-white"
+                    : "bg-slate-700 text-slate-200 hover:bg-slate-600"
                 }`}
-                aria-label={`${n}`}
-                title={`${n}`}
+                title={`패드 ${n}개`}
               >
                 {n}
               </button>
@@ -188,99 +280,111 @@ export default function MemoryPage() {
           </div>
         </div>
 
-        {/* 보드: 행 증가로 세로 확장 + 스케일로 셀 크기 보정 */}
-        <div className="relative w-full max-w-md rounded-3xl bg-slate-900 border border-slate-700 shadow-xl p-4">
-          <div className={`grid grid-cols-2 ${gridGapClass} w-full origin-top ${boardScaleClass}`}>
+        {/* 보드 */}
+        <div className="relative w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 p-4 shadow-xl">
+          <div className={`grid ${gridCols} gap-3`}>
             {pads.map((p) => {
               const active = flash === p;
-              const color = (padColors[p] ?? padColors[p % padColors.length]);
-              const bgClass = active ? color.glow : color.base;
+              const color = padColors[p % padColors.length];
               return (
                 <button
                   key={p}
                   onClick={() => onPadPress(p)}
                   className={[
-                    "w-full aspect-square rounded-2xl transition-all duration-150",
-                    bgClass,
-                    active ? "scale-[1.02] ring-4 ring-veil/30" : "ring-2 ring-black/20",
-                    phase === "input" ? "cursor-pointer" : "cursor-default opacity-90",
-                    "shadow-inner"
+                    "aspect-square w-full rounded-2xl shadow-inner transition-all duration-100",
+                    active ? color.glow : color.base,
+                    active
+                      ? "scale-[1.03] ring-4 ring-veil/40"
+                      : "ring-2 ring-black/20",
+                    phase === "input"
+                      ? "cursor-pointer"
+                      : "cursor-default opacity-90",
                   ].join(" ")}
+                  aria-label={`패드 ${p + 1}`}
                 />
               );
             })}
           </div>
 
-          {/* 컨페티: 끝난 뒤에만 다음 라운드 진행 */}
+          {/* 컨페티는 축하 전용 — 라운드 진행을 기다리게 하지 않는다 */}
           <Confetti
             run={confetti}
-            duration={1000}
-            fadeOutMs={220}
-            onEnd={() => {
-              setConfetti(false);
-              if (pendingAdvanceNext) {
-                setPendingAdvanceNext(false);
-                advanceRound();
-              }
-            }}
+            duration={900}
+            fadeOutMs={200}
+            onEnd={() => setConfetti(false)}
           />
         </div>
 
-        {/* 컨트롤/메시지: phase별 텍스트만 사용 */}
-        <div className="w-full max-w-md flex flex-col items-center gap-2">
+        {/* 입력 제한시간 바 */}
+        <div className="h-1.5 w-full max-w-md overflow-hidden rounded-full bg-slate-800">
+          {phase === "input" && (
+            <div
+              // key: 탭마다 요소를 새로 만들어 애니메이션을 처음부터 다시 돌린다
+              key={`${round}-${inputIndex}`}
+              className="animate-time-bar h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400"
+              style={{ animationDuration: `${limitMs}ms` }}
+            />
+          )}
+        </div>
+
+        {/* 컨트롤 / 상태 */}
+        <div className="flex w-full max-w-md flex-col items-center gap-2">
           {phase === "idle" && (
             <button
               onClick={startGame}
-              className="mt-1 w-full rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-bold py-3 hover:from-emerald-700 hover:to-cyan-700 transition"
+              className="w-full rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 py-3 font-bold text-white transition hover:from-emerald-700 hover:to-cyan-700"
             >
               시작하기
             </button>
           )}
 
           {phase === "showing" && (
-            <div className="w-full text-center text-slate-400 text-sm">
-              시퀀스를 외우세요…
+            <div className="w-full text-center text-sm text-slate-400">
+              시퀀스를 외우세요… ({showMs}ms)
             </div>
           )}
 
           {phase === "input" && (
-            <div className="w-full text-center text-slate-200 text-sm">
-              그대로 눌러보세요!
-            </div>
-          )}
-
-          {phase === "fail" && (
-            <div className="w-full flex gap-2">
-              <button
-                onClick={startGame}
-                className="flex-1 rounded-xl bg-rose-600 text-white font-bold py-3 hover:bg-rose-700 transition"
-              >
-                다시 도전
-              </button>
-              <button
-                onClick={resetGame}
-                className="px-4 rounded-xl bg-slate-700 text-slate-100 font-semibold hover:bg-slate-600 transition"
-              >
-                초기화
-              </button>
+            <div className="w-full text-center text-sm text-slate-200">
+              그대로 눌러보세요! <b className="text-strong">{inputIndex}</b> /{" "}
+              {seq.length}
             </div>
           )}
 
           {phase === "clear" && (
-            <div className="w-full text-center text-emerald-300 text-sm">
+            <div className="w-full text-center text-sm text-emerald-400">
               잘했어요! 다음 라운드…
             </div>
           )}
 
-          <p className="mt-1 text-[12px] text-slate-400 text-center">
-            패드 수를 바꾸면 보드가 세로로 확장되고, 6/8패드에서는 셀 크기가 살짝 줄어 한 화면 가독성을 유지합니다.
+          {phase === "fail" && (
+            <>
+              <div className="w-full text-center text-sm text-rose-400">
+                {failReason} 라운드 {round} 에서 종료 · 최고 {best}
+              </div>
+              <div className="flex w-full gap-2">
+                <button
+                  onClick={startGame}
+                  className="flex-1 rounded-xl bg-rose-600 py-3 font-bold text-white transition hover:bg-rose-700"
+                >
+                  다시 도전
+                </button>
+                <button
+                  onClick={resetGame}
+                  className="rounded-xl bg-slate-700 px-4 font-semibold text-slate-100 transition hover:bg-slate-600"
+                >
+                  초기화
+                </button>
+              </div>
+            </>
+          )}
+
+          <p className="text-center text-[12px] text-slate-400">
+            라운드가 오를수록 재생이 빨라지고 입력 제한시간도 짧아집니다.
+            {GROWTH_STEP_ROUND}라운드부터는 한 번에 두 개씩 늘어납니다.
           </p>
         </div>
       </div>
     </GameLayout>
   );
-}
-
-function sleep(ms: number) {
-  return new Promise<void>((res) => setTimeout(res, ms));
 }

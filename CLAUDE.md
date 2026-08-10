@@ -70,7 +70,7 @@ export default function FooPage() {
 
 ### Supabase 경계
 
-- 페이지 컴포넌트는 **Supabase를 직접 호출하지 않습니다.** 반드시 `src/lib/leaderboard.ts` 또는 `src/lib/reflex.ts`를 경유합니다.
+- 페이지 컴포넌트는 **Supabase를 직접 호출하지 않습니다.** 반드시 `src/lib/leaderboard.ts` · `src/lib/reflex.ts` · `src/lib/speedrun.ts`를 경유합니다.
 - `src/lib/supabase.ts`는 모듈 최상단에서 클라이언트를 생성하는 싱글톤입니다.
 - **DB 실패가 게임 진행을 막아서는 안 됩니다.** 기존 패턴을 따라 `console.error` + 빈 값 반환으로 처리하고, 예외를 throw하거나 UI를 블로킹하지 마세요.
 
@@ -78,6 +78,9 @@ export default function FooPage() {
 |---|---|
 | 밸런스월드컵 | `wins` 테이블(insert), `leaderboard` 뷰(select) |
 | 반사신경 | `reflex_scores` 테이블(select), `submit_reflex_score` RPC(insert) |
+| 1 to 48 | `speed_scores` 테이블(select), `submit_speed_score` RPC(insert) — 스키마는 `supabase/speed_scores.sql` |
+
+랭킹 닉네임 검증은 `src/lib/nickname.ts` 한 곳에 있습니다(반사신경·1 to 48 공용). **클라이언트 검증은 RPC 직접 호출로 우회되므로 DB 함수 안에도 같은 규칙이 있어야 합니다** — 규칙을 바꿀 땐 양쪽을 함께 고치세요.
 
 ---
 

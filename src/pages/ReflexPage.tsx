@@ -1,13 +1,39 @@
 // src/pages/ReflexPage.tsx
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type SyntheticEvent,
+} from "react";
 import GameLayout from "../layouts/GameLayout";
 import ReflexLeaderboardPanel from "../components/ReflexLeaderboardPanel";
 import { recordReflexScore } from "../lib/reflex";
+import { validateNickname, NICKNAME_MAX } from "../lib/nickname";
+import { eventTime } from "../lib/eventTime";
 
 type Phase = "idle" | "waiting" | "ready" | "toosoon" | "result";
 
-const MIN_DELAY = 1200;
-const MAX_DELAY = 3500;
+const MIN_DELAY = 800; // 하한: 시작 직후 곧바로 뜨는 것만 막는다
+const MAX_DELAY = 7000; // 상한: 드물게만 닿는 꼬리 끝
+const MEAN_EXTRA = 1600; // 하한 위에 더해지는 지수분포의 평균
+
+// 대기 시간을 지수분포에서 뽑는다.
+// 기존 균등분포(1200~3500)는 평균이 2.35초로 뻔하고 상한이 낮아
+// "이쯤이면 뜬다"고 미리 찍는 플레이가 통했다.
+// 지수분포는 무기억성이라 이미 얼마나 기다렸든 다음 순간 신호가 뜰 확률이
+// 항상 같아서, 원리적으로 예측이 성립하지 않는다.
+// 상한 초과 시 클램프하지 않고 다시 뽑는다 — 클램프하면 MAX_DELAY 에 값이
+// 뭉쳐서 그 지점 자체가 또 하나의 예측 가능한 타이밍이 되어버린다.
+function pickDelay(): number {
+  for (let i = 0; i < 32; i++) {
+    // 1 - Math.random() 으로 (0, 1] 범위를 만들어 log(0) = -Infinity 를 피한다
+    const delay = MIN_DELAY - Math.log(1 - Math.random()) * MEAN_EXTRA;
+    if (delay <= MAX_DELAY) return Math.round(delay);
+  }
+  return MAX_DELAY; // 32회 연속 상한 초과 — 확률상 사실상 도달하지 않는다
+}
+
 const WAITING_BG_POOL = [
   "bg-red-700",
   "bg-blue-700",
@@ -21,30 +47,6 @@ const WAITING_BG_POOL = [
   "bg-lime-700",
 ];
 
-// 욕설/비속어 필터용 리스트 (원하는 대로 계속 추가해도 됨)
-const BAD_WORDS = [
-  "시발",
-  "씨발",
-  "병신",
-  "느금",
-  "ㅅㅂ",
-  "ㅂㅅ",
-  "fuck",
-  "shit",
-  "보지",
-  "자지",
-  "새끼",
-  "잠지",
-  "오랄",
-  "사까",
-  "꼬추",
-  "꼬추년",
-  "창녀",
-  "개새끼",
-  "씨빨",
-  "씹쌔끼",
-  "오랄"
-];
 
 export default function ReflexPage() {
   const [phase, setPhase] = useState<Phase>("idle");
@@ -58,6 +60,8 @@ export default function ReflexPage() {
 
   const startAtRef = useRef<number | null>(null);
   const timeoutRef = useRef<number | null>(null);
+  // 한 라운드에 기록이 두 번 제출되는 것을 막는 가드
+  const submittedRef = useRef(false);
 
   useEffect(
     () => () => {
@@ -66,30 +70,6 @@ export default function ReflexPage() {
     []
   );
 
-  // 닉네임 검증
-  const validateNickname = (name: string): string | null => {
-    const trimmed = name.trim();
-
-    if (!trimmed) return "닉네임을 입력하세요.";
-    if (trimmed.length > 10) return "닉네임은 10자 이하";
-
-    // 한글/영문/숫자/_ 만 허용
-    const validPattern = /^[ㄱ-ㅎ가-힣a-zA-Z0-9_]+$/;
-    if (!validPattern.test(trimmed)) {
-      return "한글/영문/숫자만 사용";
-    }
-
-    // 욕설 필터 (부분 포함도 막음)
-    const lower = trimmed.toLowerCase();
-    for (const bad of BAD_WORDS) {
-      if (!bad) continue;
-      if (lower.includes(bad.toLowerCase())) {
-        return "사용할 수 없는 단어";
-      }
-    }
-
-    return null;
-  };
 
   const onChangeNickname = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -98,7 +78,7 @@ export default function ReflexPage() {
   };
 
   const scheduleReady = () => {
-    const delay = Math.floor(Math.random() * (MAX_DELAY - MIN_DELAY)) + MIN_DELAY;
+    const delay = pickDelay();
     timeoutRef.current = window.setTimeout(() => {
       setPhase("ready");
       startAtRef.current = performance.now();
@@ -113,10 +93,11 @@ export default function ReflexPage() {
     setPhase("waiting");
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     startAtRef.current = null;
+    submittedRef.current = false;
     scheduleReady();
   };
 
-  const onTapArea = () => {
+  const onTapArea = (e: SyntheticEvent) => {
     // 랭킹 화면일 때는 터치 무시 (안 렌더되지만 안전장치)
     if (showRanking) return;
 
@@ -126,9 +107,27 @@ export default function ReflexPage() {
       return;
     }
     if (phase === "ready") {
-      const now = performance.now();
-      const startAt = startAtRef.current ?? now;
-      const ms = Math.max(0, Math.round(now - startAt));
+      const startAt = startAtRef.current;
+      // 신호 시각을 모르면 기록을 만들지 않는다.
+      // (이전에는 여기서 현재 시각을 대입해 0ms 기록을 만들어냈다)
+      if (startAt === null) {
+        setPhase("toosoon");
+        return;
+      }
+      // touchstart 와 click 으로 같은 탭이 두 번 들어오는 것을 막는다
+      if (submittedRef.current) return;
+
+      const raw = eventTime(e) - startAt;
+      /* 음수 = 신호가 뜨기 전에 누른 것. 이벤트 처리가 밀려 ready 로 넘어온
+       * 경우이므로 기록이 아니라 실패로 처리한다.
+       * (이전에는 Math.max(0, ...) 로 0ms 만점 기록이 되었다) */
+      if (raw < 0) {
+        setPhase("toosoon");
+        return;
+      }
+
+      submittedRef.current = true;
+      const ms = Math.round(raw);
 
       setLatency(ms);
       setPhase("result");
@@ -274,7 +273,7 @@ export default function ReflexPage() {
               {/* 상단: 라벨 + 에러문구 같은 줄 */}
               <div className="flex items-center justify-between">
                 <label className="min-w-0 text-[11px] text-slate-300">
-                  닉네임 (한글/영문 10자 이하)
+                  닉네임 (한글/영문 {NICKNAME_MAX}자 이하)
                 </label>
 
                 {nicknameError && (
@@ -292,7 +291,7 @@ export default function ReflexPage() {
                   onChange={onChangeNickname}
                   // min-w-0: 없으면 input 의 기본 min-content 폭 때문에 좁은 화면에서 행이 넘친다
                   className="min-w-0 flex-1 rounded-md bg-slate-900/70 border border-slate-700 px-3 py-1.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-                  maxLength={12}
+                  maxLength={NICKNAME_MAX}
                   placeholder="닉네임을 입력하세요"
                 />
 

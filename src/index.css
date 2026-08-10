@@ -111,6 +111,26 @@ html {
   animation: bounceIn 0.5s ease-out;
 }
 
+/* 기억력 테스트의 입력 제한시간 바 —
+   길이를 매 프레임 다시 그리지 않고 transform 으로만 줄인다.
+   재생 시간은 인라인 animationDuration 으로 라운드마다 조절하고,
+   key 를 바꿔 요소를 새로 만들어 처음부터 다시 돌린다. */
+@keyframes memoryTimeBar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.animate-time-bar {
+  transform-origin: left;
+  animation-name: memoryTimeBar;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
 /* 스크롤 유도 표시(ScrollHint)의 화살표 —
    위에서 스며 나와 아래로 흘러내리며 사라지는 동작을 반복해 "아래로" 를 가리킨다. */
 @keyframes scrollArrow {
