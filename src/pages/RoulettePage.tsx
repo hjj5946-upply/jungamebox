@@ -376,13 +376,14 @@ export default function RoulettePage() {
   return (
     <GameLayout title="돌려돌림판">
       <div className="flex flex-col h-full gap-4 pt-2 pb-4">
-        <div className="flex items-center justify-center pt-2">
+        <div className="flex items-center justify-center">
           {/* 폭과 높이 양쪽에 걸린다.
               - w-full        : 좁은 화면에서는 열 폭을 따라간다
-              - 24rem         : 넓은 화면 상한. 앱 열(28rem)에서 GameLayout 의 p-4 를 뺀 26rem 안에 들어간다
-              - 100dvh-30rem  : 원판 말고 나머지(헤더·입력·버튼·목록·결과배너·여백)가 약 30rem 이라
-                                남는 높이를 넘지 않게 해 세로 스크롤 없이 한 화면에 담는다 */}
-          <div className="relative aspect-square w-full max-w-[min(24rem,calc(100dvh_-_30rem))]">
+              - 26rem         : 넓은 화면 상한. 앱 열(28rem)에서 GameLayout 의 p-4 를 뺀 폭 전체를 쓴다
+              - 100dvh-27rem  : 원판 말고 나머지(헤더·입력·버튼·목록·결과배너·여백)가 약 27rem 이라
+                                남는 높이를 넘지 않게 해 세로 스크롤 없이 한 화면에 담는다.
+                                결과배너를 얇게(py-2.5/text-xl) 줄여 그만큼 원판에 넘긴 값이다 */}
+          <div className="relative aspect-square w-full max-w-[min(26rem,calc(100dvh_-_27rem))]">
             {/* 화살표(플래퍼). 축은 원판 위에 떠 있고, 끝만 얇은 띠에 걸친다.
                 띠 폭이 지름의 4% 뿐이라 끝이 그보다 더 들어가면 색칸을 가린다.
                 전체 높이 32px(축 10 − 겹침 4 + 촉 26), 24px 끌어올려 끝이 가장자리에서 8px 안쪽. */}
@@ -470,16 +471,17 @@ export default function RoulettePage() {
           </div>
         </div>
 
+        {/* 결과 배너 — 원판에 자리를 넘기려고 얇게 잡았다 (py-2.5 + text-xl) */}
         {result && !isSpinning && (
           <div
-            className="mt-4 text-2xl font-bold text-center py-4 px-6 rounded-lg animate-bounce mx-4"
+            className="text-xl font-bold text-center py-2.5 px-6 rounded-lg animate-bounce mx-4"
             style={{ backgroundColor: result.color, color: "white" }}
           >
             🎉 {result.label} 🎉
           </div>
         )}
 
-        <div className="space-y-4 px-4 mt-4">
+        <div className="space-y-4 px-4">
           <div className="flex gap-2">
             <input
               type="text"
