@@ -35,40 +35,54 @@ const MAX_OPTIONS = 12;
 
 /* ── 도형 (viewBox "0 0 300 300" 기준) ────────────────────────── */
 const CENTER = 150;
-const BAND_OUTER = 150; // 띠 바깥 반지름
-const BAND_INNER = 138; // 띠 안쪽 반지름 — 폭 12(지름의 4%)로 얇게
-const SECTOR_RADIUS = 136; // 색칸 반지름. 띠와 사이의 2 만큼이 검은 테로 남는다
-const CELL_GAP = 1.6; // 칸 사이 홈(도). 화살표가 걸리는 턱이 된다
+const BAND_RING = 150; // 바탕 원. 칸보다 1 크게 둬서 이 1 이 원판 외곽선이 된다
+const BAND_OUTER = 149; // 띠(칸) 바깥 반지름
+const BAND_INNER = 140; // 띠 안쪽 반지름 — 폭 9(지름의 3%)
+const SECTOR_RADIUS = 138; // 색칸 반지름. 띠와 사이의 2 만큼이 검은 테로 남는다
+const CELL_GAP = 2.2; // 칸 사이 홈(도). 화살표가 걸리는 턱이 된다
+const CELL_EDGE = 0.6; // 칸 윤곽선 굵기. 얇은 띠에서 칸 하나하나를 또렷하게 만든다
 const MIN_CELLS = 24; // 띠 칸 최소 개수
 
-// 띠는 검정 계열. 두 톤을 번갈아 칠해 얇아도 회전이 읽히게 한다.
-const BAND_GROOVE = "#000000"; // 칸 사이 홈 + 띠 안쪽 테
-const BAND_LIGHT = "#272c3a";
-const BAND_DARK = "#0c0f18";
+// 띠는 밝은 톤·어두운 톤을 번갈아 칠한다.
+// 폭이 지름의 3% 뿐이라 대비가 약하면 테두리 자체가 배경에 묻힌다.
+// 두 톤 중 하나는 어느 테마에서든 배경과 붙지 않으므로 양쪽에서 눈금이 보인다.
+const BAND_GROOVE = "#000000"; // 칸 사이 홈 + 칸 윤곽선 + 띠 안쪽 테
+const BAND_LIGHT = "#dfe5f2";
+const BAND_DARK = "#1d2331";
 
 /* ── 회전 물리 (단위: 도, 초) ─────────────────────────────────── */
 const FIXED_DT = 1 / 120; // 물리 스텝. 화면 주사율과 무관하게 고정
 const MAX_FRAME = 0.1; // 탭 복귀 등으로 프레임이 벌어져도 여기까지만 따라잡는다
 
-const START_VEL_MIN = 1700; // 초기 각속도 ≈ 5바퀴/초
-const START_VEL_MAX = 2600;
-const AIR_DECAY = 0.68; // 1초 뒤 남는 속도 비율 — 공기저항
-const AXLE_KINETIC = 55; // 돌고 있을 때의 축 마찰 (deg/s²)
-const AXLE_STATIC = 420; // 멎어 있을 때 버티는 힘 (deg/s²). 턱이 미는 힘이 이보다 작으면 그대로 걸려 선다
-const CREST_LOSS = 0.985; // 턱을 넘을 때마다 부딪히며 잃는 비율 (곱셈이라 속도와 무관하게 항상 손해)
-const CATCH_VEL = 90; // 이 아래로 떨어지면 턱에 걸리는 손실이 커진다
-const CATCH_LOSS = 0.9;
+const START_VEL_MIN = 1350; // 초기 각속도 ≈ 3.8바퀴/초
+const START_VEL_MAX = 1950;
+const AIR_DECAY = 0.72; // 1초 뒤 남는 속도 비율 — 공기저항
+const AXLE_KINETIC = 12; // 돌고 있을 때의 축 마찰 (deg/s²). 낮게 둬야 끝에서 한 칸씩 아쉽게 밀린다
+const AXLE_STATIC = 300; // 멎어 있을 때 버티는 힘 (deg/s²). 턱이 미는 힘이 이보다 작으면 그대로 걸려 선다
+const CREST_LOSS = 0.99; // 턱을 넘을 때마다 부딪히며 잃는 비율 (곱셈이라 속도와 무관하게 항상 손해)
+const CATCH_VEL = 70; // 이 아래로 떨어지면 턱에 걸리는 손실이 커진다
+const CATCH_LOSS = 0.96;
 const REST_VEL = 3; // 이 아래면 정지마찰 판정에 들어간다
 
 /* ── 턱 모양 ──────────────────────────────────────────────────
    칸 하나를 [평평한 홈] → [완만한 오르막] → [가파른 낙차] 로 본다.
-   이 높이차가 그대로 위치에너지라서, 오르막에서는 원판을 뒤로 밀고
-   낙차에서는 앞으로 민다. 보존력이므로 여기서 에너지가 생기지 않는다
-   (손실은 공기저항·축마찰·CREST_LOSS 뿐 → 반드시 멈춘다). */
+   이 높이차가 그대로 위치에너지라서, 턱을 오를 때는 원판을 되밀고
+   내려갈 때는 진행 방향으로 민다. */
 const RIDGE_START = 0.75; // 칸의 앞 3/4 은 평평한 홈 — 여기서 힘없이 멎으면 화살표는 반듯하다
 const RIDGE_DROP = 0.08; // 턱을 넘어 다음 홈으로 떨어지는 구간
 const RIDGE_ACCEL = 100; // 턱 경사가 만드는 접선 가속 계수
 const RIDGE_PRELOAD = 0.25; // 화살표가 평소에도 띠를 누르고 있는 정도
+
+/* 턱을 내려갈 때 되돌려받는 힘의 비율. 나머지는 부딪히는 소리·충격으로 사라진다.
+   이게 1(=완전 보존력)이면 두 가지가 어긋난다.
+   ① 고정 스텝 적분에서는 가파른 낙차를 한두 스텝에 건너뛰므로 오차가 쌓이고,
+      특정 속도에서 얻는 쪽으로 균형이 맞아 원판이 등속으로 영원히 돈다.
+   ② 감쇠가 약할수록 그 균형점이 잘 생기는데, 자연스러운 마무리를 위해 축마찰을 낮춰야 한다.
+   1 보다 작게 두면 턱을 넘는 방향과 무관하게 칸마다 위치에너지의 (1-이 값) 이 사라져
+   에너지가 단조 감소한다 → 반드시 멈춘다.
+   동시에 이 절대 손실이 "마지막 한 칸을 못 넘고 스르르 되굴러 내려오는" 마무리를 만든다.
+   정지 임계속도 ≈ sqrt(1.5 * (1-이 값) * RIDGE_ACCEL * 칸크기) ≈ 35deg/s (칸당 0.43초). */
+const RIDGE_DROP_RETURN = 0.45;
 
 /* ── 화살표(플래퍼) 스프링 ────────────────────────────────────── */
 const FLAP_MAX = 15; // 턱 꼭대기에서의 각도
@@ -231,22 +245,30 @@ export default function RoulettePage() {
         const { h, slope } = ridgeAt(phaseOf(rot, cell));
 
         // 턱 경사가 만드는 접선 가속. 눌린 만큼 세게 버티므로 (선하중 + 높이) 를 곱한다.
-        // 오르막(slope>0)이면 뒤로, 낙차(slope<0)면 앞으로 민다.
-        let accel = -RIDGE_ACCEL * (RIDGE_PRELOAD + h) * slope;
+        // 항상 "턱을 내려가는 쪽"으로 미는 힘이다 (오르막 slope>0 이면 뒤로, 낙차 slope<0 이면 앞으로).
+        const ridgeForce = -RIDGE_ACCEL * (RIDGE_PRELOAD + h) * slope;
+        let accel = ridgeForce;
+
+        // 지금 턱을 내려가는 중이면(진행 방향으로 높이가 낮아짐) 일부만 되돌려받는다.
+        // 진행 방향이 아니라 오르내림으로 판정해야 한다 — 되굴러 내려갈 때도 소산돼야
+        // 역방향으로 에너지를 얻어 뒤로 무한히 가속하는 일이 없다.
+        if (Math.sign(vel) * slope < 0) accel *= RIDGE_DROP_RETURN;
 
         vel *= Math.pow(AIR_DECAY, dt);
 
         if (Math.abs(vel) > REST_VEL) {
           // 돌고 있다 — 운동마찰이 진행 방향 반대로 걸린다
           accel -= Math.sign(vel) * AXLE_KINETIC;
-        } else if (Math.abs(accel) <= AXLE_STATIC) {
+        } else if (Math.abs(ridgeForce) <= AXLE_STATIC) {
           // 거의 멎었는데 턱이 미는 힘이 정지마찰을 못 이긴다 → 여기서 그대로 선다.
-          // 오르막 중턱이면 화살표가 턱에 걸린 채로, 홈이면 반듯한 채로 멈춘다.
+          // 판정은 소산을 뺀 ridgeForce 로 한다. 아직 움직이지 않아 부딪힐 일이 없고,
+          // 깎인 값으로 재면 오르막 중턱에서 버티는 것처럼 보여 화살표가 크게 기운 채 멈춘다.
           vel = 0;
           accel = 0;
           wheelDone = true;
         } else {
-          accel -= Math.sign(accel) * AXLE_STATIC;
+          // 정지마찰을 이겨 다시 움직이기 시작한다. 아직 정지 상태이므로 소산 없이 민다.
+          accel = ridgeForce - Math.sign(ridgeForce) * AXLE_STATIC;
         }
 
         if (!wheelDone) {
@@ -385,9 +407,11 @@ export default function RoulettePage() {
                                 결과배너를 얇게(py-2.5/text-xl) 줄여 그만큼 원판에 넘긴 값이다 */}
           <div className="relative aspect-square w-full max-w-[min(26rem,calc(100dvh_-_27rem))]">
             {/* 화살표(플래퍼). 축은 원판 위에 떠 있고, 끝만 얇은 띠에 걸친다.
-                띠 폭이 지름의 4% 뿐이라 끝이 그보다 더 들어가면 색칸을 가린다.
-                전체 높이 32px(축 10 − 겹침 4 + 촉 26), 24px 끌어올려 끝이 가장자리에서 8px 안쪽. */}
-            <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-6">
+                띠 폭이 지름의 3% 뿐이라 끝이 그보다 더 들어가면 색칸을 가린다.
+                전체 높이 32px(축 10 − 겹침 4 + 촉 26), 26px 끌어올려 끝이 가장자리에서 6px 안쪽.
+                원판 지름이 곧 컨테이너 폭이라 6px 는 viewBox 로 4.3(넓은 화면)~6.9(좁은 화면)
+                — 어느 쪽이든 띠 폭 9 안에 남는다. */}
+            <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-[26px]">
               <div ref={pointerRef} className="origin-top will-change-transform">
                 <div className="mx-auto h-2.5 w-2.5 rounded-full bg-red-600 shadow" />
                 <div className="-mt-1 h-0 w-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[26px] border-t-red-500 drop-shadow-lg" />
@@ -408,15 +432,19 @@ export default function RoulettePage() {
                 viewBox="0 0 300 300"
                 className="will-change-transform"
               >
-                {/* 띠 바탕. 칸 사이 홈과 띠~색칸 사이 테가 이 색으로 드러난다. */}
-                <circle cx={CENTER} cy={CENTER} r={BAND_OUTER} fill={BAND_GROOVE} />
+                {/* 띠 바탕. 칸 사이 홈, 띠~색칸 사이 테, 그리고 칸보다 1 큰 만큼이
+                    원판 외곽선으로 드러난다. */}
+                <circle cx={CENTER} cy={CENTER} r={BAND_RING} fill={BAND_GROOVE} />
 
-                {/* 칸칸이 띠 — 화살표가 여기 턱에 걸린다 */}
+                {/* 칸칸이 띠 — 화살표가 여기 턱에 걸린다.
+                    같은 색으로 윤곽선을 둘러 얇은 띠에서도 칸 하나하나가 또렷하게 끊긴다. */}
                 {Array.from({ length: cellCount }, (_, k) => (
                   <path
                     key={`cell-${k}`}
                     d={cellPath(k, cellCount)}
                     fill={k % 2 === 0 ? BAND_LIGHT : BAND_DARK}
+                    stroke={BAND_GROOVE}
+                    strokeWidth={CELL_EDGE}
                   />
                 ))}
 
