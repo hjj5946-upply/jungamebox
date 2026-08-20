@@ -31,6 +31,8 @@ type Puzzle = {
   region: number[];
   /** solution[r] = 행 r 의 고양이가 있는 열 */
   solution: number[];
+  /** 구역 번호 → 배경색 클래스. 판마다 팔레트에서 새로 뽑는다. */
+  colors: string[];
 };
 
 const SIZE_OPTIONS: BoardSize[] = [7, 8, 10];
@@ -113,19 +115,33 @@ function resolveTap(
   return "toggleX";
 }
 
-// 구역 색. slate 는 표면 토큰이라 테마에 따라 뒤집히므로 장식용으로 쓰지 않는다.
+// 구역 색 팔레트. slate 는 표면 토큰이라 테마에 따라 뒤집히므로 장식용으로 쓰지 않는다.
 // 아이콘을 검정으로 얹기 때문에 라이트/다크 어느 쪽에서도 그대로 읽힌다.
-const REGION_COLORS = [
-  "bg-rose-400",
-  "bg-orange-400",
-  "bg-amber-300",
-  "bg-lime-300",
-  "bg-emerald-400",
-  "bg-teal-300",
-  "bg-sky-400",
-  "bg-indigo-300",
-  "bg-violet-400",
-  "bg-fuchsia-300",
+//
+// 계열(색상 톤)별로 묶어 두고 한 판에서는 계열을 겹치지 않게 뽑는다.
+// 그냥 한 배열에서 무작위로 뽑으면 red-400 옆에 rose-400 이 붙는 판이 나와
+// 구역 경계가 안 보이기 때문이다. 계열 안에서만 명도를 흔들어 변화를 준다.
+// (Tailwind 는 동적 클래스명을 스캔하지 못하므로 완성된 문자열로 적어 둔다)
+const COLOR_FAMILIES: string[][] = [
+  ["bg-red-400", "bg-red-300"],
+  ["bg-orange-400", "bg-orange-300"],
+  ["bg-amber-300", "bg-amber-400"],
+  ["bg-yellow-300", "bg-yellow-400"],
+  ["bg-lime-300", "bg-lime-400"],
+  ["bg-green-400", "bg-green-300"],
+  ["bg-emerald-400", "bg-emerald-300"],
+  ["bg-teal-300", "bg-teal-400"],
+  ["bg-cyan-300", "bg-cyan-400"],
+  ["bg-sky-400", "bg-sky-300"],
+  ["bg-blue-400", "bg-blue-300"],
+  ["bg-indigo-300", "bg-indigo-400"],
+  ["bg-violet-400", "bg-violet-300"],
+  ["bg-purple-300", "bg-purple-400"],
+  ["bg-fuchsia-300", "bg-fuchsia-400"],
+  ["bg-pink-400", "bg-pink-300"],
+  ["bg-rose-400", "bg-rose-300"],
+  ["bg-stone-300", "bg-stone-400"],
+  ["bg-zinc-300", "bg-zinc-400"],
 ];
 
 /* ── 문제 생성 ───────────────────────────────────────────────
@@ -148,6 +164,13 @@ function shuffled<T>(arr: T[]): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+/** 판마다 색 계열을 겹치지 않게 count 개 뽑는다(계열 안에서는 명도를 무작위로). */
+function pickRegionColors(count: number): string[] {
+  return shuffled(COLOR_FAMILIES)
+    .slice(0, count)
+    .map((family) => family[Math.floor(Math.random() * family.length)]);
 }
 
 /** 행/열 유일 + 8방향 인접 금지를 만족하는 배치. 인접 행끼리 열 차이가 2 이상이면 된다. */
@@ -543,7 +566,7 @@ async function generatePuzzle(
 
     for (let step = 0; step < REFINE_STEPS; step += 1) {
       if (score === 1 && solvableByLogic(size, region)) {
-        return { size, region, solution };
+        return { size, region, solution, colors: pickRegionColors(size) };
       }
 
       // 경계 칸 하나를 이웃 구역으로 넘겨 보고, 해가 줄거나 유지되면 채택
@@ -594,6 +617,83 @@ function formatTime(sec: number): string {
   const s = sec % 60;
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
+
+/** 클리어 화면에 쓰는 "3분 12초" 표기 (1분 미만이면 초만) */
+function formatTimeKo(sec: number): string {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return m > 0 ? `${m}분 ${s}초` : `${s}초`;
+}
+
+/* ── 시작 화면 규칙 그림 ──────────────────────────────────────
+   글로만 적어 두면 "대각선 이웃 금지"가 잘 안 와닿아서,
+   고양이를 실제로 얹은 작은 판 3개로 규칙을 보여 준다.
+   ─────────────────────────────────────────────────────────── */
+
+type MiniMark = "cat" | "x" | null;
+type MiniCell = { color: string; mark: MiniMark };
+
+/** 예시용 미니 판. colsClass 는 Tailwind 스캔을 위해 완성된 클래스로 받는다. */
+function MiniBoard({
+  colsClass,
+  cells,
+}: {
+  colsClass: string;
+  cells: MiniCell[];
+}) {
+  return (
+    <div className={`grid w-full gap-[2px] ${colsClass}`}>
+      {cells.map((cell, i) => (
+        <div
+          key={i}
+          className={`flex aspect-square items-center justify-center rounded-[2px] ${cell.color}`}
+        >
+          {cell.mark === "cat" ? (
+            <Cat strokeWidth={2.4} className="h-[72%] w-[72%] text-black" />
+          ) : cell.mark === "x" ? (
+            <X strokeWidth={3} className="h-[60%] w-[60%] text-black/55" />
+          ) : null}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// 예시 1·2 가 공유하는 4x4 색 배치 (사분면 4색)
+const EX_A = "bg-rose-400";
+const EX_B = "bg-sky-400";
+const EX_C = "bg-amber-300";
+const EX_D = "bg-emerald-400";
+const EX_QUAD: string[] = [
+  EX_A, EX_A, EX_B, EX_B,
+  EX_A, EX_A, EX_B, EX_B,
+  EX_C, EX_C, EX_D, EX_D,
+  EX_C, EX_C, EX_D, EX_D,
+];
+
+const buildEx = (marks: Record<number, MiniMark>, colors: string[]): MiniCell[] =>
+  colors.map((color, i) => ({ color, mark: marks[i] ?? null }));
+
+// 1) 색마다 딱 한 마리 — 네 색에 고양이 하나씩 (행·열 규칙도 함께 지킨 배치)
+const EX_REGION = buildEx({ 1: "cat", 7: "cat", 8: "cat", 14: "cat" }, EX_QUAD);
+
+// 2) 가로·세로에도 한 마리 — 고양이가 선 줄과 열은 전부 X
+const EX_LINE = buildEx(
+  { 1: "cat", 0: "x", 2: "x", 3: "x", 5: "x", 9: "x", 13: "x" },
+  EX_QUAD
+);
+
+// 3) 대각선 포함 8방향 금지 — 고양이를 둘러싼 여덟 칸이 전부 X
+const EX_NEAR = buildEx(
+  { 5: "cat", 0: "x", 1: "x", 2: "x", 4: "x", 6: "x", 8: "x", 9: "x", 10: "x" },
+  new Array<string>(16).fill("bg-violet-300")
+);
+
+const RULE_EXAMPLES: { cells: MiniCell[]; caption: string }[] = [
+  { cells: EX_REGION, caption: "색마다 한 마리" },
+  { cells: EX_LINE, caption: "가로·세로도 한 마리" },
+  { cells: EX_NEAR, caption: "옆·대각선은 금지" },
+];
 
 export default function CatSudokuPage() {
   const [size, setSize] = useState<BoardSize | null>(null);
@@ -766,11 +866,11 @@ export default function CatSudokuPage() {
     return (
       <GameLayout title="색상 스도쿠">
         <div className="flex flex-col gap-4 text-sm text-slate-100">
-          <section className="rounded-lg border border-slate-700 bg-slate-800/80 p-3">
-            <h2 className="mb-1 text-xs font-semibold text-slate-200">
+          <section className="rounded-lg border border-slate-700 bg-slate-800/80 p-4">
+            <h2 className="mb-1 text-base font-semibold text-strong">
               판 크기 선택
             </h2>
-            <p className="mb-3 text-[11px] text-slate-300">
+            <p className="mb-3 text-[13px] leading-relaxed text-slate-300">
               고르면 그때마다 새로운 판이 만들어집니다. 모든 판은 답이 하나뿐이고
               찍지 않고 논리로만 풀 수 있습니다.
             </p>
@@ -780,10 +880,10 @@ export default function CatSudokuPage() {
                   key={n}
                   type="button"
                   onClick={() => setSize(n)}
-                  className="rounded-md bg-slate-900 px-3 py-3 text-xs font-semibold text-slate-100 shadow-sm transition hover:bg-slate-700"
+                  className="rounded-md bg-slate-900 px-3 py-3 font-semibold text-slate-100 shadow-sm transition hover:bg-slate-700"
                 >
-                  <span className="block text-sm">{SIZE_LABELS[n]}</span>
-                  <span className="mt-0.5 block text-[10px] text-slate-400">
+                  <span className="block text-base">{SIZE_LABELS[n]}</span>
+                  <span className="mt-0.5 block text-xs text-slate-400">
                     {n}×{n}
                   </span>
                 </button>
@@ -791,8 +891,29 @@ export default function CatSudokuPage() {
             </div>
           </section>
 
-          <section className="rounded-lg border border-slate-700 bg-slate-800/80 p-3 text-[11px] leading-relaxed text-slate-300">
-            <h3 className="mb-1 text-xs font-semibold text-slate-200">규칙</h3>
+          {/* 규칙 그림 — 글보다 판을 보는 쪽이 빠르다 */}
+          <section className="rounded-lg border border-slate-700 bg-slate-800/80 p-4">
+            <h3 className="mb-3 text-base font-semibold text-strong">
+              이렇게 풀어요
+            </h3>
+            <div className="grid grid-cols-3 gap-3">
+              {RULE_EXAMPLES.map((ex) => (
+                <div key={ex.caption} className="flex flex-col gap-1.5">
+                  <MiniBoard colsClass="grid-cols-4" cells={ex.cells} />
+                  <p className="text-center text-[12px] font-medium leading-snug text-slate-300">
+                    {ex.caption}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-[13px] leading-relaxed text-slate-400">
+              세 조건을 모두 만족하는 자리에만 고양이가 숨어 있습니다. X 는
+              고양이가 없다고 확신한 칸에 직접 찍어 두는 표시입니다.
+            </p>
+          </section>
+
+          <section className="rounded-lg border border-slate-700 bg-slate-800/80 p-4 text-[13px] leading-relaxed text-slate-300">
+            <h3 className="mb-1.5 text-base font-semibold text-strong">규칙</h3>
             <ul className="list-inside list-disc space-y-1">
               <li>같은 색 안에 고양이는 딱 한 마리입니다.</li>
               <li>가로줄과 세로줄에도 고양이는 한 마리씩만 있습니다.</li>
@@ -801,7 +922,7 @@ export default function CatSudokuPage() {
               </li>
               <li>모든 색에서 고양이를 찾으면 클리어입니다.</li>
             </ul>
-            <h3 className="mb-1 mt-3 text-xs font-semibold text-slate-200">
+            <h3 className="mb-1.5 mt-4 text-base font-semibold text-strong">
               조작
             </h3>
             <ul className="list-inside list-disc space-y-1">
@@ -847,32 +968,34 @@ export default function CatSudokuPage() {
     <GameLayout title="색상 스도쿠">
       <div className="flex flex-col gap-3 text-sm text-slate-100">
         {/* 진행 상황 */}
-        <section className="rounded-lg border border-slate-700 bg-slate-800/80 p-3 text-[11px]">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-xs font-semibold text-emerald-300">
+        <section className="rounded-lg border border-slate-700 bg-slate-800/80 p-3 text-sm">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-base font-bold text-emerald-300">
                 {SIZE_LABELS[n]} · {n}×{n}
               </div>
-              <div className="mt-1 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10px] text-slate-300">
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-300">
                 <span>
                   찾은 고양이{" "}
-                  <span className="font-semibold">
+                  <span className="font-bold text-strong">
                     {catCount}/{n}
                   </span>
                 </span>
                 <span className="text-slate-500">·</span>
                 <span>
                   시간{" "}
-                  <span className="font-semibold">{formatTime(elapsed)}</span>
+                  <span className="font-bold text-strong">
+                    {formatTime(elapsed)}
+                  </span>
                 </span>
                 <span className="text-slate-500">·</span>
                 <span className="flex items-center gap-1">
                   기회
-                  <span className="flex items-center gap-0.5">
+                  <span className="flex items-center gap-1">
                     {Array.from({ length: MAX_MISTAKES }, (_, i) => (
                       <span
                         key={i}
-                        className={`h-2 w-2 rounded-full ${
+                        className={`h-2.5 w-2.5 rounded-full ${
                           i < chancesLeft ? "bg-rose-400" : "bg-slate-600"
                         }`}
                       />
@@ -890,27 +1013,23 @@ export default function CatSudokuPage() {
             <button
               type="button"
               onClick={() => setSize(null)}
-              className="shrink-0 rounded-md bg-slate-700 px-2 py-1 text-[10px] text-slate-100 hover:bg-slate-600"
+              className="shrink-0 rounded-md bg-slate-700 px-2.5 py-1.5 text-xs font-semibold text-slate-100 hover:bg-slate-600"
             >
               난이도 변경
             </button>
           </div>
 
-          {won ? (
-            <p className="mt-2 text-emerald-400">
-              🎉 클리어! {formatTime(elapsed)} 만에 고양이 {n}마리를 모두
-              찾았어요{hints > 0 ? ` (힌트 ${hints}회)` : ""}.
-            </p>
-          ) : failed ? (
-            <p className="mt-2 text-rose-400">
+          {/* 클리어 문구는 중앙 팝업이 대신한다 */}
+          {won ? null : failed ? (
+            <p className="mt-2 text-[13px] text-rose-400">
               기회를 모두 썼어요. 새 문제로 바꿉니다…
             </p>
           ) : wrong ? (
-            <p className="mt-2 text-rose-400">
+            <p className="mt-2 text-[13px] text-rose-400">
               여긴 고양이가 없어요. 남은 기회 {chancesLeft}번.
             </p>
           ) : (
-            <p className="mt-2 text-slate-300">
+            <p className="mt-2 text-[13px] text-slate-300">
               색마다 고양이 한 마리. 같은 줄·열·대각선 이웃은 안 됩니다.
             </p>
           )}
@@ -927,7 +1046,7 @@ export default function CatSudokuPage() {
               const mark = marks[idx] ?? 0;
               const isWrong = wrong !== null && wrong.idx === idx;
               const cellClasses = [
-                REGION_COLORS[g],
+                puzzle.colors[g] ?? "bg-zinc-300",
                 isWrong ? "ring-2 ring-inset ring-red-700" : "",
               ].join(" ");
 
@@ -965,28 +1084,28 @@ export default function CatSudokuPage() {
               type="button"
               onClick={() => resetBoard(n * n)}
               disabled={failed}
-              className="flex items-center justify-center gap-1 rounded-md bg-slate-900 px-2 py-2 text-[11px] font-semibold text-slate-100 shadow-sm transition hover:bg-slate-700 disabled:opacity-40"
+              className="flex items-center justify-center gap-1.5 rounded-md bg-slate-900 px-2 py-2.5 text-sm font-semibold text-slate-100 shadow-sm transition hover:bg-slate-700 disabled:opacity-40"
             >
-              <RotateCcw size={13} /> 다시 풀기
+              <RotateCcw size={16} /> 다시 풀기
             </button>
             <button
               type="button"
               onClick={handleHint}
               disabled={won || failed || hints >= MAX_HINTS}
-              className="flex items-center justify-center gap-1 rounded-md bg-slate-900 px-2 py-2 text-[11px] font-semibold text-slate-100 shadow-sm transition hover:bg-slate-700 disabled:opacity-40"
+              className="flex items-center justify-center gap-1.5 rounded-md bg-slate-900 px-2 py-2.5 text-sm font-semibold text-slate-100 shadow-sm transition hover:bg-slate-700 disabled:opacity-40"
             >
-              <Lightbulb size={13} /> 힌트 {MAX_HINTS - hints}
+              <Lightbulb size={16} /> 힌트 {MAX_HINTS - hints}
             </button>
             <button
               type="button"
               onClick={() => setRound((v) => v + 1)}
-              className="flex items-center justify-center gap-1 rounded-md bg-slate-900 px-2 py-2 text-[11px] font-semibold text-slate-100 shadow-sm transition hover:bg-slate-700"
+              className="flex items-center justify-center gap-1.5 rounded-md bg-slate-900 px-2 py-2.5 text-sm font-semibold text-slate-100 shadow-sm transition hover:bg-slate-700"
             >
-              <Shuffle size={13} /> 새 문제
+              <Shuffle size={16} /> 새 문제
             </button>
           </div>
 
-          <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
+          <p className="mt-2.5 text-[13px] leading-relaxed text-slate-400">
             한 번 탭 = X 표시/해제 · 빈 칸 연속 두 번 탭 = 고양이 · 고양이 탭 =
             지우기
             <br />
@@ -995,6 +1114,50 @@ export default function CatSudokuPage() {
           </p>
         </section>
       </div>
+
+      {/* 클리어 팝업 — 걸린 시간과 다음 판 버튼을 화면 한가운데 띄운다.
+          판이 뒤에 그대로 보이도록 배경은 어둡게만 깐다(스크림은 두 테마 모두 검정). */}
+      {won ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6">
+          <div className="w-full max-w-xs rounded-2xl border border-veil/10 bg-slate-800 p-6 text-center shadow-2xl">
+            <Cat
+              size={44}
+              strokeWidth={2}
+              className="mx-auto text-emerald-400"
+            />
+            <h2 className="mt-2 text-2xl font-bold text-strong">클리어!</h2>
+            <p className="mt-1 text-sm text-slate-300">
+              고양이 {n}마리를 모두 찾았어요
+            </p>
+
+            <div className="mt-4 rounded-xl bg-slate-900 px-4 py-3">
+              <div className="text-xs text-slate-400">걸린 시간</div>
+              <div className="mt-0.5 text-3xl font-bold text-emerald-300">
+                {formatTimeKo(elapsed)}
+              </div>
+              <div className="mt-1 text-xs text-slate-400">
+                {SIZE_LABELS[n]} · {n}×{n}
+                {hints > 0 ? ` · 힌트 ${hints}회` : ""}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setRound((v) => v + 1)}
+              className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-3 text-base font-bold text-white shadow-sm transition hover:bg-emerald-500"
+            >
+              <Shuffle size={18} /> 다음 판 시작
+            </button>
+            <button
+              type="button"
+              onClick={() => setSize(null)}
+              className="mt-2 w-full rounded-xl bg-slate-700 px-4 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-slate-600"
+            >
+              판 크기 다시 선택
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <Confetti
         run={confetti}
