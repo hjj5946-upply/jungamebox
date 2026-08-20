@@ -73,7 +73,7 @@ const WRONG_FLASH_MS = 700;
 /** 기회를 다 쓴 뒤 새 판으로 넘어가기까지 두는 시간(ms). 무슨 일이 났는지 보여 줄 틈. */
 const FAIL_DELAY_MS = 1300;
 
-/** 고양이가 놓이는 순간 짧게 진동. 지원하지 않는 기기(iOS 사파리 등)에서는 무시된다. */
+/** 칸을 누르는 순간 짧게 진동. 지원하지 않는 기기(iOS 사파리 등)에서는 무시된다. */
 function buzz(pattern: number | number[]) {
   if (typeof navigator === "undefined" || !("vibrate" in navigator)) return;
   try {
@@ -836,6 +836,7 @@ export default function CatSudokuPage() {
     }
 
     // 한 번 탭 = X 켜기/끄기
+    buzz(12); // 고양이(35)보다 약하게 — 표시만 바뀐다는 감각
     lastTapRef.current = { idx, at: now, wasEmpty: current === 0 };
     setMarks((prev) => {
       const next = [...prev];
