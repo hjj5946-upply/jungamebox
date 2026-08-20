@@ -48,10 +48,12 @@ const GRID_COLS: Record<BoardSize, string> = {
   10: "grid-cols-10",
 };
 
-const ICON_PX: Record<BoardSize, number> = {
-  7: 26,
-  8: 23,
-  10: 18,
+// 행도 함께 고정한다. 행 트랙을 auto 로 두면 아이콘이 놓인 줄만 콘텐츠 높이만큼
+// 더 커져서 칸이 늘어나 보인다(gap 만 뺀 뒤 1fr 로 균등 분배해야 정사각형이 유지됨).
+const GRID_ROWS: Record<BoardSize, string> = {
+  7: "grid-rows-[repeat(7,minmax(0,1fr))]",
+  8: "grid-rows-[repeat(8,minmax(0,1fr))]",
+  10: "grid-rows-[repeat(10,minmax(0,1fr))]",
 };
 
 /** 고양이를 잘못 짚을 수 있는 횟수. 다 쓰면 판이 새 문제로 바뀐다. */
@@ -838,7 +840,6 @@ export default function CatSudokuPage() {
   }
 
   const n = size; // 위 분기에서 null 이 걸러졌고 puzzle.size 와 항상 같다
-  const iconPx = ICON_PX[n];
   const chancesLeft = MAX_MISTAKES - mistakes;
 
   // 3) 게임 화면
@@ -917,7 +918,9 @@ export default function CatSudokuPage() {
 
         {/* 판 — 테두리 없이 칸끼리 아주 좁은 간격만 두어 색으로 구역을 구분한다 */}
         <section className="flex justify-center">
-          <div className={`grid aspect-square w-full gap-[2px] ${GRID_COLS[n]}`}>
+          <div
+            className={`grid aspect-square w-full gap-[2px] ${GRID_COLS[n]} ${GRID_ROWS[n]}`}
+          >
             {puzzle.region.map((g, idx) => {
               const r = Math.floor(idx / n);
               const c = idx % n;
@@ -934,22 +937,20 @@ export default function CatSudokuPage() {
                   type="button"
                   onClick={() => handleCell(idx)}
                   aria-label={`${r + 1}행 ${c + 1}열`}
-                  className={`flex touch-manipulation select-none items-center justify-center rounded-[2px] transition active:brightness-90 ${cellClasses}`}
+                  className={`flex h-full w-full min-h-0 min-w-0 touch-manipulation select-none items-center justify-center overflow-hidden rounded-[2px] p-0 transition active:brightness-90 ${cellClasses}`}
                 >
                   {isWrong ? (
                     <Cat
-                      size={iconPx}
                       strokeWidth={2.6}
-                      className="animate-pulse text-red-700"
+                      className="h-[72%] w-[72%] animate-pulse text-red-700"
                     />
                   ) : mark === 2 ? (
                     <Cat
-                      size={iconPx}
                       strokeWidth={2.2}
-                      className="text-black"
+                      className="h-[72%] w-[72%] text-black"
                     />
                   ) : mark === 1 ? (
-                    <X size={iconPx} strokeWidth={3} className="text-black/70" />
+                    <X strokeWidth={3} className="h-[62%] w-[62%] text-black/70" />
                   ) : null}
                 </button>
               );

@@ -55,7 +55,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "bingo", name: "빙고", path: "/games/bingo", image: bingoImg },
   { id: "reading", name: "나도아나운서", path: "/games/reading", image: korlangImg },
   { id: "card", name: "카드뽑기", path: "/games/card", image: cardImg },
-  { id: "sudoku", name: "스도쿠", path: "/games/sudoku", image: sudokuImg },
+  { id: "catsudoku", name: "색상 스도쿠", path: "/games/catsudoku", emoji: "🐱" },
 
   { id: "speed", name: "1 to 48", path: "/games/speed", image: to48Img, imageSize: "large" },
   { id: "memory", name: "기억력테스트", path: "/games/memory", image: memoryImg },
@@ -71,7 +71,7 @@ export const GAME_LIST: GameMeta[] = [
   { id: "color", name: "스투룹테스트", path: "/games/color", image: colorImg },
   { id: "timer", name: "타이머", path: "/games/timer", image: timer },
   { id: "wisesay", name: "명언 모음집", path: "/games/wisesay", image: wisesayImg },
-  { id: "catsudoku", name: "색상 스도쿠", path: "/games/catsudoku", emoji: "🐱" },
+  { id: "sudoku", name: "스도쿠", path: "/games/sudoku", image: sudokuImg },
 
   // ─── 미노출 (주석 해제 시 노출됨) ───
   // 행 정렬을 흐트러뜨리지 않도록 아래에 모아둠. 해제하면 배열 끝에 붙으므로
