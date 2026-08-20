@@ -28,6 +28,7 @@ import PinballPage from "./pages/PinballPage";
 import PinballPlayPage from "./pages/PinballPlayPage";
 import SudokuPage from "./pages/SudokuPage";
 import LadderPage from "./pages/LadderPage";
+import CatSudokuPage from "./pages/CatSudokuPage";
 
 import "./index.css";
 
@@ -83,6 +84,7 @@ export default function App() {
               <Route path="/games/pinball/play" element={<PinballPlayPage />} />
               <Route path="/games/sudoku" element={<SudokuPage />} />
               <Route path="/games/ladder" element={<LadderPage />} />
+              <Route path="/games/catsudoku" element={<CatSudokuPage />} />
 
               <Route path="/terms" element={<Terms />} />
             </Routes>

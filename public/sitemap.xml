@@ -105,6 +105,10 @@
     <loc>https://jun-gamebox.com/games/wisesay</loc>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://jun-gamebox.com/games/catsudoku</loc>
+    <priority>0.8</priority>
+  </url>
 
   <!-- 정적 페이지 -->
   <url>
