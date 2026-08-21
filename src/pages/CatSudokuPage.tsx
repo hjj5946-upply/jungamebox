@@ -115,34 +115,97 @@ function resolveTap(
   return "toggleX";
 }
 
-// 구역 색 팔레트. slate 는 표면 토큰이라 테마에 따라 뒤집히므로 장식용으로 쓰지 않는다.
-// 아이콘을 검정으로 얹기 때문에 라이트/다크 어느 쪽에서도 그대로 읽힌다.
+// 구역 색 후보. slate 는 표면 토큰이라 테마에 따라 뒤집히므로 장식용으로 쓰지 않는다.
+// 아이콘을 검정으로 얹기 때문에 검정 대비 4.5:1 이상인 명도만 남겼고, 라이트/다크 어느
+// 쪽에서도 그대로 읽힌다.
 //
-// 계열(색상 톤)별로 묶어 두고 한 판에서는 계열을 겹치지 않게 뽑는다.
-// 그냥 한 배열에서 무작위로 뽑으면 red-400 옆에 rose-400 이 붙는 판이 나와
-// 구역 경계가 안 보이기 때문이다. 계열 안에서만 명도를 흔들어 변화를 준다.
-// (Tailwind 는 동적 클래스명을 스캔하지 못하므로 완성된 문자열로 적어 둔다)
-const COLOR_FAMILIES: string[][] = [
-  ["bg-red-400", "bg-red-300"],
-  ["bg-orange-400", "bg-orange-300"],
-  ["bg-amber-300", "bg-amber-400"],
-  ["bg-yellow-300", "bg-yellow-400"],
-  ["bg-lime-300", "bg-lime-400"],
-  ["bg-green-400", "bg-green-300"],
-  ["bg-emerald-400", "bg-emerald-300"],
-  ["bg-teal-300", "bg-teal-400"],
-  ["bg-cyan-300", "bg-cyan-400"],
-  ["bg-sky-400", "bg-sky-300"],
-  ["bg-blue-400", "bg-blue-300"],
-  ["bg-indigo-300", "bg-indigo-400"],
-  ["bg-violet-400", "bg-violet-300"],
-  ["bg-purple-300", "bg-purple-400"],
-  ["bg-fuchsia-300", "bg-fuchsia-400"],
-  ["bg-pink-400", "bg-pink-300"],
-  ["bg-rose-400", "bg-rose-300"],
-  ["bg-stone-300", "bg-stone-400"],
-  ["bg-zinc-300", "bg-zinc-400"],
+// 클래스명은 Tailwind 가 스캔할 수 있게 완성형으로 적어 둔다(동적 조합 금지). hex 는
+// 색끼리 얼마나 달라 보이는지 재는 데만 쓰고, 화면은 항상 클래스로 칠한다.
+const COLOR_POOL: { cls: string; hex: string }[] = [
+  { cls: "bg-red-300", hex: "#fca5a5" }, { cls: "bg-red-400", hex: "#f87171" }, { cls: "bg-red-500", hex: "#ef4444" },
+  { cls: "bg-orange-300", hex: "#fdba74" }, { cls: "bg-orange-400", hex: "#fb923c" }, { cls: "bg-orange-500", hex: "#f97316" }, { cls: "bg-orange-600", hex: "#ea580c" },
+  { cls: "bg-amber-200", hex: "#fde68a" }, { cls: "bg-amber-300", hex: "#fcd34d" }, { cls: "bg-amber-400", hex: "#fbbf24" }, { cls: "bg-amber-500", hex: "#f59e0b" },
+  { cls: "bg-yellow-200", hex: "#fef08a" }, { cls: "bg-yellow-300", hex: "#fde047" }, { cls: "bg-yellow-400", hex: "#facc15" }, { cls: "bg-yellow-500", hex: "#eab308" },
+  { cls: "bg-lime-200", hex: "#d9f99d" }, { cls: "bg-lime-300", hex: "#bef264" }, { cls: "bg-lime-400", hex: "#a3e635" }, { cls: "bg-lime-500", hex: "#84cc16" },
+  { cls: "bg-green-300", hex: "#86efac" }, { cls: "bg-green-400", hex: "#4ade80" }, { cls: "bg-green-500", hex: "#22c55e" }, { cls: "bg-green-600", hex: "#16a34a" },
+  { cls: "bg-emerald-300", hex: "#6ee7b7" }, { cls: "bg-emerald-400", hex: "#34d399" }, { cls: "bg-emerald-500", hex: "#10b981" }, { cls: "bg-emerald-600", hex: "#059669" },
+  { cls: "bg-teal-200", hex: "#99f6e4" }, { cls: "bg-teal-300", hex: "#5eead4" }, { cls: "bg-teal-400", hex: "#2dd4bf" }, { cls: "bg-teal-500", hex: "#14b8a6" },
+  { cls: "bg-cyan-300", hex: "#67e8f9" }, { cls: "bg-cyan-400", hex: "#22d3ee" }, { cls: "bg-cyan-500", hex: "#06b6d4" },
+  { cls: "bg-sky-300", hex: "#7dd3fc" }, { cls: "bg-sky-400", hex: "#38bdf8" }, { cls: "bg-sky-500", hex: "#0ea5e9" },
+  { cls: "bg-blue-300", hex: "#93c5fd" }, { cls: "bg-blue-400", hex: "#60a5fa" }, { cls: "bg-blue-500", hex: "#3b82f6" },
+  { cls: "bg-indigo-300", hex: "#a5b4fc" }, { cls: "bg-indigo-400", hex: "#818cf8" }, { cls: "bg-indigo-500", hex: "#6366f1" },
+  { cls: "bg-violet-300", hex: "#c4b5fd" }, { cls: "bg-violet-400", hex: "#a78bfa" }, { cls: "bg-violet-500", hex: "#8b5cf6" },
+  { cls: "bg-purple-300", hex: "#d8b4fe" }, { cls: "bg-purple-400", hex: "#c084fc" }, { cls: "bg-purple-500", hex: "#a855f7" },
+  { cls: "bg-fuchsia-300", hex: "#f0abfc" }, { cls: "bg-fuchsia-400", hex: "#e879f9" }, { cls: "bg-fuchsia-500", hex: "#d946ef" },
+  { cls: "bg-pink-300", hex: "#f9a8d4" }, { cls: "bg-pink-400", hex: "#f472b6" }, { cls: "bg-pink-500", hex: "#ec4899" },
+  { cls: "bg-rose-300", hex: "#fda4af" }, { cls: "bg-rose-400", hex: "#fb7185" }, { cls: "bg-rose-500", hex: "#f43f5e" },
+  { cls: "bg-stone-200", hex: "#e7e5e4" }, { cls: "bg-stone-300", hex: "#d6d3d1" }, { cls: "bg-stone-400", hex: "#a8a29e" },
+  { cls: "bg-zinc-200", hex: "#e4e4e7" }, { cls: "bg-zinc-300", hex: "#d4d4d8" }, { cls: "bg-zinc-400", hex: "#a1a1aa" },
 ];
+
+/**
+ * 후보를 OKLab 좌표로 미리 바꿔 둔다.
+ *
+ * sRGB 값끼리 비교하면 "값은 다른데 눈으로는 같은" 조합을 못 걸러낸다(초록끼리는 차이를
+ * 과대, 파랑끼리는 과소 평가한다). OKLab 은 좌표 거리가 사람이 느끼는 차이에 거의
+ * 비례하므로, 판을 뽑을 때 이 좌표로 최소 거리와 색상환 간격을 함께 검사한다.
+ */
+type Swatch = {
+  cls: string;
+  /** red-300 / red-500 처럼 같은 계열은 한 판에 하나만. 무채색은 전부 한 계열로 묶는다. */
+  family: string;
+  lab: [number, number, number];
+  /** 색상환 각도(0~360). 무채색은 의미가 없어 검사에서 빼준다. */
+  hue: number;
+  neutral: boolean;
+};
+
+function toOklab(hex: string): [number, number, number] {
+  const channel = (at: number) => {
+    const v = parseInt(hex.slice(at, at + 2), 16) / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  };
+  const r = channel(1);
+  const g = channel(3);
+  const b = channel(5);
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+}
+
+const SWATCHES: Swatch[] = COLOR_POOL.map(({ cls, hex }) => {
+  const lab = toOklab(hex);
+  const chroma = Math.hypot(lab[1], lab[2]);
+  const neutral = chroma < 0.03;
+  const deg = (Math.atan2(lab[2], lab[1]) * 180) / Math.PI;
+  return {
+    cls,
+    family: neutral ? "neutral" : cls.slice(3, cls.lastIndexOf("-")),
+    lab,
+    hue: deg < 0 ? deg + 360 : deg,
+    neutral,
+  };
+});
+
+/** 두 색이 눈에 얼마나 다른지(OKLab 거리). */
+function colorDistance(a: Swatch, b: Swatch): number {
+  return Math.hypot(
+    a.lab[0] - b.lab[0],
+    a.lab[1] - b.lab[1],
+    a.lab[2] - b.lab[2]
+  );
+}
+
+/** 색상환에서 두 색이 떨어진 각도(0~180). */
+function hueGap(a: Swatch, b: Swatch): number {
+  const diff = Math.abs(a.hue - b.hue) % 360;
+  return Math.min(diff, 360 - diff);
+}
 
 /* ── 문제 생성 ───────────────────────────────────────────────
    1) 규칙을 만족하는 정답 배치를 랜덤으로 하나 만든다.
@@ -166,11 +229,79 @@ function shuffled<T>(arr: T[]): T[] {
   return a;
 }
 
-/** 판마다 색 계열을 겹치지 않게 count 개 뽑는다(계열 안에서는 명도를 무작위로). */
+/** 색 고르기 기준. 위에서부터 시도하고, 다 실패하면 한 단계 느슨하게 내려간다. */
+const COLOR_TIERS: { dist: number; hue: number }[] = [
+  { dist: 0.22, hue: 40 },
+  { dist: 0.2, hue: 36 },
+  { dist: 0.18, hue: 32 },
+  { dist: 0.16, hue: 28 },
+  { dist: 0.14, hue: 23 },
+  { dist: 0.12, hue: 18 },
+];
+
+/** 한 기준에서 다시 뽑아 볼 횟수. 한 번이 0.03ms 수준이라 넉넉히 잡는다. */
+const COLOR_TRIES = 60;
+
+/**
+ * 무작위 순서로 훑으며 기준을 통과하는 색만 담는다. count 개를 못 채우면 null.
+ * 순서만 섞으므로(최적 조합을 찾는 게 아니므로) 판마다 색 조합이 달라진다.
+ */
+function tryPickColors(
+  count: number,
+  minDist: number,
+  minHue: number
+): Swatch[] | null {
+  const chosen: Swatch[] = [];
+  for (const cand of shuffled(SWATCHES)) {
+    if (chosen.length === count) break;
+    const ok = chosen.every(
+      (picked) =>
+        picked.family !== cand.family &&
+        colorDistance(picked, cand) >= minDist &&
+        (picked.neutral || cand.neutral || hueGap(picked, cand) >= minHue)
+    );
+    if (ok) chosen.push(cand);
+  }
+  return chosen.length === count ? chosen : null;
+}
+
+/** 한 조합에서 가장 비슷한 두 색의 거리. 클수록 판 전체가 또렷하다. */
+function weakestPair(set: Swatch[]): number {
+  let worst = Infinity;
+  for (let i = 0; i < set.length; i += 1) {
+    for (let j = i + 1; j < set.length; j += 1) {
+      worst = Math.min(worst, colorDistance(set[i], set[j]));
+    }
+  }
+  return worst;
+}
+
+/**
+ * 판마다 서로 확실히 달라 보이는 색을 count 개 뽑는다.
+ *
+ * 계열만 겹치지 않게 뽑던 방식으로는 red-300 / rose-300(OKLab 거리 0.015),
+ * stone-300 / zinc-300(0.009)처럼 "값은 다른데 육안으로는 같은" 판이 종종 나왔다.
+ * 지금은 기준을 통과한 조합 중에서도 가장 비슷한 쌍이 제일 멀리 떨어진 것을 골라,
+ * 7·8 칸은 거리 0.18 / 색상 32도, 10 칸도 0.14 / 24도 이상 벌어진다.
+ */
 function pickRegionColors(count: number): string[] {
-  return shuffled(COLOR_FAMILIES)
-    .slice(0, count)
-    .map((family) => family[Math.floor(Math.random() * family.length)]);
+  for (const tier of COLOR_TIERS) {
+    let best: Swatch[] | null = null;
+    let bestScore = -1;
+    for (let i = 0; i < COLOR_TRIES; i += 1) {
+      const chosen = tryPickColors(count, tier.dist, tier.hue);
+      if (!chosen) continue;
+      const score = weakestPair(chosen);
+      if (score > bestScore) {
+        bestScore = score;
+        best = chosen;
+      }
+    }
+    if (best) return best.map((s) => s.cls);
+  }
+  // 안전망: 계열만 겹치지 않게. 계열이 18 개라 10 개는 항상 채워진다.
+  const fallback = tryPickColors(count, 0, 0) ?? SWATCHES.slice(0, count);
+  return fallback.map((s) => s.cls);
 }
 
 /** 행/열 유일 + 8방향 인접 금지를 만족하는 배치. 인접 행끼리 열 차이가 2 이상이면 된다. */
